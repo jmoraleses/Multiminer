@@ -51,7 +51,6 @@ public class Hashcat {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(total_files);
 
 
 //        String cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_1" + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
@@ -62,9 +61,9 @@ public class Hashcat {
         String cmd = "";
         for (int i = 1; i <= 3; i++) { //Change the number of process that you want to execute
             try {
-//                if (i == 1) cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe  -a 3 -m 21400 --session session_"+i+" --potfile-path path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
-//                else cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 --session session_"+i+" --potfile-path path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
-                cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 --session session_"+i+" --potfile-path path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
+//                if (i == 1) cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe  -a 3 -m 21400 --brain-server --session session_"+i+" --potfile-path "+ route_hashcat +"path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
+//                else cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 --brain-client --session session_"+i+" --potfile-path "+ route_hashcat +"path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
+                cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 --session session_"+i+" --potfile-path "+ route_hashcat +"path_"+i+" -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_" + i + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
                 //Convert the string to command line arguments
                 String[] args = cmd.split(" ");
                 execute(args);

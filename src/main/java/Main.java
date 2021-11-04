@@ -17,6 +17,10 @@ public class Main {
      */
     public static void main(String[] args) throws Throwable {
 
+        System.out.println("##############################");
+        System.out.println("## Welcome to Breaking Hash ##");
+        System.out.println("##############################");
+
         //Ask for introduce by keyboard the next variables: dir_hashcat, hash, wordlist and output_file
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String route_hashcat = "C:/Users/Javier/Documents/hashcat-6.2.4"; //Introduce the route of hashcat
@@ -38,12 +42,18 @@ public class Main {
             String route_crackme = route_hashcat + "/crackme";
             new java.io.File(route_crackme).mkdir();
             //Show message and put in pause the program until the user press enter
-            System.out.println("Please introduce name file for wordlist:");
-            String wordlist = br.readLine();
-            System.out.println("Please introduce name file for output file:");
-            String output_file = br.readLine();
-            System.out.println("Please introduce name file with the hashes:");
-            String hashes = br.readLine();
+//            System.out.println("Please introduce name file for wordlist:");
+//            String wordlist = br.readLine();
+//            System.out.println("Please introduce name file for output file:");
+//            String output_file = br.readLine();
+//            System.out.println("Please introduce name file with the hashes:");
+//            String hashes = br.readLine();
+
+            String wordlist = "";
+            String output_file = "";
+            String hashes = "";
+
+
 
             //call to function hashcat in "Hashcat" class
             Hashcat.launch(route_hashcat, wordlist, output_file, hashes);
