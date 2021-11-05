@@ -1,6 +1,5 @@
-
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.*;
@@ -70,14 +69,17 @@ public class Main {
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
 
-        System.out.println(response);
-        //convert automatically the json string to json object
-        JSONObject json = (JSONObject) JSONValue.parse(response);
-        System.out.println(json);
+//        JSONObject jsonObjectResponse = JSONValue.parse(response);
+//        System.out.println(jsonObjectResponse);
 
-        //function for mining in bitcoin
-        String newblock = Mining.miner(json);
+        //Convertir String response a JSONObject response
+        JSONObject jsonObjectResponse = new JSONObject(response);
+        System.out.println(jsonObjectResponse);
 
+
+        //Recovery the json object getblocktemplate
+        String blockMined = Mining.mineBlock(response, "00000010");
+        System.out.println(blockMined);
 
 
     }
