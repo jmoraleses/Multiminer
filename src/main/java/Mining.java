@@ -1,9 +1,11 @@
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class Mining {
@@ -80,25 +82,32 @@ public class Mining {
 
     public static Block operation(String response){
         List<String> list = extractInfoFromJson(response);
-        return createBlock(list.get(0), list.get(1), list.get(2));
+        //Encontrar nonce
+
+        String nonce = "";
+
+        return createBlock(list.get(0), list.get(1), nonce);
     }
 
 
 
     //Extraer de un json en formato string las siguientes variables String previousHash, String data, String nonce
-    public static List<String> extractInfoFromJson(String jsonObjectResponse) {
+    public static List<String> extractInfoFromJson(String response) {
         String previousHash = "";
         String data = "";
-        String nonce = "";
+        //String nonce = "";
         try {
-            JSONObject jsonObject = new JSONObject(jsonObjectResponse);
-            previousHash = jsonObject.getString("previous_hash");
-            data = jsonObject.getString("data");
-            nonce = jsonObject.getString("nonce");
+            JSONObject jsonObject = new JSONObject(response);
+            //extraer el datos de JSONObject response
+            String result = jsonObject.getString("result");
+            JSONObject jsonResult = new JSONObject(result);
+            previousHash = jsonResult.getString("previousblockhash");
+            data = jsonResult.getString("transactions");
+            //nonce = jsonObject.getString("nonce");
             List<String> list = new ArrayList<>();
             list.add(previousHash);
             list.add(data);
-            list.add(nonce);
+            //list.add(nonce);
             return list;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -140,20 +149,10 @@ public class Mining {
 
     //crear la función mineBlock(block, nonce)
     public static String mineBlock(Block block, String nonce) {
-        String hash = "";
-        try {
-            String theblock = (block.getPreviousHash() + block.getData() + block.getDifficulty() + block.getTimestamp() + block.getVersion() + block.getMerkleRoot() + nonce);
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            hash = md.digest(theblock.getBytes()).toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        String theblock = (block.getPreviousHash() + block.getData() + block.getDifficulty() + block.getTimestamp() + block.getVersion() + block.getMerkleRoot() + nonce);
+        //Encriptar theblock con librería SHA-256
+        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(theblock);
         return hash;
     }
-
-
-
-
-
 
 }
