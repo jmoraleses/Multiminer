@@ -52,11 +52,6 @@ public class Hashcat {
             e.printStackTrace();
         }
 
-
-//        String cmd = "C:/msys64/msys2.exe " + route_hashcat + "hashcat.exe -a 3 -m 21400 -o " + route_hashcat + output_file + " " + route_hashcat + "crackme/" + hashes + "_1" + ".txt --wordlist " + route_hashcat + "crackme/" + wordlist;
-//        process(cmd);
-
-
         //create a array of string to store all the hashcat commands
         String cmd = "";
         for (int i = 1; i <= 3; i++) { //Change the number of process that you want to execute
