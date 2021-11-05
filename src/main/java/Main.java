@@ -1,4 +1,7 @@
 
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
+
 import java.io.*;
 import java.net.*;
 import java.util.List;
@@ -6,6 +9,7 @@ import java.util.List;
 public class Main {
 
     private static JsonCreate jsonCreate;
+
 
     /**
      * @param args the command line arguments
@@ -61,10 +65,21 @@ public class Main {
 
         //json for to get template for mining in bitcoin 0.22.0
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
+        //String request2= "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
 
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
+
         System.out.println(response);
+        //convert automatically the json string to json object
+        JSONObject json = (JSONObject) JSONValue.parse(response);
+        System.out.println(json);
+
+        //function for mining in bitcoin
+        String newblock = Mining.miner(json);
+
+
+
     }
 
     /**
