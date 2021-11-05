@@ -60,7 +60,7 @@ public class Main {
 //        System.in.read();
 
         //variable "request" with json for getbalance in bitcoin
-//        String request = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"getbalance\"}";
+        //String request = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"getbalance\"}";
 
         //json for to get template for mining in bitcoin 0.22.0
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
@@ -69,20 +69,8 @@ public class Main {
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
 
-//        JSONObject jsonObjectResponse = JSONValue.parse(response);
-//        System.out.println(jsonObjectResponse);
-
-        //Convertir String response a JSONObject response
-//        JSONObject jsonObjectResponse = new JSONObject(response);
-//        System.out.println(jsonObjectResponse);
-
         Block blockMined = Mining.operation(response);
         System.out.println(blockMined);
-
-        //Recovery the json object getblocktemplate
-//        String blockMined = Mining.createBlock(response, "00000010");
-//        System.out.println(blockMined);
-
 
     }
 
