@@ -73,10 +73,11 @@ public class Main {
 //        System.out.println(jsonObjectResponse);
 
         //Convertir String response a JSONObject response
-        JSONObject jsonObjectResponse = new JSONObject(response);
-        System.out.println(jsonObjectResponse);
+//        JSONObject jsonObjectResponse = new JSONObject(response);
+//        System.out.println(jsonObjectResponse);
 
         Block blockMined = Mining.operation(response);
+        System.out.println(blockMined);
 
         //Recovery the json object getblocktemplate
 //        String blockMined = Mining.createBlock(response, "00000010");

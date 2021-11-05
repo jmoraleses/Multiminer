@@ -1,6 +1,5 @@
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.btc4j.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
