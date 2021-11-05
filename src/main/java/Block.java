@@ -13,6 +13,20 @@ public class Block {
     private String hash;
     private String version;
 
+    @Override
+    public String toString() {
+        return "Block{" +
+                "creator='" + creator + '\'' +
+                ", previousHash='" + previousHash + '\'' +
+                ", data='" + data + '\'' +
+                ", nonce='" + nonce + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", merkleRoot='" + merkleRoot + '\'' +
+                ", difficulty='" + difficulty + '\'' +
+                ", hash='" + hash + '\'' +
+                ", version='" + version + '\'' +
+                '}';
+    }
 
     public String getCreator() {
         return creator;

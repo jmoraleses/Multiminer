@@ -4,6 +4,8 @@ import org.btc4j.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mining {
 
@@ -74,6 +76,36 @@ public class Mining {
 //        }
 //        return hash;
 //    }
+
+
+
+    public static Block operation(String response){
+        List<String> list = extractInfoFromJson(response);
+        return createBlock(list.get(0), list.get(1), list.get(2));
+    }
+
+
+
+    //Extraer de un json en formato string las siguientes variables String previousHash, String data, String nonce
+    public static List<String> extractInfoFromJson(String jsonObjectResponse) {
+        String previousHash = "";
+        String data = "";
+        String nonce = "";
+        try {
+            JSONObject jsonObject = new JSONObject(jsonObjectResponse);
+            previousHash = jsonObject.getString("previous_hash");
+            data = jsonObject.getString("data");
+            nonce = jsonObject.getString("nonce");
+            List<String> list = new ArrayList<>();
+            list.add(previousHash);
+            list.add(data);
+            list.add(nonce);
+            return list;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     //calcular el merkleroot
