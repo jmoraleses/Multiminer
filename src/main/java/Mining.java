@@ -32,50 +32,6 @@ public class Mining {
     }
 
 
-    //Use btc4j-core library for mining with the following parameters: jsonObjectResponse and the nonce
-//    public static String mineBlock(String jsonObjectResponse, String nonce) {
-//        String hash = "";
-//        try {
-//            JSONObject jsonObject = new JSONObject(jsonObjectResponse);
-//            String previousHash = jsonObject.getString("previous_hash");
-//            String difficulty = getDifficulty(previousHash);
-//            String data = jsonObject.getString("data");
-//            String timestamp = jsonObject.getString("timestamp");
-//            String version = jsonObject.getString("version");
-//            String merkleRoot = jsonObject.getString("merkle_root");
-//            String nonceString = nonce;
-//
-//            //Use btc4j-core library for mining with the following parameters: hash and the nonce
-//            //encrypt in sha256 the nonce and the another data
-//
-//            String theblock = (previousHash + data + difficulty + timestamp + version + merkleRoot + nonceString);
-//            MessageDigest md = MessageDigest.getInstance("SHA-256");
-//            hash = md.digest(theblock.getBytes()).toString();
-//
-//        } catch (JSONException | NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-//        return hash;
-//    }
-//
-
-
-
-//    //Use library bitcoin-rpc-client for mining with the following parameters: the block and the nonce
-//    public static String mineBlock(Block block, String nonce) {
-//        String hash = "";
-//        try {
-//            String theblock = (block.getPreviousHash() + block.getData() + block.getDifficulty() + block.getTimestamp() + block.getVersion() + block.getMerkleRoot() + nonce);
-//            MessageDigest md = MessageDigest.getInstance("SHA-256");
-//            hash = md.digest(theblock.getBytes()).toString();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-//        return hash;
-//    }
-
-
-
     public static Block operation(String response){
         List<String> list = extractInfoFromJson(response);
         //Encontrar nonce
