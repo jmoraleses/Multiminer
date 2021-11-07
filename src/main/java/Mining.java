@@ -19,10 +19,6 @@ public class Mining {
         }
     }
 
-    //función den ombre toHex que convierte un número en 8 caracteres hexadecimales
-    public static String toHex(int n) {
-        return String.format("%08x", n);
-    }
 
 
     //function for found the difficulty of the hash
@@ -43,7 +39,7 @@ public class Mining {
         List<String> list = extractInfoFromJson(response);
         //Encontrar nonce
 
-        String nonce = toHex(10); //esto hay que cambiarlo por una variable que se incremente en 1
+        String nonce = Util.numtoHex(10); //esto hay que cambiarlo por una variable que se incremente en 1
 
         return createBlock(list.get(0), list.get(1), list.get(2), nonce);
     }
@@ -86,7 +82,7 @@ public class Mining {
         //block.setData(data.toString());
         block.setNonce(nonce);
         block.setTimestamp(String.valueOf(System.currentTimeMillis()));
-        block.setVersion(toHex(1));
+        block.setVersion(Util.numtoHex(1));
         block.setBits(bits);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setDifficulty(getDifficulty(previousHash));

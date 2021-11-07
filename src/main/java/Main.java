@@ -72,6 +72,10 @@ public class Main {
 
         Block blockMined = Mining.operation(response);
 
+        Transaction transaction = new Transaction();
+        transaction.set(blockMined);
+
+
         String blockMinedString = Mining.blockMinedtoJSON(blockMined);
         System.out.println(blockMinedString);
         //json for to get submitblock for mining in bitcoin 0.22.0
