@@ -12,6 +12,7 @@ public class Block {
     private String difficulty;
     private String hash;
     private String version;
+    private String bits;
 
     @Override
     public String toString() {
@@ -25,8 +26,13 @@ public class Block {
                 ", difficulty='" + difficulty + '\'' +
                 ", hash='" + hash + '\'' +
                 ", version='" + version + '\'' +
+                ", bits='" + bits + '\'' +
                 '}';
     }
+
+    public String getBits() { return bits; }
+
+    public void setBits(String bits) { this.bits = bits; }
 
     public String getCreator() {
         return creator;

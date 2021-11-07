@@ -68,9 +68,20 @@ public class Main {
 
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
+        System.out.println(response);
 
         Block blockMined = Mining.operation(response);
-        System.out.println(blockMined);
+
+        String blockMinedString = Mining.blockMinedtoJSON(blockMined);
+        System.out.println(blockMinedString);
+        //json for to get submitblock for mining in bitcoin 0.22.0
+        //String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+
+
+        //String response2 = sendBlockMined(blockMinedString);
+        //System.out.println(response2);
+
+
 
     }
 
@@ -122,7 +133,37 @@ public class Main {
         }
     }
 
+    //send block mined to the network with submitblock
+    public static String sendBlockMined(String blockMined) {
 
+        String response = "";
+        try {
+            URL url = new URL("http://localhost:9997/");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(blockMined);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response1 = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response1.append(inputLine);
+            }
+            in.close();
+            response = response1.toString();
+            System.out.println(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
 
 }
 
