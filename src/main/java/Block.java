@@ -12,7 +12,9 @@ public class Block {
     private String difficulty;
     private String hash;
     private String version;
-    private String bits;
+    private String bits; //target
+
+    public double fee;
 
     @Override
     public String toString() {
@@ -21,7 +23,7 @@ public class Block {
                 ", previousHash='" + previousHash + '\'' +
                 ", data='" + data + '\'' +
                 ", nonce='" + nonce + '\'' +
-                ", timestamp='" + timestamp + '\'' +
+                ", time='" + timestamp + '\'' +
                 ", merkleRoot='" + merkleRoot + '\'' +
                 ", difficulty='" + difficulty + '\'' +
                 ", hash='" + hash + '\'' +
@@ -105,4 +107,8 @@ public class Block {
     public void setVersion(String version) {
         this.version = version;
     }
+
+    public double getFee() { return fee; }
+
+    public void setFee(double fee) { this.fee = fee; }
 }

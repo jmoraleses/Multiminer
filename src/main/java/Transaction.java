@@ -1,9 +1,8 @@
-
-
+import java.util.ArrayList;
 
 public class Transaction {
 
-    private String address = "tb1q5f2jdp006qp4q0qu8uq0ut0zh8lymwnvafy3rv";
+    private String address = "bc1qc7f3azswx3ezyfgsqxtsp0447yalhz98eq7ygf";
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -36,41 +35,12 @@ public class Transaction {
         sequence = "ffffffff";
 
         outputCount = "01";
-
-        value = "00000000"; //
+        value = String.valueOf(block.getFee()); //no debe exceder las recompensas
         scriptPubKey = "76a914" + Util.toHex(address.length()/2) + address + "88ac"; //P2PKH
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
-
     }
-
-
-
-
-    //EXAMPLE
-    //function that create transaction coinbase
-//    public String createCoinbase(String address, String transactionId, String transactionOutput){
-//        version = "01000000";
-//        inputCount = "01";
-//        txid = transactionId;
-//        vout = "0000000000000000";
-//        scriptSigSize = "FFFFFFFF";
-//        scriptSig = "04" + address + "0000000000000000000000000000000000000000000000000000000000000000";
-//        sequence = "FFFFFFFF";
-//
-//        outputCount = "01";
-//        value = transactionOutput;
-//        scriptPubKeySize = "19";
-//        scriptPubKey = "76a914" + address + "88ac";
-//
-//        locktime = "00000000";
-//
-//        return version + inputCount + txid + vout + scriptSigSize + scriptSig + sequence + outputCount + value + scriptPubKeySize + scriptPubKey + locktime;
-//    }
-
-    //find how built a transaction coinbase
-
 
 
     //function calculate ScriptSigSize

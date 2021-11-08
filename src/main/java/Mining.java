@@ -7,7 +7,10 @@ import java.util.List;
 
 public class Mining {
 
-    private static String target;
+    public static String target;
+    public static double fee_transactions;
+    public static double fee_for_mine = 6.25;
+    public static double fee_total;
 
     //comprueba que crea un hash valido para minar
 //    public static String checkHash(String hash, String difficulty) {
@@ -58,8 +61,8 @@ public class Mining {
             JSONObject jsonResult = new JSONObject(result);
 
             target = jsonResult.getString("target");
-
             bits = jsonResult.getString("bits");
+
             previousHash = jsonResult.getString("previousblockhash");
             transactions = jsonResult.getString("transactions");
 
@@ -87,6 +90,7 @@ public class Mining {
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setDifficulty(getDifficulty(previousHash));
         block.setHash(mineBlock(block, nonce));
+        block.setFee(fee_total);
         return block;
     }
 
@@ -103,15 +107,19 @@ public class Mining {
     //calcular el merkleroot a partir  de una array de transacciones
     public static String extractMerkleRoot(String transactions) throws JSONException {
         JSONArray jsonTransactions = new JSONArray(transactions);
-
+        int fee = 0;
         List<String> list = new ArrayList<>();
+//        List<String> feeList = new ArrayList<>();
         for (int i = 0; i < jsonTransactions.length(); i++) {
             JSONObject jsonObjectTransaction = jsonTransactions.getJSONObject(i);
             list.add(jsonObjectTransaction.getString("hash"));
+            fee += Integer.parseInt(jsonObjectTransaction.getString("fee"));
         }
-        String merkleRoot = calculateMerkleRoot(list);
-        return merkleRoot;
+        fee_transactions = Util.feeToSatoshi(fee);
+        fee_total = fee_for_mine + fee_transactions;
+        return calculateMerkleRoot(list);
     }
+
 
     //calcute merkle root from a list of transactions
     public static String calculateMerkleRoot(List<String> data){
@@ -138,9 +146,11 @@ public class Mining {
         blockMined += "\"version\":\"" + block.getVersion() + "\",";
         blockMined += "\"previousblockhash\":\"" + block.getPreviousHash() + "\",";
         blockMined += "\"merkleroot\":\"" + block.getMerkleRoot() + "\",";
-        blockMined += "\"timestamp\":\"" + block.getTimestamp() + "\",";
+        blockMined += "\"time\":\"" + block.getTimestamp() + "\",";
         blockMined += "\"bits\":\"" + block.getBits() + "\",";
         blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
+
+
 
 //        blockMined += "\"data\":\"" + block.getData() + "\",";
 //        blockMined += "\"difficulty\":\"" + block.getDifficulty() + "\",";

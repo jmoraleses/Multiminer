@@ -78,6 +78,9 @@ public class Main {
 
         String blockMinedString = Mining.blockMinedtoJSON(blockMined);
         System.out.println(blockMinedString);
+
+
+
         //json for to get submitblock for mining in bitcoin 0.22.0
         //String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
 

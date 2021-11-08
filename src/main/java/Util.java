@@ -7,6 +7,8 @@ public class Util {
         return String.format("%08x", n);
     }
 
+
+
     //función de nombre toHex, convierte un String de tipo ascii en un String de tipo hexadecimal
     public static String asciiToHex(String ascii) {
         byte[] bytes = ascii.getBytes(StandardCharsets.US_ASCII);
@@ -31,6 +33,14 @@ public class Util {
             return String.format("%02x%02x", 0xfd, size);
         } else {
             return String.format("%02x%02x%02x", 0xfe, size, size);
+        }
+    }
+    //convertir en satoshi los fee
+    public static double feeToSatoshi(Object fee) {
+        if (fee instanceof String) {
+        return Double.parseDouble((String) fee) * 100000000;
+        }else{
+            return Double.parseDouble(fee.toString()) * 100000000;
         }
     }
 
