@@ -70,12 +70,24 @@ public class Main {
         String response = sendRequest(request);
         System.out.println(response);
 
+        //Create new block mined
         Block blockMined = Mining.operation(response);
 
-        Transaction transaction = new Transaction();
-        transaction.set(blockMined);
+        //Create transaction
+        Transaction header = new Transaction();
+        header.set(blockMined);
+
+        //Concatenate header and transactions
+        String transactions = header + blockMined.getTransactions();
+        //set transactions in block
+        blockMined.setTransactions(transactions);
+
+        //set merkleRoot complete
+        String str = header + blockMined.getMerkleRoot();
+        blockMined.setMerkleRoot(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
 
 
+        //Prepare to send block mined to the network
         String blockMinedString = Mining.blockMinedtoJSON(blockMined);
         System.out.println(blockMinedString);
 

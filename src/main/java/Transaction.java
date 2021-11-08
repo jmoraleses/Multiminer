@@ -42,6 +42,26 @@ public class Transaction {
         locktime = "00000000";
     }
 
+    //generar toString para transaction
+    public String toString(){
+        String output = "";
+        output += "{";
+        output += "\"Version\":\"" + version + "\",";
+        output += "\"Inputs\":\"" + inputCount + "\",";
+        output += "\"Txid\":\"" + txid + "\",";
+        output += "\"Vout\":\"" + vout + "\",";
+        output += "\"ScriptSigSize\":\"" + scriptSigSize + "\",";
+        output += "\"ScriptSig\":\"" + scriptSig + "\",";
+        output += "\"Sequence\":\"" + sequence + "\",";
+        output += "\"Outputs\":\"" + outputCount + "\",";
+        output += "\"Value\":\"" + value + "\",";
+        output += "\"ScriptPubKeySize\":\"" + scriptPubKeySize + "\",";
+        output += "\"ScriptPubKey\":\"" + scriptPubKey + "\",";
+        output += "\"Locktime\":\"" + locktime + "\"";
+        output += "},";
+        return output;
+    }
+
 
     //function calculate ScriptSigSize
     public String calculateScriptSigSize(String scriptSig){

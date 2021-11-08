@@ -3,7 +3,7 @@
 public class Block {
     //crear todos los atributos de un bloque de bitcoin
 
-    private String creator = "tb1q5f2jdp006qp4q0qu8uq0ut0zh8lymwnvafy3rv";
+//    private String creator = "bc1qc7f3azswx3ezyfgsqxtsp0447yalhz98eq7ygf";
     private String previousHash;
     private String data;
     private String nonce;
@@ -13,13 +13,13 @@ public class Block {
     private String hash;
     private String version;
     private String bits; //target
-
+    public String transactions;
     public double fee;
 
     @Override
     public String toString() {
         return "Block{" +
-                "creator='" + creator + '\'' +
+//                "creator='" + creator + '\'' +
                 ", previousHash='" + previousHash + '\'' +
                 ", data='" + data + '\'' +
                 ", nonce='" + nonce + '\'' +
@@ -36,13 +36,18 @@ public class Block {
 
     public void setBits(String bits) { this.bits = bits; }
 
-    public String getCreator() {
-        return creator;
-    }
+//    public String getCreator() {
+//        return creator;
+//    }
+//
+//    public void setCreator(String creator) {
+//        this.creator = creator;
+//    }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+
+    public String getTransactions() { return transactions; }
+
+    public void setTransactions(String transactions) { this.transactions = transactions; }
 
     public String getPreviousHash() {
         return previousHash;

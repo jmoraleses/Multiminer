@@ -87,9 +87,11 @@ public class Mining {
         block.setTimestamp(String.valueOf(System.currentTimeMillis()));
         block.setVersion(Util.numtoHex(1));
         block.setBits(bits);
-        block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setDifficulty(getDifficulty(previousHash));
         block.setHash(mineBlock(block, nonce));
+        //de momento concatenamos todas las transacciones
+        block.setTransactions(transactions);
+        block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
         return block;
     }
@@ -107,16 +109,14 @@ public class Mining {
     //calcular el merkleroot a partir  de una array de transacciones
     public static String extractMerkleRoot(String transactions) throws JSONException {
         JSONArray jsonTransactions = new JSONArray(transactions);
-        int fee = 0;
+        fee_transactions = 0;
         List<String> list = new ArrayList<>();
-//        List<String> feeList = new ArrayList<>();
         for (int i = 0; i < jsonTransactions.length(); i++) {
             JSONObject jsonObjectTransaction = jsonTransactions.getJSONObject(i);
             list.add(jsonObjectTransaction.getString("hash"));
-            fee += Integer.parseInt(jsonObjectTransaction.getString("fee"));
+            fee_transactions += Integer.parseInt(jsonObjectTransaction.getString("fee"));
         }
-        fee_transactions = Util.feeToSatoshi(fee);
-        fee_total = fee_for_mine + fee_transactions;
+        fee_total = fee_for_mine + Util.feeToSatoshi(fee_transactions);
         return calculateMerkleRoot(list);
     }
 
@@ -140,28 +140,29 @@ public class Mining {
 
     //find structure of block mined for send to network with the address of the creator
     //header = reversebytes(field(version, 4)) + reversebytes(prevblock) + reversebytes(merkleroot) + reversebytes(field(time, 4)) + reversebytes(bits)
-    public static String blockMinedtoJSON(Block block) {
+    public static String blockMinedtoJSON(Block block) throws JSONException {
         String blockMined = "";
         blockMined += "{";
         blockMined += "\"version\":\"" + block.getVersion() + "\",";
         blockMined += "\"previousblockhash\":\"" + block.getPreviousHash() + "\",";
+
         blockMined += "\"merkleroot\":\"" + block.getMerkleRoot() + "\",";
         blockMined += "\"time\":\"" + block.getTimestamp() + "\",";
         blockMined += "\"bits\":\"" + block.getBits() + "\",";
         blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
 
+        String transactions = block.getTransactions();
+        transactions = transactions.replace("[", "");
+        transactions = transactions.replace("]", "");
 
+        blockMined += "\"transactions\":[" + transactions + "]";
 
-//        blockMined += "\"data\":\"" + block.getData() + "\",";
-//        blockMined += "\"difficulty\":\"" + block.getDifficulty() + "\",";
-//        blockMined += "\"hash\":\"" + block.getHash() + "\",";
-//        blockMined += "\"creator\":\"" + block.getCreator() + "\"";
         blockMined += "}";
         return blockMined;
     }
 
     //find structure of submitblock for send to network with coinbasetxn
-    public static String createSubmitBlock(Block block) {
+    public static String createSubmitBlock(Block block) throws JSONException {
         String submitBlock = "";
         submitBlock += "{";
         submitBlock += "\"jsonrpc\":\"1.0\",";
