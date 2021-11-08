@@ -10,14 +10,14 @@ public class Mining {
     private static String target;
 
     //comprueba que crea un hash valido para minar
-    public static String checkHash(String hash, String difficulty) {
-        String hashToCheck = hash.substring(0, difficulty.length());
-        if (hashToCheck.equals(difficulty)) {
-            return hash;
-        } else {
-            return "";
-        }
-    }
+//    public static String checkHash(String hash, String difficulty) {
+//        String hashToCheck = hash.substring(0, difficulty.length());
+//        if (hashToCheck.equals(difficulty)) {
+//            return hash;
+//        } else {
+//            return "";
+//        }
+//    }
 
 
 

@@ -22,6 +22,22 @@ public class Util {
         return String.format("%02x", n);
     }
 
+//    //función que dado scriptPubKey, devuelve el tamaño en bytes de scriptPubKeySize
+//    public static String scriptPubKeySize(String scriptPubKey) {
+//        return String.format("%02x", scriptPubKey.length() / 2);
+//    }
+
+    //función que calcula VarInt de scriptPubKey
+    public static String scriptPubKeyVarInt(String scriptPubKey) {
+        int size = scriptPubKey.length() / 2;
+        if (size < 0xfd) {
+            return String.format("%02x", size);
+        } else if (size <= 0xffff) {
+            return String.format("%02x%02x", 0xfd, size);
+        } else {
+            return String.format("%02x%02x%02x", 0xfe, size, size);
+        }
+    }
 
 
 }

@@ -38,8 +38,8 @@ public class Transaction {
         outputCount = "01";
 
         value = "00000000"; //
-        scriptPubKeySize = "19"; //
-        scriptPubKey = "76a914" + Util.toHex(address.length()/2) + address + "88ac"; //
+        scriptPubKey = "76a914" + Util.toHex(address.length()/2) + address + "88ac"; //P2PKH
+        scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
 
