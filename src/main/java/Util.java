@@ -1,4 +1,9 @@
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
 
@@ -6,8 +11,6 @@ public class Util {
     public static String numtoHex(int n) {
         return String.format("%08x", n);
     }
-
-
 
     //función de nombre toHex, convierte un String de tipo ascii en un String de tipo hexadecimal
     public static String asciiToHex(String ascii) {
@@ -35,14 +38,22 @@ public class Util {
             return String.format("%02x%02x%02x", 0xfe, size, size);
         }
     }
-    //convertir en satoshi los fee
-    public static double feeToSatoshi(Object fee) {
-        if (fee instanceof String) {
-        return Double.parseDouble((String) fee) * 100000000;
-        }else{
-            return Double.parseDouble(fee.toString()) * 100000000;
-        }
+
+    //Convertir los satoshis en hexadecimal
+    public static String satoshisToHex(double satoshis) {
+        return String.format("%016x", (long) satoshis);
     }
+
+
+//    public static String onlyhex(String data) throws JSONException {
+//        JSONArray jsonTransactions = new JSONArray(data);
+//        List<String> list = new ArrayList<>();
+//        for (int i = 0; i < jsonTransactions.length(); i++) {
+//            //concatenar hashes
+//
+//        }
+//    }
+
 
 
 }

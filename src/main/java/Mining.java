@@ -10,7 +10,7 @@ public class Mining {
     public static String target;
     public static double fee_transactions;
     public static double fee_for_mine = 6.25;
-    public static double fee_total;
+    public static String fee_total;
 
     //comprueba que crea un hash valido para minar
 //    public static String checkHash(String hash, String difficulty) {
@@ -42,9 +42,10 @@ public class Mining {
         List<String> list = extractInfoFromJson(response);
         //Encontrar nonce
 
-        String nonce = Util.numtoHex(10); //esto hay que cambiarlo por una variable que se incremente en 1
+        String nonce = Util.numtoHex(10); //esto hay que cambiarlo por la llamada al método personalizado de minería
 
-        return createBlock(list.get(0), list.get(1), list.get(2), nonce);
+
+        return createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
     }
 
 
@@ -116,7 +117,8 @@ public class Mining {
             list.add(jsonObjectTransaction.getString("hash"));
             fee_transactions += Integer.parseInt(jsonObjectTransaction.getString("fee"));
         }
-        fee_total = fee_for_mine + Util.feeToSatoshi(fee_transactions);
+        fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
+
         return calculateMerkleRoot(list);
     }
 
@@ -151,11 +153,11 @@ public class Mining {
         blockMined += "\"bits\":\"" + block.getBits() + "\",";
         blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
 
-        String transactions = block.getTransactions();
-        transactions = transactions.replace("[", "");
-        transactions = transactions.replace("]", "");
+//        String transactions = block.getTransactions();
+//        transactions = transactions.replace("[", "");
+//        transactions = transactions.replace("]", "");
 
-        blockMined += "\"transactions\":[" + transactions + "]";
+        blockMined += "\"transactions\":[" + block.getTransactions() + "]";
 
         blockMined += "}";
         return blockMined;

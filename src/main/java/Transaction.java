@@ -43,7 +43,7 @@ public class Transaction {
     }
 
     //generar toString para transaction
-    public String toString(){
+    public String toJSON(){
         String output = "";
         output += "{";
         output += "\"Version\":\"" + version + "\",";
@@ -58,9 +58,28 @@ public class Transaction {
         output += "\"ScriptPubKeySize\":\"" + scriptPubKeySize + "\",";
         output += "\"ScriptPubKey\":\"" + scriptPubKey + "\",";
         output += "\"Locktime\":\"" + locktime + "\"";
-        output += "},";
+        output += "}";
         return output;
     }
+
+    //concatenar valores de transacción coinbase
+//    public String show() {
+//        String output = "";
+//        output += version;
+//        output += inputCount;
+//        output += txid;
+//        output += vout;
+//        output += scriptSigSize;
+//        output += scriptSig;
+//        output += sequence;
+//        output += outputCount;
+//        output += value;
+//        output += scriptPubKeySize;
+//        output += scriptPubKey;
+//        output += locktime;
+//        return output;
+//    }
+
 
 
     //function calculate ScriptSigSize

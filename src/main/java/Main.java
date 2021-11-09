@@ -77,14 +77,12 @@ public class Main {
         Transaction header = new Transaction();
         header.set(blockMined);
 
-        //Concatenate header and transactions
-        String transactions = header + blockMined.getTransactions();
-        //set transactions in block
-        blockMined.setTransactions(transactions);
+        //Add header to transactions of the block mined
+        blockMined.addHeader(header);
 
         //set merkleRoot complete
-        String str = header + blockMined.getMerkleRoot();
-        blockMined.setMerkleRoot(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
+//        String str = header + blockMined.getMerkleRoot();
+//        blockMined.setMerkleRoot(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
 
 
         //Prepare to send block mined to the network
@@ -94,11 +92,11 @@ public class Main {
 
 
         //json for to get submitblock for mining in bitcoin 0.22.0
-        //String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+        String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
 
 
-        //String response2 = sendBlockMined(blockMinedString);
-        //System.out.println(response2);
+        String response2 = sendRequest(request2);
+        System.out.println(response2);
 
 
 

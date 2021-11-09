@@ -14,23 +14,43 @@ public class Block {
     private String version;
     private String bits; //target
     public String transactions;
-    public double fee;
 
-    @Override
-    public String toString() {
-        return "Block{" +
-//                "creator='" + creator + '\'' +
-                ", previousHash='" + previousHash + '\'' +
-                ", data='" + data + '\'' +
-                ", nonce='" + nonce + '\'' +
-                ", time='" + timestamp + '\'' +
-                ", merkleRoot='" + merkleRoot + '\'' +
-                ", difficulty='" + difficulty + '\'' +
-                ", hash='" + hash + '\'' +
-                ", version='" + version + '\'' +
-                ", bits='" + bits + '\'' +
-                '}';
-    }
+    public String fee;
+
+
+//    //función toString de un bloque de bitcoin
+//    public String toString() {
+//        return "Block{" +
+//                "previousHash='" + previousHash + '\'' +
+//                ",data='" + data + '\'' +
+//                ",nonce='" + nonce + '\'' +
+//                ",time='" + timestamp + '\'' +
+//                ",merkleRoot='" + merkleRoot + '\'' +
+//                ",difficulty='" + difficulty + '\'' +
+//                ",hash='" + hash + '\'' +
+//                ",version='" + version + '\'' +
+//                ",bits='" + bits + '\'' +
+//                ",transactions='" + transactions + '\'' +
+//                '}';
+//    }
+//
+//
+//    //crear toString de block
+//    public String show() {
+//        String output = "";
+//        output += previousHash;
+//        output += data;
+//        output += nonce;
+//        output += timestamp;
+//        output += merkleRoot;
+//        output += difficulty;
+//        output += hash;
+//        output += version;
+//        output += bits;
+//        output += transactions;
+//        return output;
+//    }
+
 
     public String getBits() { return bits; }
 
@@ -44,6 +64,9 @@ public class Block {
 //        this.creator = creator;
 //    }
 
+    public void addHeader(Transaction header) {
+        this.transactions = header.toJSON() + this.transactions;
+    }
 
     public String getTransactions() { return transactions; }
 
@@ -113,7 +136,7 @@ public class Block {
         this.version = version;
     }
 
-    public double getFee() { return fee; }
+    public String getFee() { return fee; }
 
-    public void setFee(double fee) { this.fee = fee; }
+    public void setFee(String fee) { this.fee = fee; }
 }
