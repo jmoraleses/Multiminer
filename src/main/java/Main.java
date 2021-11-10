@@ -131,7 +131,8 @@ public class Main {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Conexión rechazada.");
+            //e.printStackTrace();
         }
         return response;
     }
