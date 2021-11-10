@@ -1,2 +1,2 @@
 # RPC-JSON-Miner
-jmoraleses
+Este proyecto presenta un modo fácil de minar bitcoins en Java, conectado directamente a la red.
