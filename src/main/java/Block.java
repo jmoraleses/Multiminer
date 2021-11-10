@@ -1,4 +1,10 @@
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 
 public class Block {
     //crear todos los atributos de un bloque de bitcoin
@@ -16,53 +22,67 @@ public class Block {
     public String transactions;
 
     public String fee;
+    public String blockHash;
 
 
 //    //función toString de un bloque de bitcoin
-//    public String toString() {
-//        return "Block{" +
-//                "previousHash='" + previousHash + '\'' +
-//                ",data='" + data + '\'' +
-//                ",nonce='" + nonce + '\'' +
-//                ",time='" + timestamp + '\'' +
-//                ",merkleRoot='" + merkleRoot + '\'' +
-//                ",difficulty='" + difficulty + '\'' +
-//                ",hash='" + hash + '\'' +
-//                ",version='" + version + '\'' +
-//                ",bits='" + bits + '\'' +
-//                ",transactions='" + transactions + '\'' +
-//                '}';
-//    }
+    public String toString() {
+        return "Block{" +
+                "previousHash='" + previousHash + '\'' +
+                ",nonce='" + nonce + '\'' +
+                ",time='" + timestamp + '\'' +
+                ",merkleRoot='" + merkleRoot + '\'' +
+                ",difficulty='" + difficulty + '\'' +
+                ",hash='" + hash + '\'' +
+                ",version='" + version + '\'' +
+                ",bits='" + bits + '\'' +
+                ",transactions='" + transactions + '\'' +
+                '}';
+    }
+
 //
-//
-//    //crear toString de block
+    //crear toString de block
 //    public String show() {
 //        String output = "";
-//        output += previousHash;
-//        output += data;
-//        output += nonce;
-//        output += timestamp;
-//        output += merkleRoot;
-//        output += difficulty;
-//        output += hash;
 //        output += version;
+//        output += previousHash;
+//        output += merkleRoot;
+//        output += timestamp;
 //        output += bits;
-//        output += transactions;
+//        output += nonce;
 //        return output;
 //    }
 
+    //crear toString de block
+    public String show() {
+        String output = "";
+        output += Util.reverseHash(version);
+        output += Util.reverseHash(previousHash);
+        output += Util.reverseHash(merkleRoot);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDtm = Instant.ofEpochSecond(Long.parseLong(timestamp)/1000)
+                .atZone(java.time.ZoneOffset.UTC)
+                .format(formatter);
+        Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
+        output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
+
+        output += Util.reverseHash(bits);
+        output += Util.reverseHash(nonce);
+        return output;
+    }
 
     public String getBits() { return bits; }
 
     public void setBits(String bits) { this.bits = bits; }
 
-//    public String getCreator() {
-//        return creator;
-//    }
-//
-//    public void setCreator(String creator) {
-//        this.creator = creator;
-//    }
+    public String getBlockHash() {
+        return blockHash;
+    }
+
+    public void setBlockHash(String blockHash) {
+        this.blockHash = blockHash;
+    }
 
     public void addHeader(Transaction header) {
         this.transactions = header.toJSON() + this.transactions;

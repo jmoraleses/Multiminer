@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Transaction {
 
-    private String address = "bc1qc7f3azswx3ezyfgsqxtsp0447yalhz98eq7ygf";
+    private String address = "bcrt1qxtqrmhspyfjhn484r3h7yuukwhau2v7dtyparz";
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -63,22 +63,22 @@ public class Transaction {
     }
 
     //concatenar valores de transacción coinbase
-//    public String show() {
-//        String output = "";
-//        output += version;
-//        output += inputCount;
-//        output += txid;
-//        output += vout;
-//        output += scriptSigSize;
-//        output += scriptSig;
-//        output += sequence;
-//        output += outputCount;
-//        output += value;
-//        output += scriptPubKeySize;
-//        output += scriptPubKey;
-//        output += locktime;
-//        return output;
-//    }
+    public String show() {
+        String output = "";
+        output += version;
+        output += inputCount;
+        output += txid;
+        output += vout;
+        output += scriptSigSize;
+        output += scriptSig;
+        output += sequence;
+        output += outputCount;
+        output += value;
+        output += scriptPubKeySize;
+        output += scriptPubKey;
+        output += locktime;
+        return output;
+    }
 
 
 

@@ -2,6 +2,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,15 @@ public class Util {
     //función de nombre toHex que convierte un número en 8 caracteres hexadecimales
     public static String numtoHex(int n) {
         return String.format("%08x", n);
+    }
+
+    //función que dado un string convierte el string a un número de 8 caracteres en hexadecimal
+    public static String strtoHex(String s) {
+        return String.format("%08x", s.hashCode());
+    }
+
+    public static String timestampToHex(Instant ts) {
+        return String.format("%08x", ts.getEpochSecond());
     }
 
     //función de nombre toHex, convierte un String de tipo ascii en un String de tipo hexadecimal
@@ -44,15 +55,21 @@ public class Util {
         return String.format("%016x", (long) satoshis);
     }
 
+    //dar la vuelta al hash de dos en dos
+    public static String reverseHash(String hash) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = hash.length() - 2; i >= 0; i -= 2) {
+            sb.append(hash, i, i + 2);
+        }
+        return sb.toString();
+    }
 
-//    public static String onlyhex(String data) throws JSONException {
-//        JSONArray jsonTransactions = new JSONArray(data);
-//        List<String> list = new ArrayList<>();
-//        for (int i = 0; i < jsonTransactions.length(); i++) {
-//            //concatenar hashes
-//
-//        }
-//    }
+    //función hacer dos sha256 para obtener el block hash
+    public static String blockHash(String input) {
+        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
+    }
+
 
 
 

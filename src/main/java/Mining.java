@@ -94,6 +94,7 @@ public class Mining {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
+        block.setBlockHash(Util.blockHash(block.show()));
         return block;
     }
 
@@ -118,10 +119,9 @@ public class Mining {
             fee_transactions += Integer.parseInt(jsonObjectTransaction.getString("fee"));
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
-
-        return calculateMerkleRoot(list);
+        if (list.size() == 0) return "";
+        else return calculateMerkleRoot(list);
     }
-
 
     //calcute merkle root from a list of transactions
     public static String calculateMerkleRoot(List<String> data){
@@ -152,10 +152,6 @@ public class Mining {
         blockMined += "\"time\":\"" + block.getTimestamp() + "\",";
         blockMined += "\"bits\":\"" + block.getBits() + "\",";
         blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
-
-//        String transactions = block.getTransactions();
-//        transactions = transactions.replace("[", "");
-//        transactions = transactions.replace("]", "");
 
         blockMined += "\"transactions\":[" + block.getTransactions() + "]";
 

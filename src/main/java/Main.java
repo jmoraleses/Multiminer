@@ -3,6 +3,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.*;
+import java.util.Base64;
 import java.util.List;
 
 public class Main {
@@ -72,13 +73,20 @@ public class Main {
 
         //Create new block mined
         Block blockMined = Mining.operation(response);
+        System.out.println(blockMined);
+        System.out.println(blockMined.show());
+        System.out.println(blockMined.getBlockHash());
+
+
+
+
 
         //Create transaction
         Transaction header = new Transaction();
         header.set(blockMined);
 
         //Add header to transactions of the block mined
-        blockMined.addHeader(header);
+        //blockMined.addHeader(header);
 
         //set merkleRoot complete
 //        String str = header + blockMined.getMerkleRoot();
@@ -86,7 +94,8 @@ public class Main {
 
 
         //Prepare to send block mined to the network
-        String blockMinedString = Mining.blockMinedtoJSON(blockMined);
+//        String blockMinedString = Mining.blockMinedtoJSON(blockMined);
+        String blockMinedString = blockMined.show() + header.show();
         System.out.println(blockMinedString);
 
 
@@ -102,6 +111,7 @@ public class Main {
 
     }
 
+
     /**
      * Function for send request to bitcoin server
      *
@@ -109,78 +119,114 @@ public class Main {
      * @return
      */
     public static String sendRequest(String requestBody) {
-        Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("prueba", "prueba".toCharArray());
-            }
-        });
-        String uri = "http://127.0.0.1:9997";
+//        Authenticator.setDefault(new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication("prueba", "prueba".toCharArray());
+//            }
+//        });
+        String uri = "http://127.0.0.1:18332";
         String contentType = "application/json";
-        HttpURLConnection connection = null;
-
-        try {
-            URL url = new URL(uri);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", contentType);
-            connection.setRequestProperty("Content-Length", String.valueOf(requestBody.length()));
-            connection.setUseCaches(false);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-            connection.connect();
-            DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-            writer.writeBytes(requestBody);
-            writer.flush();
-            writer.close();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-            return response.toString();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    //send block mined to the network with submitblock
-    public static String sendBlockMined(String blockMined) {
-
+        //user and password for bitcoin server
+        String user = "prueba";
+        String password = "prueba";
         String response = "";
         try {
-            URL url = new URL("http://localhost:9997/");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(blockMined);
-            wr.flush();
-            wr.close();
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response1 = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response1.append(inputLine);
+            URL url = new URL(uri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", contentType);
+            connection.setRequestProperty("Accept", contentType);
+            connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes()));
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(requestBody);
+            writer.flush();
+            writer.close();
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response += inputLine;
+                }
+                in.close();
+            } else {
+                System.out.println("Error: " + responseCode);
             }
-            in.close();
-            response = response1.toString();
-            System.out.println(response);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return response;
     }
+
+//        HttpURLConnection connection = null;
+
+//        try {
+//            URL url = new URL(uri);
+//            connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestMethod("POST");
+//            connection.setRequestProperty("Content-Type", contentType);
+//            connection.setRequestProperty("Content-Length", String.valueOf(requestBody.length()));
+//            connection.setUseCaches(false);
+//            connection.setDoInput(true);
+//            connection.setDoOutput(true);
+//            connection.setConnectTimeout(5000);
+//            connection.setReadTimeout(5000);
+//            connection.connect();
+//            DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
+//            writer.writeBytes(requestBody);
+//            writer.flush();
+//            writer.close();
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            StringBuilder response = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                response.append(line);
+//            }
+//            reader.close();
+//            return response.toString();
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+
+
+//    //send block mined to the network with submitblock
+//    public static String sendBlockMined(String blockMined) {
+//
+//        String response = "";
+//        try {
+//            URL url = new URL("http://localhost:9997/");
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.setRequestMethod("POST");
+//            con.setRequestProperty("Content-Type", "application/json");
+//            con.setDoOutput(true);
+//            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+//            wr.writeBytes(blockMined);
+//            wr.flush();
+//            wr.close();
+//            int responseCode = con.getResponseCode();
+//            System.out.println("\nSending 'POST' request to URL : " + url);
+//            System.out.println("Response Code : " + responseCode);
+//            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//            String inputLine;
+//            StringBuffer response1 = new StringBuffer();
+//            while ((inputLine = in.readLine()) != null) {
+//                response1.append(inputLine);
+//            }
+//            in.close();
+//            response = response1.toString();
+//            System.out.println(response);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return response;
+//    }
 
 }
 
