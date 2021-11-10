@@ -1,15 +1,10 @@
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 
 public class Block {
     //crear todos los atributos de un bloque de bitcoin
 
-//    private String creator = "bc1qc7f3azswx3ezyfgsqxtsp0447yalhz98eq7ygf";
     private String previousHash;
     private String data;
     private String nonce;
@@ -22,10 +17,10 @@ public class Block {
     public String transactions;
 
     public String fee;
-    public String blockHash;
+    public String blockHash; //hash válido?
 
 
-//    //función toString de un bloque de bitcoin
+    //función toString de un bloque de bitcoin
     public String toString() {
         return "Block{" +
                 "previousHash='" + previousHash + '\'' +
@@ -40,26 +35,14 @@ public class Block {
                 '}';
     }
 
-//
-    //crear toString de block
-//    public String show() {
-//        String output = "";
-//        output += version;
-//        output += previousHash;
-//        output += merkleRoot;
-//        output += timestamp;
-//        output += bits;
-//        output += nonce;
-//        return output;
-//    }
 
-    //crear toString de block
     public String show() {
         String output = "";
         output += Util.reverseHash(version);
         output += Util.reverseHash(previousHash);
         output += Util.reverseHash(merkleRoot);
 
+        timestamp = "1636560593731";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(timestamp)/1000)
                 .atZone(java.time.ZoneOffset.UTC)
@@ -68,7 +51,7 @@ public class Block {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(bits);
-        output += Util.reverseHash(nonce);
+        //output += Util.reverseHash(nonce);
         return output;
     }
 

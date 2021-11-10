@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Transaction {
 
     private String address = "bcrt1qxtqrmhspyfjhn484r3h7yuukwhau2v7dtyparz";
@@ -82,11 +80,9 @@ public class Transaction {
 
 
 
-    //function calculate ScriptSigSize
     public String calculateScriptSigSize(String scriptSig){
         return Util.toHex(scriptSig.length()/2);
     }
-
 
     public String getAddress() {
         return address;

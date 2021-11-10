@@ -2,8 +2,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Mining {
 
@@ -11,17 +13,6 @@ public class Mining {
     public static double fee_transactions;
     public static double fee_for_mine = 6.25;
     public static String fee_total;
-
-    //comprueba que crea un hash valido para minar
-//    public static String checkHash(String hash, String difficulty) {
-//        String hashToCheck = hash.substring(0, difficulty.length());
-//        if (hashToCheck.equals(difficulty)) {
-//            return hash;
-//        } else {
-//            return "";
-//        }
-//    }
-
 
 
     //function for found the difficulty of the hash
@@ -37,17 +28,20 @@ public class Mining {
         return difficulty;
     }
 
-
-    public static Block operation(String response) throws JSONException {
+    public static Block operation(String response) throws JSONException, IOException, InterruptedException {
         List<String> list = extractInfoFromJson(response);
-        //Encontrar nonce
+        //Creamos un bloque con nounce y blockhash erróneos
+        String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
+        Block block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
+        System.out.println(block);
+        //buscamos el verdadero nounce
+        //Hashcat.launch("", "", "", "", 1);
+        //asignamos el retorno al bloque
 
-        String nonce = Util.numtoHex(10); //esto hay que cambiarlo por la llamada al método personalizado de minería
-
-
-        return createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
+        block.setNonce(nonce);
+        block.setBlockHash(Util.blockHash(block.show()));
+        return block;
     }
-
 
     //Extraer de un json en formato string las siguientes variables String previousHash, String data, String nonce
     public static List<String> extractInfoFromJson(String response) {
@@ -55,49 +49,46 @@ public class Mining {
         String bits = "";
         String transactions = "";
         try {
-            JSONObject jsonObject = new JSONObject(response);
+            if (!Objects.equals(response, "")) {
+                JSONObject jsonObject = new JSONObject(response);
 
-            //extraer el datos de JSONObject response
-            String result = jsonObject.getString("result");
-            JSONObject jsonResult = new JSONObject(result);
+                String result = jsonObject.getString("result");
+                JSONObject jsonResult = new JSONObject(result);
 
-            target = jsonResult.getString("target");
-            bits = jsonResult.getString("bits");
+                target = jsonResult.getString("target");
+                bits = jsonResult.getString("bits");
 
-            previousHash = jsonResult.getString("previousblockhash");
-            transactions = jsonResult.getString("transactions");
+                previousHash = jsonResult.getString("previousblockhash");
+                transactions = jsonResult.getString("transactions");
 
-            List<String> list = new ArrayList<>();
-            list.add(previousHash);
-            list.add(transactions);
-            list.add(bits);
-            return list;
+                List<String> list = new ArrayList<>();
+                list.add(previousHash);
+                list.add(transactions);
+                list.add(bits);
+                return list;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-
     //crear un bloque de minado correcto según el BIP22
     public static Block createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException {
         Block block = new Block();
         block.setPreviousHash(previousHash);
-        //block.setData(data.toString());
         block.setNonce(nonce);
         block.setTimestamp(String.valueOf(System.currentTimeMillis()));
         block.setVersion(Util.numtoHex(1));
         block.setBits(bits);
         block.setDifficulty(getDifficulty(previousHash));
         block.setHash(mineBlock(block, nonce));
-        //de momento concatenamos todas las transacciones
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
         block.setBlockHash(Util.blockHash(block.show()));
         return block;
     }
-
 
     //crear la función mineBlock(block, nonce)
     public static String mineBlock(Block block, String nonce) {
@@ -106,7 +97,6 @@ public class Mining {
         String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(theblock);
         return hash;
     }
-
 
     //calcular el merkleroot a partir  de una array de transacciones
     public static String extractMerkleRoot(String transactions) throws JSONException {
@@ -141,46 +131,34 @@ public class Mining {
 
 
     //find structure of block mined for send to network with the address of the creator
-    //header = reversebytes(field(version, 4)) + reversebytes(prevblock) + reversebytes(merkleroot) + reversebytes(field(time, 4)) + reversebytes(bits)
-    public static String blockMinedtoJSON(Block block) throws JSONException {
-        String blockMined = "";
-        blockMined += "{";
-        blockMined += "\"version\":\"" + block.getVersion() + "\",";
-        blockMined += "\"previousblockhash\":\"" + block.getPreviousHash() + "\",";
-
-        blockMined += "\"merkleroot\":\"" + block.getMerkleRoot() + "\",";
-        blockMined += "\"time\":\"" + block.getTimestamp() + "\",";
-        blockMined += "\"bits\":\"" + block.getBits() + "\",";
-        blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
-
-        blockMined += "\"transactions\":[" + block.getTransactions() + "]";
-
-        blockMined += "}";
-        return blockMined;
-    }
-
-    //find structure of submitblock for send to network with coinbasetxn
-    public static String createSubmitBlock(Block block) throws JSONException {
-        String submitBlock = "";
-        submitBlock += "{";
-        submitBlock += "\"jsonrpc\":\"1.0\",";
-        submitBlock += "\"id\":\"curltext\",";
-        submitBlock += "\"method\":\"submitblock\",";
-        submitBlock += "\"params\":[\"" + blockMinedtoJSON(block) + "\"]";
-        submitBlock += "}";
-        return submitBlock;
-    }
-
-    //submitblock
-
-
-
-
-
-
-
-
-
+//    public static String blockMinedtoJSON(Block block) throws JSONException {
+//        String blockMined = "";
+//        blockMined += "{";
+//        blockMined += "\"version\":\"" + block.getVersion() + "\",";
+//        blockMined += "\"previousblockhash\":\"" + block.getPreviousHash() + "\",";
+//
+//        blockMined += "\"merkleroot\":\"" + block.getMerkleRoot() + "\",";
+//        blockMined += "\"time\":\"" + block.getTimestamp() + "\",";
+//        blockMined += "\"bits\":\"" + block.getBits() + "\",";
+//        blockMined += "\"nonce\":\"" + block.getNonce() + "\",";
+//
+//        blockMined += "\"transactions\":[" + block.getTransactions() + "]";
+//
+//        blockMined += "}";
+//        return blockMined;
+//    }
+//
+//    //find structure of submitblock for send to network with coinbasetxn
+//    public static String createSubmitBlock(Block block) throws JSONException {
+//        String submitBlock = "";
+//        submitBlock += "{";
+//        submitBlock += "\"jsonrpc\":\"1.0\",";
+//        submitBlock += "\"id\":\"curltext\",";
+//        submitBlock += "\"method\":\"submitblock\",";
+//        submitBlock += "\"params\":[\"" + blockMinedtoJSON(block) + "\"]";
+//        submitBlock += "}";
+//        return submitBlock;
+//    }
 
 
 
