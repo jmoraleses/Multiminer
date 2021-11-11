@@ -7,6 +7,9 @@ import java.util.Base64;
 
 public class Main {
 
+    public static int total_process = 10;
+    public static int total_process_parallel = 2;
+
     /**
      * @param args the command line arguments
      */
@@ -62,11 +65,12 @@ public class Main {
 
         if (!response.equals("")) {
             //Create new block mined
-            Block blockMined = Mining.operation(response);
+
+            Block blockMined = Mining.operation(response, total_process, total_process_parallel);
             System.out.println(blockMined);
             System.out.println(blockMined.show());
 
-            //Create transaction
+            //Create header for transactions
             Transaction header = new Transaction();
             header.set(blockMined);
 

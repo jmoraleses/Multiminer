@@ -28,16 +28,14 @@ public class Mining {
         return difficulty;
     }
 
-    public static Block operation(String response) throws JSONException, IOException, InterruptedException {
+    public static Block operation(String response, int total_process, int total_process_parallel) throws JSONException, IOException, InterruptedException {
         List<String> list = extractInfoFromJson(response);
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
         Block block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
         System.out.println(block);
         //buscamos el verdadero nounce
-        //Hashcat.launch("", "", "", "", 1);
-        //asignamos el retorno al bloque
-
+        nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel); //selected in Main
         block.setNonce(nonce);
         block.setBlockHash(Util.blockHash(block.show()));
         return block;
