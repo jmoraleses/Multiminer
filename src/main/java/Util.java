@@ -64,7 +64,14 @@ public class Util {
         return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
     }
 
-
+    //contar cantidad de ceros delante de hash
+    public static int countLeadingZeros(String hash) {
+        int i = 0;
+        while (hash.charAt(i) == '0') {
+            i++;
+        }
+        return i;
+    }
 
 
 }

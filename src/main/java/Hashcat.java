@@ -11,10 +11,8 @@ import java.util.Map;
 
 public class Hashcat {
 
-    private static Map<Thread, Runnable> map = new HashMap<>();
-
-    //find the number of process that system is able to execute
-    private static int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
+    private static final Map<Thread, Runnable> map = new HashMap<>();
+    private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors(); //find the number of process that system is able to execute
 
 
     private static void execute(String[] args) throws IOException, InterruptedException {
@@ -88,7 +86,7 @@ public class Hashcat {
         //create a array of string to store all the hashcat commands
         String cmd = "";
         for (int x = 2; x <= total_process; x += 2) { //Change the number of process that you want to execute
-            for (int i = 1; i < total_process_parallel; i++) { //Change the number of process that you want to execute
+            for (int i = x-2; i < x + total_process_parallel; i++) { //Change the number of process that you want to execute
 
                 while (!new File(route_hashcat + "crackme/" + output_file).exists()) {
 
@@ -98,8 +96,8 @@ public class Hashcat {
                     String[] args = cmd.split(" ");
 
                     //Ejecutar el comando hasta que se detenga el proceso
-//                    process(args);
-                    ejecutar(args);
+                    process(args);
+                    //ejecutar(args);
 
                     //si existe le archivo output_file
                     if (new File(route_hashcat + "crackme/" + output_file).exists()) {
@@ -111,7 +109,7 @@ public class Hashcat {
                     } else {
                         System.out.println("no existe el archivo output_file");
                         //esperar un minuto
-                        Thread.sleep(60000);
+                        Thread.sleep(5000);
                     }
                 }
 

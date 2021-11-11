@@ -34,9 +34,16 @@ public class Mining {
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
         Block block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
         System.out.println(block);
+
         //buscamos el verdadero nounce
-        nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel); //selected in Main
-        block.setNonce(nonce);
+        //nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel);
+
+        int nonceX = Searching.search(block, block.getDifficulty());
+        if (nonceX == Searching.nonceMAX) {
+            System.out.println("No se encontró un nounce válido");
+            nonceX = 0;
+        }
+        block.setNonce(String.valueOf(nonceX));
         block.setBlockHash(Util.blockHash(block.show()));
         return block;
     }
