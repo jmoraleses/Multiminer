@@ -37,13 +37,9 @@ public class Mining {
 
         //buscamos el verdadero nounce
         //nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel);
+        nonce = Searching.search(block, block.getDifficulty());
 
-        int nonceX = Searching.search(block, block.getDifficulty());
-        if (nonceX == Searching.nonceMAX) {
-            System.out.println("No se encontró un nounce válido");
-            nonceX = 0;
-        }
-        block.setNonce(String.valueOf(nonceX));
+        block.setNonce(nonce);
         block.setBlockHash(Util.blockHash(block.show()));
         return block;
     }

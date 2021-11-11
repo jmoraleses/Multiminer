@@ -9,8 +9,8 @@ public class Util {
     }
 
     //función que dado un string convierte el string a un número de 8 caracteres en hexadecimal
-    public static String strtoHex(String s) {
-        return String.format("%08x", s.hashCode());
+    public static String intToHex(int s) {
+        return String.format("%02x", s);
     }
 
     public static String timestampToHex(Instant ts) {

@@ -42,7 +42,7 @@ public class Block {
         output += Util.reverseHash(previousHash);
         output += Util.reverseHash(merkleRoot);
 
-        timestamp = "1636560593731";
+        //timestamp = "1636560593731";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(timestamp)/1000)
                 .atZone(java.time.ZoneOffset.UTC)
