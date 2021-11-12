@@ -18,7 +18,7 @@ public class Searching {
     public static void searchNonce(Block block, String target, int ini, int fin) {
         //String nonce = "";
         //System.out.println("Buscando entre "+ini+" y "+fin);
-        int num = 0;
+        int num = ini;
         String blockhash = Util.blockHash(block.show() + String.valueOf(0));
 
         while (!blockhash.startsWith(target) && num < fin) {
