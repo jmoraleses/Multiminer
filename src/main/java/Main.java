@@ -61,14 +61,14 @@ public class Main {
 
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
-        System.out.println(response);
+        //System.out.println(response);
 
         if (!response.equals("")) {
             //Create new block mined
 
             Block blockMined = Mining.operation(response, total_process, total_process_parallel);
-            System.out.println(blockMined);
-            System.out.println(blockMined.show());
+            //System.out.println(blockMined);
+            //System.out.println(blockMined.show());
 
             //Create header for transactions
             Transaction header = new Transaction();
@@ -84,7 +84,7 @@ public class Main {
             //Prepare to send block mined to the network
             //String blockMinedString = Mining.blockMinedtoJSON(blockMined);
             String blockMinedString = header.show() + blockMined.show();
-            System.out.println(blockMinedString);
+            //System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";

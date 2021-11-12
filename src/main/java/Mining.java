@@ -33,13 +33,13 @@ public class Mining {
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
         Block block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
-        System.out.println(block);
+        //System.out.println(block);
 
         //buscamos el verdadero nounce
         //nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel);
-        Searching.parallelProcess(block, block.getDifficulty());
+        Searching.searchNonce(block, block.getDifficulty());
 
-        block.setNonce(Util.numtoHex(Searching.nonce));
+        block.setNonce(Searching.nonce);
         block.setBlockHash(Util.blockHash(block.show()));
 
         System.out.println("Nonce: "+block.getNonce()); //
