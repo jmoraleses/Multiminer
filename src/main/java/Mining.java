@@ -37,10 +37,13 @@ public class Mining {
 
         //buscamos el verdadero nounce
         //nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel);
-        nonce = Searching.searchNonce(block, block.getDifficulty());
+        Searching.parallelProcess(block, block.getDifficulty());
 
-        block.setNonce(nonce);
+        block.setNonce(Util.numtoHex(Searching.nonce));
         block.setBlockHash(Util.blockHash(block.show()));
+
+        System.out.println("Nonce: "+block.getNonce()); //
+        System.out.println("Blockhash: "+block.getBlockHash()); //
         return block;
     }
 
