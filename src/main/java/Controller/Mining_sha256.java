@@ -34,7 +34,7 @@ public class Mining_sha256 {
         Searching.searchNonce(block, block.getDifficulty());
 
         block.setNonce(Searching.nonce);
-        block.setBlockHash(Util.blockHash(SHA256.showBlock(block)));
+        block.setBlockHash(SHA256.blockHash(SHA256.showBlock(block)));
 
         System.out.println("Nonce: "+block.getNonce()); //
         System.out.println("Blockhash: "+block.getBlockHash()); //
@@ -84,7 +84,7 @@ public class Mining_sha256 {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        block.setBlockHash(Util.blockHash(SHA256.showBlock(block)));
+        block.setBlockHash(SHA256.blockHash(SHA256.showBlock(block)));
         return block;
     }
 

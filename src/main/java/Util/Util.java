@@ -60,11 +60,7 @@ public class Util {
         return sb.toString();
     }
 
-    //función hacer dos sha256 para obtener el block hash
-    public static String blockHash(String input) {
-        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
-    }
+
 
     //contar cantidad de ceros delante de hash
     public static int countLeadingZeros(String hash) {

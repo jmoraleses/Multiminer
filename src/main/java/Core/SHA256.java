@@ -15,7 +15,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class SHA256 {
 
-
+    //función hacer dos sha256 para obtener el block hash
+    public static String blockHash(String input) {
+        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
+    }
 
 
     //función toString de un bloque de bitcoin

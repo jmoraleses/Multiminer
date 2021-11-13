@@ -14,6 +14,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class Scrypt {
 
+
+
+
     //función que encripta en Core.Scrypt el contenido de un string
     public static String scrypt(String input) throws IOException {
         byte[] salt = new byte[16];

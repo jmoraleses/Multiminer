@@ -20,7 +20,7 @@ public class Searching {
     public static void searchNonce(Block_sha256 block, String target) {
         System.out.println("Buscando entre "+ini+" y "+fin);
         int num = ini;
-        String blockhash = Util.blockHash(SHA256.showBlock(block) + String.valueOf(0));
+        String blockhash = SHA256.blockHash(SHA256.showBlock(block) + String.valueOf(0));
 
         while (!blockhash.startsWith(target) && num < fin) {
             //Crear números aleatorios sin posibilidad de repetirse
@@ -28,7 +28,7 @@ public class Searching {
 
             //calcular blockhash
             num++;
-            blockhash = Util.blockHash(SHA256.showBlock(block) + Util.numtoHex(num));
+            blockhash = SHA256.blockHash(SHA256.showBlock(block) + Util.numtoHex(num));
         }
         if (blockhash.startsWith(target)){
             nonce = Util.numtoHex(num);

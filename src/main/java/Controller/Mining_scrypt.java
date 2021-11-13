@@ -33,7 +33,7 @@ public class Mining_scrypt {
         Scrypt.nonce(block, block.getDifficulty());
 
         block.setNonce(Searching.nonce);
-        block.setBlockHash(Util.blockHash(Scrypt.showBlock(block)));
+        block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
 
         System.out.println("Nonce: "+block.getNonce()); //
         System.out.println("Blockhash: "+block.getBlockHash()); //
@@ -71,7 +71,7 @@ public class Mining_scrypt {
     }
 
     //crear un bloque de minado correcto según el BIP22
-    public static Block_scrypt createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException {
+    public static Block_scrypt createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException, IOException {
         Block_scrypt block = new Block_scrypt();
         block.setPreviousHash(previousHash);
         block.setNonce(nonce);
@@ -83,7 +83,7 @@ public class Mining_scrypt {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        block.setBlockHash(Util.blockHash(Scrypt.showBlock(block)));
+        block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
         return block;
     }
 
