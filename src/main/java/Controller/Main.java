@@ -11,6 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
+/**
+ * (SHA256) Bitcoin
+ */
 public class Main {
 
     public static int total_process = 10;

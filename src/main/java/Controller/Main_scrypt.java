@@ -12,8 +12,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
+/**
+ * (Scrypt) Dogecoin, Litecoin
+ */
 public class Main_scrypt {
-
 
     /**
      * @param args the command line arguments
@@ -46,7 +48,7 @@ public class Main_scrypt {
             String blockMinedString = Scrypt.showTransaction(header) + Scrypt.showBlock(blockMined);
             //System.out.println(blockMinedString);
 
-            //json for to get submitblock for mining in bitcoin 0.22.0
+            //json for to get submitblock for mining in Scrypt
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
 
             String response2 = sendRequest(request2);
