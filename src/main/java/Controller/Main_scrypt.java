@@ -1,6 +1,6 @@
 package Controller;
 
-
+import Util.Util;
 import Core.Scrypt;
 import Model.Block_scrypt;
 import Model.Transaction_scrypt;
@@ -45,7 +45,7 @@ public class Main_scrypt {
             header.set(blockMined);
 
             //Prepare to send block mined to the network
-            String blockMinedString = Scrypt.showTransaction(header) + Scrypt.showBlock(blockMined);
+            String blockMinedString = Scrypt.showBlock(blockMined) + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  Scrypt.showTransaction(header) +  blockMined.getTransactions();
             System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in Scrypt

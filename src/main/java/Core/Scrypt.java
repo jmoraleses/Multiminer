@@ -74,6 +74,8 @@ public class Scrypt {
                 '}';
     }
 
+    //función blockhash en dogecoin
+
 
     public static String showBlock(Block_scrypt block) {
         String output = "";
@@ -90,7 +92,7 @@ public class Scrypt {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(block.getBits());
-        //output += Util.Util.reverseHash(nonce);
+        output += Util.reverseHash(block.getNonce()); ////
         return output;
     }
 
@@ -115,13 +117,24 @@ public class Scrypt {
         return output;
     }
 
+    //función que encripta la altura del bloque en dogecoin
+    public static String encodeHeight(int height) {
+        String output = "";
+        output += Integer.toHexString(height);
+        return output;
+    }
+
+
     //concatenar valores de transacción coinbase
     public static String showTransaction(Transaction_scrypt transaction) {
+        String heightHexLength = "03";
         String output = "";
         output += transaction.getVersion();
         output += transaction.getInputCount();
         output += transaction.getTxid();
         output += transaction.getVout();
+//        output += heightHexLength; //
+//        output += transaction.getHeight(); //
         output += transaction.getScriptSigSize();
         output += transaction.getScriptSig();
         output += transaction.getSequence();

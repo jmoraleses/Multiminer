@@ -26,7 +26,7 @@ public class Mining_scrypt {
         List<String> list = extractInfoFromJson(response);
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
-        Block_scrypt block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
+        Block_scrypt block = createBlock(list.get(0), list.get(1), list.get(2), list.get(3), nonce); //String previousHash, String transactions, String bits, String nonce
         //System.out.println(block);
 
         //buscamos el verdadero nounce
@@ -35,16 +35,19 @@ public class Mining_scrypt {
         block.setNonce(nonce);
         block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
 
-        System.out.println("Nonce: "+block.getNonce()); //
-        System.out.println("Blockhash: "+block.getBlockHash()); //
+        //System.out.println("Nonce: "+block.getNonce()); //
+        //System.out.println("Blockhash: "+block.getBlockHash()); //
         return block;
     }
+
+
 
     //Extraer de un json en formato string las siguientes variables String previousHash, String data, String nonce
     public static List<String> extractInfoFromJson(String response) {
         String previousHash = "";
         String bits = "";
         String transactions = "";
+        String jsonHeight = "";
         try {
             if (!Objects.equals(response, "")) {
                 JSONObject jsonObject = new JSONObject(response);
@@ -58,10 +61,14 @@ public class Mining_scrypt {
                 previousHash = jsonResult.getString("previousblockhash");
                 transactions = jsonResult.getString("transactions");
 
+                //extraer altura del bloque
+                jsonHeight = jsonResult.getString("height");
+
                 List<String> list = new ArrayList<>();
                 list.add(previousHash);
                 list.add(transactions);
                 list.add(bits);
+                list.add(jsonHeight);
                 return list;
             }
         } catch (JSONException e) {
@@ -71,7 +78,7 @@ public class Mining_scrypt {
     }
 
     //crear un bloque de minado correcto según el BIP22
-    public static Block_scrypt createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException, IOException {
+    public static Block_scrypt createBlock(String previousHash, String transactions, String bits, String height, String nonce) throws JSONException, IOException {
         Block_scrypt block = new Block_scrypt();
         block.setPreviousHash(previousHash);
         block.setNonce(nonce);
@@ -84,6 +91,7 @@ public class Mining_scrypt {
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
         block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
+        block.setBlockHash(height);
         return block;
     }
 

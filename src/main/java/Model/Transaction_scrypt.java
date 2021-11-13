@@ -25,6 +25,8 @@ public class Transaction_scrypt {
     private String scriptPubKey;
 
     private String locktime;
+    private String height;
+    private String heightLength;
 
 
     public void set(Block_scrypt block){
@@ -32,7 +34,9 @@ public class Transaction_scrypt {
         inputCount = "01";
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
-        scriptSig = Util.asciiToHex(phrase);
+        height = block.getHeight(); //
+        heightLength = "03"; //
+        scriptSig = heightLength + height + Util.asciiToHex(phrase); //
         scriptSigSize = calculateScriptSigSize(scriptSig);
         sequence = "ffffffff";
 
@@ -42,6 +46,7 @@ public class Transaction_scrypt {
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
+
     }
 
 
@@ -151,5 +156,13 @@ public class Transaction_scrypt {
 
     public void setLocktime(String locktime) {
         this.locktime = locktime;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }

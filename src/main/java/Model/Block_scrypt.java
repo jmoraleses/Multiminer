@@ -14,6 +14,7 @@ public class Block_scrypt {
     private String version;
     private String bits; //target
     public String transactions;
+    public String height;
 
     public String fee;
     public String blockHash; //hash válido?
@@ -107,4 +108,11 @@ public class Block_scrypt {
 
     public void setFee(String fee) { this.fee = fee; }
 
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
 }
