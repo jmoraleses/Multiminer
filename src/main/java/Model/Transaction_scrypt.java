@@ -4,7 +4,7 @@ import Util.Util;
 
 public class Transaction_scrypt {
 
-    private String address = "niwMwv2fWek3HV5n4SLzEySZhxmUTAWgEs";
+    private String address = "DUQYnrZHiCkhuvpkMm9YhbvEcvP1pQ7CZT"; //Dogecoin
     private String phrase = "The Tree of Life";
     private String version;
 

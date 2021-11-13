@@ -27,25 +27,29 @@ public class Main_scrypt {
         System.out.println("##############################");
 
         //json for to get template for mining in bitcoin 0.22.0
-        String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
+//        String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
+        String request = "{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", \"method\": \"getblocktemplate\", \"params\": [] }";
 
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
-        //System.out.println(response);
+        System.out.println(response);
 
         if (!response.equals("")) {
             //Create new block mined
 
-            Block_scrypt blockMined = Mining_scrypt.operation(response);
-            //System.out.println(blockMined);
+            Block_scrypt blockMined = null;
+            while (blockMined == null) {
+                blockMined = Mining_scrypt.operation(response);
+                System.out.println(blockMined);
+            }
             //System.out.println(blockMined.show());
 
             //Create header for transactions
-            Transaction_scrypt header = new Transaction_scrypt();
-            header.set(blockMined);
+            Transaction_scrypt header_coinbase = new Transaction_scrypt();
+            header_coinbase.set(blockMined);
 
             //Prepare to send block mined to the network
-            String blockMinedString = Scrypt.showBlock(blockMined) + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  Scrypt.showTransaction(header) +  blockMined.getTransactions();
+            String blockMinedString = Scrypt.showBlock(blockMined) + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  Scrypt.showTransaction(header_coinbase) ; //+  blockMined.getTransactions();
             System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in Scrypt

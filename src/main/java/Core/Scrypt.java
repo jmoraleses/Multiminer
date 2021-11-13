@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Scrypt {
 
-
+    public static String  noncerange;
 
 
     //función que encripta en Core.Scrypt el contenido de un string
@@ -26,15 +26,18 @@ public class Scrypt {
     }
 
     //Función que calcula el nonce del bloque de dogecoin, dados el input y la dificultad con scrypt. Pasando como parámtetros el bloque y la dificultad.
-    public static String nonce(Block_scrypt block, String difficulty) throws IOException {
-        int nonce = 0;
-        while (true) {
+    public static String nonce(Block_scrypt block, String target) throws IOException {
+        int nonce = 500000000;
+        //System.out.println(Util.hexToLong(noncerange));
+        while (nonce < 1000000000 ) {
             String hash = scrypt(Scrypt.showBlock(block) + Util.numtoHex(nonce));
-            if (hash.startsWith(difficulty)) {
+            if (hash.startsWith(Util.getDifficulty(target))) {
+                System.out.println("find nonce: " + nonce);
                 return String.valueOf(Util.numtoHex(nonce));
             }
             nonce += 1;
         }
+        return null;
     }
 
 
@@ -59,20 +62,7 @@ public class Scrypt {
 
 
 
-    //función toString de un bloque de bitcoin
-    public String toString(Block_scrypt block) {
-        return "Model.Block{" +
-                "previousHash='" + block.getPreviousHash() + '\'' +
-                ",nonce='" + block.getNonce() + '\'' +
-                ",time='" + block.getTimestamp() + '\'' +
-                ",merkleRoot='" + block.getMerkleRoot() + '\'' +
-                ",difficulty='" + block.getDifficulty() + '\'' +
-                ",hash='" + block.getHash() + '\'' +
-                ",version='" + block.getVersion() + '\'' +
-                ",bits='" + block.getBits() + '\'' +
-                ",transactions='" + block.getTransactions() + '\'' +
-                '}';
-    }
+
 
     //función blockhash en dogecoin
 
@@ -92,7 +82,7 @@ public class Scrypt {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(block.getBits());
-        output += Util.reverseHash(block.getNonce()); ////
+        //output += Util.reverseHash(block.getNonce()); //// no habilitar, pues es utilizado en la búsqueda del nonce
         return output;
     }
 
@@ -127,7 +117,7 @@ public class Scrypt {
 
     //concatenar valores de transacción coinbase
     public static String showTransaction(Transaction_scrypt transaction) {
-        String heightHexLength = "03";
+        //String heightHexLength = "03";
         String output = "";
         output += transaction.getVersion();
         output += transaction.getInputCount();

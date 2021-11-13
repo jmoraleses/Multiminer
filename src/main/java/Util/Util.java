@@ -29,6 +29,7 @@ public class Util {
         return sb.toString();
     }
 
+
     //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
     public static String merkleRootTXLen(String merkleroot){
         return compactSize(merkleroot.length() + 1);
@@ -83,6 +84,19 @@ public class Util {
         return sb.toString();
     }
 
+    //convertir string a hexadecimal
+    public static String toHex(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(String.format("%02x", (int) s.charAt(i)));
+        }
+        return sb.toString();
+    }
+
+    //Convertir hexadecimal a long
+    public static long hexToLong(String hex) {
+        return Long.parseLong(hex, 16);
+    }
 
 
     //contar cantidad de ceros delante de hash

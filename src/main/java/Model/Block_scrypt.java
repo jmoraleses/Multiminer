@@ -12,12 +12,30 @@ public class Block_scrypt {
     private String difficulty;
     private String hash;
     private String version;
-    private String bits; //target
+    private String bits; //target is the same as difficulty
+    private String target; //target
     public String transactions;
     public String height;
 
     public String fee;
     public String blockHash; //hash válido?
+
+
+    //función toString de un bloque de bitcoin
+    public String toString() {
+        return "Model.Block{" +
+                "previousHash='" + this.getPreviousHash() + '\'' +
+                ",nonce='" + this.getNonce() + '\'' +
+                ",time='" + this.getTimestamp() + '\'' +
+                ",merkleRoot='" + this.getMerkleRoot() + '\'' +
+                //",difficulty='" + this.getDifficulty() + '\'' +
+                ",hash='" + this.getHash() + '\'' +
+                ",version='" + this.getVersion() + '\'' +
+                ",bits='" + this.getBits() + '\'' +
+                ",Height='" + this.getHeight() + '\'' +
+                ",transactions='" + this.getTransactions() + '\'' +
+                '}';
+    }
 
 
     public String getBits() { return bits; }
@@ -114,5 +132,13 @@ public class Block_scrypt {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }
