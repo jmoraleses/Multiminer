@@ -30,9 +30,9 @@ public class Mining_scrypt {
         //System.out.println(block);
 
         //buscamos el verdadero nounce
-        Scrypt.nonce(block, block.getDifficulty());
+        nonce = Scrypt.nonce(block, block.getDifficulty());
 
-        block.setNonce(Searching.nonce);
+        block.setNonce(nonce);
         block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
 
         System.out.println("Nonce: "+block.getNonce()); //

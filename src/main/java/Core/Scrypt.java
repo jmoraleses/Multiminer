@@ -27,13 +27,13 @@ public class Scrypt {
 
     //Función que calcula el nonce del bloque de dogecoin, dados el input y la dificultad con scrypt. Pasando como parámtetros el bloque y la dificultad.
     public static String nonce(Block_scrypt block, String difficulty) throws IOException {
-        String nonce = "0";
+        int nonce = 0;
         while (true) {
-            String hash = scrypt(Scrypt.showBlock(block) + Util.strToHex(nonce));
+            String hash = scrypt(Scrypt.showBlock(block) + Util.numtoHex(nonce));
             if (hash.startsWith(difficulty)) {
-                return nonce;
+                return String.valueOf(Util.numtoHex(nonce));
             }
-            nonce = String.valueOf(Integer.parseInt(nonce) + 1);
+            nonce += 1;
         }
     }
 

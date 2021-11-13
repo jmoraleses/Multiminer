@@ -46,7 +46,7 @@ public class Main_scrypt {
 
             //Prepare to send block mined to the network
             String blockMinedString = Scrypt.showTransaction(header) + Scrypt.showBlock(blockMined);
-            //System.out.println(blockMinedString);
+            System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in Scrypt
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
@@ -69,8 +69,8 @@ public class Main_scrypt {
         String uri = "http://127.0.0.1:18332";
         String contentType = "application/json";
         //user and password for bitcoin server
-        String user = "prueba";
-        String password = "prueba";
+        String user = "doge013";
+        String password = "dogepruebaX";
         String response = "";
         try {
             URL url = new URL(uri);

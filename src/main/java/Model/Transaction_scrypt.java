@@ -4,7 +4,7 @@ import Util.Util;
 
 public class Transaction_scrypt {
 
-    private String address = "bc1qt0m5pypcp0zz9d39mkhp9mfuhzeaw7jttn54sy";
+    private String address = "niwMwv2fWek3HV5n4SLzEySZhxmUTAWgEs";
     private String phrase = "The Tree of Life";
     private String version;
 
