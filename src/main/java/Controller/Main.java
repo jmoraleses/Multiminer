@@ -1,7 +1,6 @@
 package Controller;
 
 import Core.SHA256;
-import Core.Scrypt;
 import Model.Block_sha256;
 import Model.Transaction_sha256;
 
@@ -73,7 +72,7 @@ public class Main {
         if (!response.equals("")) {
             //Create new block mined
 
-            Block_sha256 blockMined = Mining.operation(response, total_process, total_process_parallel);
+            Block_sha256 blockMined = Mining_sha256.operation(response, total_process, total_process_parallel);
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 

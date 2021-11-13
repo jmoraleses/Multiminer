@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Mining {
+public class Mining_sha256 {
 
     public static String target;
     public static double fee_transactions;
