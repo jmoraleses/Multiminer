@@ -1,11 +1,12 @@
 package Model;
 
+import Core.SHA256;
 import Util.Util;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
-public class Block {
+public class Block_sha256 {
     //crear todos los atributos de un bloque de bitcoin
 
     private String previousHash;
@@ -23,40 +24,6 @@ public class Block {
     public String blockHash; //hash válido?
 
 
-    //función toString de un bloque de bitcoin
-    public String toString() {
-        return "Model.Block{" +
-                "previousHash='" + previousHash + '\'' +
-                ",nonce='" + nonce + '\'' +
-                ",time='" + timestamp + '\'' +
-                ",merkleRoot='" + merkleRoot + '\'' +
-                ",difficulty='" + difficulty + '\'' +
-                ",hash='" + hash + '\'' +
-                ",version='" + version + '\'' +
-                ",bits='" + bits + '\'' +
-                ",transactions='" + transactions + '\'' +
-                '}';
-    }
-
-
-    public String show() {
-        String output = "";
-        output += Util.reverseHash(version);
-        output += Util.reverseHash(previousHash);
-        output += Util.reverseHash(merkleRoot);
-
-        //timestamp = "1636560593731";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDtm = Instant.ofEpochSecond(Long.parseLong(timestamp)/1000)
-                .atZone(java.time.ZoneOffset.UTC)
-                .format(formatter);
-        Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
-        output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
-
-        output += Util.reverseHash(bits);
-        //output += Util.Util.reverseHash(nonce);
-        return output;
-    }
 
     public String getBits() { return bits; }
 
@@ -70,8 +37,8 @@ public class Block {
         this.blockHash = blockHash;
     }
 
-    public void addHeader(Transaction header) {
-        this.transactions = header.toJSON() + this.transactions;
+    public void addHeader(Transaction_sha256 header) {
+        this.transactions = SHA256.TransactiontoJSON(header) + this.transactions;
     }
 
     public String getTransactions() { return transactions; }

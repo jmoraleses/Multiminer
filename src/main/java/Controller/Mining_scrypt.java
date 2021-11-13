@@ -1,8 +1,8 @@
 package Controller;
 
-import Core.SHA256;
+import Core.Scrypt;
+import Model.Block_scrypt;
 import Util.Util;
-import Model.Block_sha256;
 import Util.Searching;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Mining {
+public class Mining_scrypt {
 
     public static String target;
     public static double fee_transactions;
@@ -22,19 +22,19 @@ public class Mining {
 
 
 
-    public static Block_sha256 operation(String response, int total_process, int total_process_parallel) throws JSONException, IOException, InterruptedException {
+    public static Block_scrypt operation(String response, int total_process, int total_process_parallel) throws JSONException, IOException, InterruptedException {
         List<String> list = extractInfoFromJson(response);
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
-        Block_sha256 block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
+        Block_scrypt block = createBlock(list.get(0), list.get(1), list.get(2), nonce); //String previousHash, String transactions, String bits, String nonce
         //System.out.println(block);
 
         //buscamos el verdadero nounce
         //nonce = Util.Hashcat.launch("", "", "", "", total_process, total_process_parallel);
-        Searching.searchNonce(block, block.getDifficulty());
+        //Searching.searchNonce(block, block.getDifficulty());
 
         block.setNonce(Searching.nonce);
-        block.setBlockHash(Util.blockHash(SHA256.showBlock(block)));
+        block.setBlockHash(Util.blockHash(Scrypt.showBlock(block)));
 
         System.out.println("Nonce: "+block.getNonce()); //
         System.out.println("Blockhash: "+block.getBlockHash()); //
@@ -72,8 +72,8 @@ public class Mining {
     }
 
     //crear un bloque de minado correcto según el BIP22
-    public static Block_sha256 createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException {
-        Block_sha256 block = new Block_sha256();
+    public static Block_scrypt createBlock(String previousHash, String transactions, String bits, String nonce) throws JSONException {
+        Block_scrypt block = new Block_scrypt();
         block.setPreviousHash(previousHash);
         block.setNonce(nonce);
         block.setTimestamp(String.valueOf(System.currentTimeMillis()));
@@ -84,12 +84,12 @@ public class Mining {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        block.setBlockHash(Util.blockHash(SHA256.showBlock(block)));
+        block.setBlockHash(Util.blockHash(Scrypt.showBlock(block)));
         return block;
     }
 
     //crear la función mineBlock(block, nonce)
-    public static String mineBlock(Block_sha256 block, String nonce) {
+    public static String mineBlock(Block_scrypt block, String nonce) {
         String theblock = (block.getPreviousHash() + block.getData() + block.getDifficulty() + block.getTimestamp() + block.getVersion() + block.getMerkleRoot() + nonce);
         //Encriptar theblock con librería SHA-256
         String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(theblock);
@@ -126,6 +126,5 @@ public class Mining {
         }
         return merkleRoot;
     }
-
 
 }

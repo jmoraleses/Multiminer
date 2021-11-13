@@ -75,5 +75,17 @@ public class Util {
         return i;
     }
 
+    //function for found the difficulty of the hash
+    public static String getDifficulty(String hash) {
+        String difficulty = "";
+        for (int i = 0; i < hash.length(); i++) {
+            if (hash.charAt(i) == '0') {
+                difficulty += "0";
+            } else {
+                break;
+            }
+        }
+        return difficulty;
+    }
 
 }

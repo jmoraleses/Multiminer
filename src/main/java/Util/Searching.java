@@ -1,7 +1,7 @@
 package Util;
 
-import Util.Util;
-import Model.Block;
+import Core.SHA256;
+import Model.Block_sha256;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,10 +17,10 @@ public class Searching {
 //    public static int nonceMAX = 4294967295; //FFFFFFFF
 
     //Búsqueda del nonce
-    public static void searchNonce(Block block, String target) {
+    public static void searchNonce(Block_sha256 block, String target) {
         System.out.println("Buscando entre "+ini+" y "+fin);
         int num = ini;
-        String blockhash = Util.blockHash(block.show() + String.valueOf(0));
+        String blockhash = Util.blockHash(SHA256.showBlock(block) + String.valueOf(0));
 
         while (!blockhash.startsWith(target) && num < fin) {
             //Crear números aleatorios sin posibilidad de repetirse
@@ -28,7 +28,7 @@ public class Searching {
 
             //calcular blockhash
             num++;
-            blockhash = Util.blockHash(block.show() + Util.numtoHex(num));
+            blockhash = Util.blockHash(SHA256.showBlock(block) + Util.numtoHex(num));
         }
         if (blockhash.startsWith(target)){
             nonce = Util.numtoHex(num);

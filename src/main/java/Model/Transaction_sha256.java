@@ -2,7 +2,7 @@ package Model;
 
 import Util.Util;
 
-public class Transaction {
+public class Transaction_sha256 {
 
     private String address = "bc1qt0m5pypcp0zz9d39mkhp9mfuhzeaw7jttn54sy";
     private String phrase = "The Tree of Life";
@@ -27,7 +27,7 @@ public class Transaction {
     private String locktime;
 
 
-    public void set(Block block){
+    public void set(Block_sha256 block){
         version = block.getVersion();
         inputCount = "01";
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
@@ -43,45 +43,6 @@ public class Transaction {
 
         locktime = "00000000";
     }
-
-    //generar toString para transaction
-    public String toJSON(){
-        String output = "";
-        output += "{";
-        output += "\"Version\":\"" + version + "\",";
-        output += "\"Inputs\":\"" + inputCount + "\",";
-        output += "\"Txid\":\"" + txid + "\",";
-        output += "\"Vout\":\"" + vout + "\",";
-        output += "\"ScriptSigSize\":\"" + scriptSigSize + "\",";
-        output += "\"ScriptSig\":\"" + scriptSig + "\",";
-        output += "\"Sequence\":\"" + sequence + "\",";
-        output += "\"Outputs\":\"" + outputCount + "\",";
-        output += "\"Value\":\"" + value + "\",";
-        output += "\"ScriptPubKeySize\":\"" + scriptPubKeySize + "\",";
-        output += "\"ScriptPubKey\":\"" + scriptPubKey + "\",";
-        output += "\"Locktime\":\"" + locktime + "\"";
-        output += "}";
-        return output;
-    }
-
-    //concatenar valores de transacción coinbase
-    public String show() {
-        String output = "";
-        output += version;
-        output += inputCount;
-        output += txid;
-        output += vout;
-        output += scriptSigSize;
-        output += scriptSig;
-        output += sequence;
-        output += outputCount;
-        output += value;
-        output += scriptPubKeySize;
-        output += scriptPubKey;
-        output += locktime;
-        return output;
-    }
-
 
 
     public String calculateScriptSigSize(String scriptSig){

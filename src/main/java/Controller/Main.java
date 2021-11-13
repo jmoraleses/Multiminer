@@ -1,8 +1,9 @@
 package Controller;
 
-import Controller.Mining;
-import Model.Block;
-import Model.Transaction;
+import Core.SHA256;
+import Core.Scrypt;
+import Model.Block_sha256;
+import Model.Transaction_sha256;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -72,12 +73,12 @@ public class Main {
         if (!response.equals("")) {
             //Create new block mined
 
-            Block blockMined = Mining.operation(response, total_process, total_process_parallel);
+            Block_sha256 blockMined = Mining.operation(response, total_process, total_process_parallel);
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 
             //Create header for transactions
-            Transaction header = new Transaction();
+            Transaction_sha256 header = new Transaction_sha256();
             header.set(blockMined);
 
             //Add header to transactions of the block mined
@@ -89,7 +90,7 @@ public class Main {
 
             //Prepare to send block mined to the network
             //String blockMinedString = Controller.Mining.blockMinedtoJSON(blockMined);
-            String blockMinedString = header.show() + blockMined.show();
+            String blockMinedString = SHA256.showTransaction(header) + SHA256.showBlock(blockMined);
             //System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in bitcoin 0.22.0

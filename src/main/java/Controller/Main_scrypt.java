@@ -1,8 +1,9 @@
 package Controller;
 
 
-import Model.Block;
-import Model.Transaction;
+import Core.Scrypt;
+import Model.Block_scrypt;
+import Model.Transaction_scrypt;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-public class Main_Scrypt {
+public class Main_scrypt {
 
 
     /**
@@ -33,16 +34,16 @@ public class Main_Scrypt {
         if (!response.equals("")) {
             //Create new block mined
 
-            Block blockMined = Mining.operation(response, 1, 1);
+            Block_scrypt blockMined = Mining_scrypt.operation(response, 1, 1);
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 
             //Create header for transactions
-            Transaction header = new Transaction();
+            Transaction_scrypt header = new Transaction_scrypt();
             header.set(blockMined);
 
             //Prepare to send block mined to the network
-            String blockMinedString = header.show() + blockMined.show();
+            String blockMinedString = Scrypt.showTransaction(header) + Scrypt.showBlock(blockMined);
             //System.out.println(blockMinedString);
 
             //json for to get submitblock for mining in bitcoin 0.22.0
