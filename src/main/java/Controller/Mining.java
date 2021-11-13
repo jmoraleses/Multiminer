@@ -1,3 +1,8 @@
+package Controller;
+
+import Util.Util;
+import Model.Block;
+import Util.Searching;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +41,7 @@ public class Mining {
         //System.out.println(block);
 
         //buscamos el verdadero nounce
-        //nonce = Hashcat.launch("", "", "", "", total_process, total_process_parallel);
+        //nonce = Util.Hashcat.launch("", "", "", "", total_process, total_process_parallel);
         Searching.searchNonce(block, block.getDifficulty());
 
         block.setNonce(Searching.nonce);
@@ -135,7 +140,7 @@ public class Mining {
 
 
     //find structure of block mined for send to network with the address of the creator
-//    public static String blockMinedtoJSON(Block block) throws JSONException {
+//    public static String blockMinedtoJSON(Model.Block block) throws JSONException {
 //        String blockMined = "";
 //        blockMined += "{";
 //        blockMined += "\"version\":\"" + block.getVersion() + "\",";
@@ -153,7 +158,7 @@ public class Mining {
 //    }
 //
 //    //find structure of submitblock for send to network with coinbasetxn
-//    public static String createSubmitBlock(Block block) throws JSONException {
+//    public static String createSubmitBlock(Model.Block block) throws JSONException {
 //        String submitBlock = "";
 //        submitBlock += "{";
 //        submitBlock += "\"jsonrpc\":\"1.0\",";

@@ -1,6 +1,10 @@
+package Model;
+
+import Util.Util;
+
 public class Transaction {
 
-    private String address = "bcrt1qxtqrmhspyfjhn484r3h7yuukwhau2v7dtyparz";
+    private String address = "bc1qt0m5pypcp0zz9d39mkhp9mfuhzeaw7jttn54sy";
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -23,7 +27,7 @@ public class Transaction {
     private String locktime;
 
 
-    void set(Block block){
+    public void set(Block block){
         version = block.getVersion();
         inputCount = "01";
         txid = "0000000000000000000000000000000000000000000000000000000000000000";

@@ -1,22 +1,23 @@
-import java.util.Random;
+package Util;
+
+import Util.Util;
+import Model.Block;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Searching {
 
     public static String nonce;
-//    public static int nonceMAX = 4294967295; //FFFFFFFF
+
     public static int min = 0;
     public static int max = 100;
-
-//    public static int nonceMAX = 2000000000;
     public static int numThreads = Runtime.getRuntime().availableProcessors();
-    public static int ini = 1000000000;
-    public static int fin = 2000000000;
-
+    public static int ini =  500000000;
+    public static int fin = 1000000000;
+//    public static int nonceMAX = 4294967295; //FFFFFFFF
 
     //Búsqueda del nonce
     public static void searchNonce(Block block, String target) {
-        //String nonce = "";
         System.out.println("Buscando entre "+ini+" y "+fin);
         int num = ini;
         String blockhash = Util.blockHash(block.show() + String.valueOf(0));
@@ -29,7 +30,6 @@ public class Searching {
             num++;
             blockhash = Util.blockHash(block.show() + Util.numtoHex(num));
         }
-        //nonce = String.valueOf(num);
         if (blockhash.startsWith(target)){
             nonce = Util.numtoHex(num);
             System.out.println("Nonce: " + String.valueOf(nonce));
@@ -55,7 +55,5 @@ public class Searching {
         nonce = String.valueOf(caracteresHex.charAt(randomNum1 % 16)) + String.valueOf(caracteresHex.charAt(randomNum2 % 16)) + String.valueOf(caracteresHex.charAt(randomNum3 % 16)) + String.valueOf(caracteresHex.charAt(randomNum4 % 16)) + String.valueOf(caracteresHex.charAt(randomNum5 % 16)) + String.valueOf(caracteresHex.charAt(randomNum6 % 16)) + String.valueOf(caracteresHex.charAt(randomNum7 % 16)) + String.valueOf(caracteresHex.charAt(randomNum8 % 16));
         return nonce;
     }
-
-
 
 }

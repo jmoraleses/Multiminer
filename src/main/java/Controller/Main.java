@@ -1,3 +1,9 @@
+package Controller;
+
+import Controller.Mining;
+import Model.Block;
+import Model.Transaction;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -49,8 +55,8 @@ public class Main {
             String output_file = "";
             String hashes = "";
 
-            //call to function hashcat in "Hashcat" class
-            //Hashcat.launch(route_hashcat, wordlist, output_file, hashes);
+            //call to function hashcat in "Util.Hashcat" class
+            //Util.Hashcat.launch(route_hashcat, wordlist, output_file, hashes);
 
         }
         //variable "request" with json for getbalance in bitcoin
@@ -82,7 +88,7 @@ public class Main {
             //blockMined.setMerkleRoot(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
 
             //Prepare to send block mined to the network
-            //String blockMinedString = Mining.blockMinedtoJSON(blockMined);
+            //String blockMinedString = Controller.Mining.blockMinedtoJSON(blockMined);
             String blockMinedString = header.show() + blockMined.show();
             //System.out.println(blockMinedString);
 

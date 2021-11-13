@@ -1,3 +1,6 @@
+package Model;
+
+import Util.Util;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +25,7 @@ public class Block {
 
     //función toString de un bloque de bitcoin
     public String toString() {
-        return "Block{" +
+        return "Model.Block{" +
                 "previousHash='" + previousHash + '\'' +
                 ",nonce='" + nonce + '\'' +
                 ",time='" + timestamp + '\'' +
@@ -51,7 +54,7 @@ public class Block {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(bits);
-        //output += Util.reverseHash(nonce);
+        //output += Util.Util.reverseHash(nonce);
         return output;
     }
 
