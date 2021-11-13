@@ -34,7 +34,7 @@ public class Main_scrypt {
         if (!response.equals("")) {
             //Create new block mined
 
-            Block_scrypt blockMined = Mining_scrypt.operation(response, 1, 1);
+            Block_scrypt blockMined = Mining_scrypt.operation(response);
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 

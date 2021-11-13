@@ -22,7 +22,7 @@ public class Mining_scrypt {
 
 
 
-    public static Block_scrypt operation(String response, int total_process, int total_process_parallel) throws JSONException, IOException, InterruptedException {
+    public static Block_scrypt operation(String response) throws JSONException, IOException, InterruptedException {
         List<String> list = extractInfoFromJson(response);
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
@@ -30,8 +30,7 @@ public class Mining_scrypt {
         //System.out.println(block);
 
         //buscamos el verdadero nounce
-        //nonce = Util.Hashcat.launch("", "", "", "", total_process, total_process_parallel);
-        //Searching.searchNonce(block, block.getDifficulty());
+        Scrypt.nonce(block, block.getDifficulty());
 
         block.setNonce(Searching.nonce);
         block.setBlockHash(Util.blockHash(Scrypt.showBlock(block)));

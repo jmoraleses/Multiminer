@@ -22,17 +22,18 @@ public class Scrypt {
         return org.spongycastle.util.encoders.Base64.toBase64String(outputBytes);
     }
 
-    //Función que calcula el nonce del bloque de dogecoin, dados el input y la dificultad con scrytp
-    public static String nonce(String input, String difficulty) throws IOException {
+    //Función que calcula el nonce del bloque de dogecoin, dados el input y la dificultad con scrypt. Pasando como parámtetros el bloque y la dificultad.
+    public static String nonce(Block_scrypt block, String difficulty) throws IOException {
         String nonce = "0";
         while (true) {
-            String hash = scrypt(input + nonce);
+            String hash = scrypt(Scrypt.showBlock(block) + Util.strToHex(nonce));
             if (hash.startsWith(difficulty)) {
                 return nonce;
             }
             nonce = String.valueOf(Integer.parseInt(nonce) + 1);
         }
     }
+
 
     //Función que crea el header en Core.Scrypt de dogecoin
     public static byte[] createHeader(byte[] header, byte[] merkleRoot, byte[] nonce, byte[] time, byte[] bits, byte[] version) {
