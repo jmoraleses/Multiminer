@@ -53,7 +53,7 @@ public class SHA256 {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(block.getBits());
-        //output += Util.Util.reverseHash(nonce);
+        output += Util.reverseHash(block.getNonce());
         return output;
     }
 

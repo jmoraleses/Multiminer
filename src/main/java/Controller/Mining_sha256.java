@@ -33,7 +33,7 @@ public class Mining_sha256 {
         //nonce = Util.Hashcat.launch("", "", "", "", total_process, total_process_parallel);
         Searching.searchNonce(block, block.getDifficulty());
 
-        block.setNonce(Searching.nonce);
+        //block.setNonce(Searching.nonce);
         block.setBlockHash(SHA256.blockHash(SHA256.showBlock(block)));
 
         System.out.println("Nonce: "+block.getNonce()); //

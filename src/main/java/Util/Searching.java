@@ -28,10 +28,12 @@ public class Searching {
 
             //calcular blockhash
             num++;
-            blockhash = SHA256.blockHash(SHA256.showBlock(block) + Util.numtoHex(num));
+            block.setNonce(Util.numtoHex(num));
+            blockhash = SHA256.blockHash(SHA256.showBlock(block));
         }
         if (blockhash.startsWith(target)){
             nonce = Util.numtoHex(num);
+            block.setNonce(nonce);
             System.out.println("Nonce: " + String.valueOf(nonce));
         }
 

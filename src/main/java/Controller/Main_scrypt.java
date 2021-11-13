@@ -31,17 +31,22 @@ public class Main_scrypt {
         String request = "{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", \"method\": \"getblocktemplate\", \"params\": [] }";
 
         //Use the function sendRequest to get gettemplate in bitcoin
-        String response = sendRequest(request);
-        System.out.println(response);
+        //String response = sendRequest(request);
+        //System.out.println(response);
+
+
+
+        String response = "";
+        Block_scrypt blockMined = null;
+        //while (blockMined == null) {
+        response = sendRequest(request);
+        System.out.println(response); //
+        //Create new block mined
+        blockMined = Mining_scrypt.operation(response);
+        System.out.println("block mined: "+blockMined);
+        //}
 
         if (!response.equals("")) {
-            //Create new block mined
-
-            Block_scrypt blockMined = null;
-            while (blockMined == null) {
-                blockMined = Mining_scrypt.operation(response);
-                System.out.println(blockMined);
-            }
             //System.out.println(blockMined.show());
 
             //Create header for transactions
@@ -51,6 +56,7 @@ public class Main_scrypt {
             //Prepare to send block mined to the network
             String blockMinedString = Scrypt.showBlock(blockMined) + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  Scrypt.showTransaction(header_coinbase) ; //+  blockMined.getTransactions();
             System.out.println(blockMinedString);
+
 
             //json for to get submitblock for mining in Scrypt
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";

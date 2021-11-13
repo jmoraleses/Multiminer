@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class Mining_scrypt {
 
 
 
-    public static Block_scrypt operation(String response) throws JSONException, IOException, InterruptedException {
+    public static Block_scrypt operation(String response) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
         List<String> list = extractInfoFromJson(response);
         //Creamos un bloque con nounce y blockhash erróneos
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
@@ -30,12 +31,12 @@ public class Mining_scrypt {
         //System.out.println(block);
 
         //buscamos el verdadero nounce
-        nonce = Scrypt.nonce(block, block.getTarget());
+        nonce = Scrypt.SearchingNonce(block, block.getTarget());
 
-        if (nonce == null) return null;
+        //if (nonce == null) return null;
 
         block.setNonce(nonce);
-        block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
+        block.setBlockHash(Scrypt.blockhash);
         //System.out.println("Nonce: "+block.getNonce()); //
         //System.out.println("Blockhash: "+block.getBlockHash()); //
         return block;
@@ -95,7 +96,8 @@ public class Mining_scrypt {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
+//        block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
+        block.setBlockHash(Scrypt.blockhash);
         block.setHeight(height);
         block.setTarget(target);
         return block;
