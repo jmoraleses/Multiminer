@@ -3,6 +3,8 @@ package Util;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
+import static Core.ScryptHelp.compactSize;
+
 public class Util {
 
 
@@ -40,24 +42,6 @@ public class Util {
     //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
     public static String merkleRootTXLen(String merkleroot){
         return compactSize(merkleroot.length() + 1);
-    }
-
-    //Función que comprime en hexadecimal segun la longitud de un string
-    public static String compactSize(int size){
-        String hex = "";
-        if (size < (2^64)){
-            hex = "ff" + String.format("%64x", size);
-        }
-        if (size < (2^32)){
-            hex = "fe" + String.format("%32x", size);
-        }
-        if (size < (2^16)){
-            hex = "fd" + String.format("%16x", size);
-        }
-        if (size <= 252){
-            hex = String.format("%08x", size);
-        }
-        return hex;
     }
 
     //función para encontrar el tamaño del scriptSig

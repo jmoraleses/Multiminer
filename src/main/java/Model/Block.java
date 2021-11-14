@@ -67,15 +67,15 @@ public class Block {
     //función para cada elemento de transactions mostrarlo
     public String getTransactionsSerialized() {
         StringBuilder transactionsSerialized = new StringBuilder();
-//        transactionsSerialized += this.transactions.length();
+        transactionsSerialized.append(this.transactions.length());
         for (int i = 0; i < this.transactions.length(); i++) {
             try {
                 JSONObject jsonObjectTransaction = this.transactions.getJSONObject(i);
-//                transactionsSerialized.append(jsonObjectTransaction.getString("data"));
-//                transactionsSerialized.append(jsonObjectTransaction.getString("fee"));
+                transactionsSerialized.append(jsonObjectTransaction.getString("data"));
+                transactionsSerialized.append(jsonObjectTransaction.getString("fee"));
                 transactionsSerialized.append(jsonObjectTransaction.getString("txid"));
-//                transactionsSerialized.append(jsonObjectTransaction.getString("weight"));
-//                transactionsSerialized.append(jsonObjectTransaction.getString("hash"));
+                transactionsSerialized.append(jsonObjectTransaction.getString("weight"));
+                transactionsSerialized.append(jsonObjectTransaction.getString("hash"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

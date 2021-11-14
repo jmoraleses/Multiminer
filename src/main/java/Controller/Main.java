@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Block;
 import Model.Transaction;
+import Util.Util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -45,6 +46,7 @@ public class Main {
             //Create header for transactions
             Transaction header = new Transaction();
             header.set(blockMined);
+
 
             //Prepare to send block mined to the network
             String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;

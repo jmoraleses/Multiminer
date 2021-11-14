@@ -88,21 +88,21 @@ public class Main_scrypt {
             targetbyte = endianSwitch(targetbyte);
 
 
+            nonce = Mining.doScrypt(databyte, blockMined.getDifficulty());//Calls sCrypt with the proper parameters, and returns the correct data
+            System.out.println("Nonce: " + nonce);
 
-            String scrypted = Mining.doScrypt(databyte, blockMined.getDifficulty());//Calls sCrypt with the proper parameters, and returns the correct data
-            System.out.println("Scrypted: " + scrypted);
-
-            blockMined.setBlockHash(Util.reverseHash(scrypted));
+            blockMined.setNonce(Util.reverseHash(nonce));
+            blockMined.setBlockHash(Util.reverseHash(Mining.blockhash));
 
             //Prepare to send block mined to the network
-            String blockMinedString = blockMined.showBlock() + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  (header_coinbase.showTransaction()); //+  blockMined.getTransactions();
+            String blockMinedString = (header_coinbase.showTransaction() + Util.merkleRootTXLen(blockMined.getMerkleRoot()) + blockMined.showBlock() ); //+  blockMined.getTransactions();
 
             System.out.println("mined: "+blockMinedString);
-            System.out.println("Transactions serialized: " + blockMined.getTransactionsSerialized());
+            //System.out.println("Transactions serialized (only txid's): " + blockMined.getTransactionsSerialized());
 
-            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + (blockMined.showBlock()) + (header_coinbase.showTransaction()) + blockMined.getTransactionsSerialized() + "]}";
+            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
             System.out.println(request2);
-            System.out.println(ScryptHelp.checkBlock((blockMined.showBlock())+ header_coinbase.showTransaction() + blockMined.getTransactionsSerialized() ));
+            System.out.println(ScryptHelp.checkBlock((blockMined.showBlock())+ header_coinbase.showTransaction() )); //+ blockMined.getTransactionsSerialized() ));
 //            String response2 = sendRequest(request2);
 //            System.out.println(response2);
 

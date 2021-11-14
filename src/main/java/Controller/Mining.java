@@ -41,7 +41,7 @@ public class Mining {
         Block block = createBlock((String)list.get(0), (JSONArray)list.get(1), (String)list.get(2), (String)list.get(3), (String)list.get(4), (String)nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
-        //nonce = doSHA256(block, block.getTarget());
+        nonce = doSHA256(block, block.getTarget());
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), block.getTarget());
 
         block.setHash(blockhash);
@@ -110,11 +110,10 @@ public class Mining {
 
     //calcular el merkleroot a partir  de una array de transacciones
     public static String extractMerkleRoot(JSONArray transactions) throws JSONException {
-        JSONArray jsonTransactions = transactions;
         fee_transactions = 0;
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < jsonTransactions.length(); i++) {
-            JSONObject jsonObjectTransaction = jsonTransactions.getJSONObject(i);
+        for (int i = 0; i < transactions.length(); i++) {
+            JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
             list.add(jsonObjectTransaction.getString("hash"));
             fee_transactions += Long.parseLong(jsonObjectTransaction.getString("fee"));
         }
@@ -141,6 +140,7 @@ public class Mining {
 
     //Búsqueda de nonce para algoritmo Scrypt
     public static String doScrypt(byte[] databyte, String target) throws GeneralSecurityException {
+        System.out.println("Buscando para Scrypt");
         //Initialize the nonce
         byte[] nonce = new byte[4];
         nonce[0] = databyte[76] ;
@@ -161,7 +161,7 @@ public class Mining {
 
             System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
 
-            if (!printByteArray(scrypted).startsWith(target)) {
+            if (!printByteArray(scrypted).startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
                 blockhash = printByteArray(scrypted);
                 return printByteArray(nonce);
@@ -186,7 +186,7 @@ public class Mining {
             block.setNonce(Util.numtoHex(num));
             blockhash = Util.blockHash((block.showBlock()));
 
-            if (blockhash.startsWith(target)) {
+            if (!blockhash.startsWith(target)) {  //!
                 System.out.println("Nonce: " + String.valueOf(num));
                 return Util.numtoHex(num);
             }
