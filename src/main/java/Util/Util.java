@@ -5,6 +5,13 @@ import java.time.Instant;
 
 public class Util {
 
+
+    //función hacer dos sha256 para obtener el block hash
+    public static String blockHash(String input) {
+        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
+    }
+
     //función de nombre toHex que convierte un número en 8 caracteres hexadecimales
     public static String numtoHex(int n) {
         return String.format("%08x", n);
@@ -120,5 +127,17 @@ public class Util {
         }
         return difficulty;
     }
+
+    //función hexStringToByteArray
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
 
 }

@@ -1,16 +1,22 @@
 package Controller;
 
+import Core.Scrypt.Converter;
+import Model.Block;
+import Model.Transaction;
 import Util.Util;
-import Core.Scrypt;
-import Model.Block_scrypt;
-import Model.Transaction_scrypt;
+import Core.ScryptHelp;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+
+import static Core.ScryptHelp.*;
 
 /**
  * (Scrypt) Dogecoin, Litecoin
@@ -30,44 +36,106 @@ public class Main_scrypt {
 //        String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         String request = "{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", \"method\": \"getblocktemplate\", \"params\": [] }";
 
-        //Use the function sendRequest to get gettemplate in bitcoin
-        //String response = sendRequest(request);
-        //System.out.println(response);
-
-
-
         String response = "";
-        Block_scrypt blockMined = null;
-        //while (blockMined == null) {
+        Block blockMined = null;
         response = sendRequest(request);
-        System.out.println(response); //
+        System.out.println(response);
+
         //Create new block mined
-        blockMined = Mining_scrypt.operation(response);
+        blockMined = Mining.mining(response);
+
         System.out.println("block mined: "+blockMined);
-        //}
+        System.out.println("block mined: "+ (blockMined.showBlock()));
 
         if (!response.equals("")) {
-            //System.out.println(blockMined.show());
 
-            //Create header for transactions
-            Transaction_scrypt header_coinbase = new Transaction_scrypt();
+            Transaction header_coinbase = new Transaction();
             header_coinbase.set(blockMined);
 
+            //This chunk pulls apart the data so they can be endian switched (see the scrypt proof of work page on the wiki)
+            String version = blockMined.getVersion(); //data.substring(0, 8);
+            String prevhash = blockMined.getPreviousHash(); //data.substring(8, 72);
+            String merkle = blockMined.getMerkleRoot(); //data.substring(72, 136 );
+            //String timestamp = blockMined.getTimestamp(); //data.substring(136, 144);
+            String bits = blockMined.getBits(); //data.substring(144, 152);
+            String nonce = blockMined.getNonce(); //data.substring(152,160);
+
+            //This chunk creates endian switched byte arrays from the data
+            byte[] versionbit = chunkEndianSwitch(Converter.fromHexString(version));
+            byte[] prevhashbit = chunkEndianSwitch(Converter.fromHexString(prevhash));
+            byte[] merklebit = chunkEndianSwitch(Converter.fromHexString(merkle));
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedDtm = Instant.ofEpochSecond(Long.parseLong(String.valueOf(System.currentTimeMillis()/1000))).atZone(java.time.ZoneOffset.UTC).format(formatter);
+            Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
+            String timestamp = Util.timestampToHex(time); //timestamp whitout reverse
+
+            byte[] timestampbit = chunkEndianSwitch(Converter.fromHexString(timestamp));
+            byte[] bitsbit = chunkEndianSwitch(Converter.fromHexString(bits));
+            byte[] noncebit = chunkEndianSwitch(Converter.fromHexString(nonce));
+
+            //This chunk of code reassembles the data into a single byre array
+            byte[] databyte = new byte[80];
+            System.arraycopy(versionbit, 0, databyte, 0, versionbit.length);
+            System.arraycopy(prevhashbit, 0, databyte, 4, prevhashbit.length);
+            System.arraycopy(merklebit, 0, databyte, 36, merklebit.length);
+            System.arraycopy(timestampbit, 0, databyte, 68, timestampbit.length);
+            System.arraycopy(bitsbit, 0, databyte, 72, bitsbit.length);
+            System.arraycopy(noncebit, 0, databyte, 76, noncebit.length);
+
+            //Converts the target string to a byte array for easier comparison
+            byte[] targetbyte = Converter.fromHexString(blockMined.getTarget());
+            targetbyte = endianSwitch(targetbyte);
+
+
+
+            String scrypted = Mining.doScrypt(databyte, blockMined.getDifficulty());//Calls sCrypt with the proper parameters, and returns the correct data
+            System.out.println("Scrypted: " + scrypted);
+
+            blockMined.setBlockHash(Util.reverseHash(scrypted));
+
             //Prepare to send block mined to the network
-            String blockMinedString = Scrypt.showBlock(blockMined) + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  Scrypt.showTransaction(header_coinbase) ; //+  blockMined.getTransactions();
-            System.out.println(blockMinedString);
+            String blockMinedString = blockMined.showBlock() + Util.merkleRootTXLen(blockMined.getMerkleRoot()) +  (header_coinbase.showTransaction()); //+  blockMined.getTransactions();
 
+            System.out.println("mined: "+blockMinedString);
+            System.out.println("Transactions serialized: " + blockMined.getTransactionsSerialized());
 
-            //json for to get submitblock for mining in Scrypt
-            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
-
-            String response2 = sendRequest(request2);
-            System.out.println(response2);
+            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + (blockMined.showBlock()) + (header_coinbase.showTransaction()) + blockMined.getTransactionsSerialized() + "]}";
+            System.out.println(request2);
+            System.out.println(ScryptHelp.checkBlock((blockMined.showBlock())+ header_coinbase.showTransaction() + blockMined.getTransactionsSerialized() ));
+//            String response2 = sendRequest(request2);
+//            System.out.println(response2);
 
 
         }
     }
 
+    public static String sendWork(String request) throws IOException{
+
+        final String rpcuser ="doge013"; //RPC User name (set in config)
+        final String rpcpassword ="dogepruebaX"; //RPC Pass (set in config)
+
+        Authenticator.setDefault(new Authenticator() {//This sets the default authenticator, with the set username and password
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication (rpcuser, rpcpassword.toCharArray());
+            }
+        });
+        URL url = new URL("http://127.0.0.1:9332");
+        URLConnection conn = url.openConnection();
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        System.out.println(request);
+        String rpcreturn = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" +request+ "]}";//RPC call with the new nonced data
+        System.out.println(rpcreturn);
+        wr.write(rpcreturn);
+        wr.flush();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        line = rd.readLine();
+        rd.close();
+        return line;
+    }
 
     /**
      * Function for send request to bitcoin server
@@ -76,7 +144,7 @@ public class Main_scrypt {
      * @return
      */
     public static String sendRequest(String requestBody) {
-        String uri = "http://127.0.0.1:18332";
+        String uri = "http://127.0.0.1:9332";
         String contentType = "application/json";
         //user and password for bitcoin server
         String user = "doge013";

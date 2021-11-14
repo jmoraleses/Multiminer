@@ -1,8 +1,7 @@
 package Controller;
 
-import Core.SHA256;
-import Model.Block_sha256;
-import Model.Transaction_sha256;
+import Model.Block;
+import Model.Transaction;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -75,12 +74,12 @@ public class Main {
         if (!response.equals("")) {
             //Create new block mined
 
-            Block_sha256 blockMined = Mining_sha256.operation(response, total_process, total_process_parallel);
+            Block blockMined = Mining.mining(response);
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 
             //Create header for transactions
-            Transaction_sha256 header = new Transaction_sha256();
+            Transaction header = new Transaction();
             header.set(blockMined);
 
             //Add header to transactions of the block mined
@@ -92,14 +91,19 @@ public class Main {
 
             //Prepare to send block mined to the network
             //String blockMinedString = Controller.Mining.blockMinedtoJSON(blockMined);
-            String blockMinedString = SHA256.showTransaction(header) + SHA256.showBlock(blockMined);
+            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
             //System.out.println(blockMinedString);
+
+            System.out.println(blockMined.getTransactionsTwoOnly());
+            System.out.println(header.transactiontoJSON());
+
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+            System.out.println(request2);
 
-            String response2 = sendRequest(request2);
-            System.out.println(response2);
+//            String response2 = sendRequest(request2);
+//            System.out.println(response2);
 
 
         }
