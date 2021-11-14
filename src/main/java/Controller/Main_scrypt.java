@@ -33,7 +33,7 @@ public class Main_scrypt {
         System.out.println("##############################");
 
         //json for to get template for mining in bitcoin 0.22.0
-//        String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
+        //String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         String request = "{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", \"method\": \"getblocktemplate\", \"params\": [] }";
 
         String response = "";
