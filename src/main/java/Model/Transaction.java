@@ -4,7 +4,7 @@ import Util.Util;
 
 public class Transaction {
 
-    private String address = "bc1qt0m5pypcp0zz9d39mkhp9mfuhzeaw7jttn54sy";
+    private String address = "03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"; //bitcoin
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -44,8 +44,7 @@ public class Transaction {
 
         outputCount = "01";
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
-        //scriptPubKey = "76a914" + Util.asciiToHex(address) + "88ac";
-        scriptPubKey = "76a914" + Util.toHex(address.length()/2) + address + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + Util.ripemd160(address) + "88ac"; //P2PKH
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";

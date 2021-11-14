@@ -2,9 +2,8 @@ package Util;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-
 import static Core.ScryptHelp.compactSize;
-
+import org.spongycastle.crypto.digests.RIPEMD160Digest;
 public class Util {
 
 
@@ -75,14 +74,14 @@ public class Util {
         return sb.toString();
     }
 
-    //convertir string a hexadecimal
-    public static String toHex(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            sb.append(String.format("%02x", (int) s.charAt(i)));
-        }
-        return sb.toString();
-    }
+//    //convertir string a hexadecimal
+//    public static String toHex(String s) {
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < s.length(); i++) {
+//            sb.append(String.format("%02x", (int) s.charAt(i)));
+//        }
+//        return sb.toString();
+//    }
 
     //Convertir hexadecimal a long
     public static long hexToLong(String hex) {
@@ -123,5 +122,19 @@ public class Util {
         return data;
     }
 
+    //función RIPEMD160
+    public static String ripemd160(String input) {
+        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+        RIPEMD160Digest digest = new RIPEMD160Digest();
+        digest.update(data.getBytes(StandardCharsets.US_ASCII), 0, data.getBytes(StandardCharsets.US_ASCII).length);
+        byte[] out = new byte[20];
+        digest.doFinal(out, 0);
+        //bytes[] to string
+        StringBuilder sb = new StringBuilder();
+        for (byte b : out) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
 
 }
