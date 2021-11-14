@@ -105,9 +105,6 @@ public class Block {
         return "["+transactionsSerialized+"]";
     }
 
-
-
-
     public String getBits() { return bits; }
 
     public void setBits(String bits) { this.bits = bits; }
@@ -120,11 +117,10 @@ public class Block {
         this.blockHash = blockHash;
     }
 
-    public void addHeader(Transaction_scrypt header) throws JSONException {
+    public void addHeader(Transaction header) throws JSONException {
         this.transactions = transactions.put(0, header);
         //Scrypt_do.TransactiontoJSON(header) + this.transactions;
     }
-
 
     public String getPreviousHash() {
         return previousHash;
