@@ -27,42 +27,6 @@ public class Main {
         System.out.println("## Welcome to Breaking Hash ##");
         System.out.println("##############################");
 
-        //Ask for introduce by keyboard the next variables: dir_hashcat, hash, wordlist and output_file
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String route_hashcat = "C:/Users/Javier/Documents/hashcat-6.2.4"; //Introduce the route of hashcat
-
-        //if route_hashcat is equal to "" then return to ask for route_hashcat""
-        while (route_hashcat.equals("")) {
-            System.out.println("Please introduce route of hashcat (necessary):");
-            route_hashcat = br.readLine();
-        }
-        //if directory of route_hashcat doesn't exist, the program show error
-        if (!(new java.io.File(route_hashcat).exists())) {
-            System.out.println("Error directory not exist, the program will close.");
-            //close de program
-            System.exit(0);
-        } else {
-            //if directory exist create a new directory "crackme"
-            String route_crackme = route_hashcat + "/crackme";
-            new java.io.File(route_crackme).mkdir();
-            //Show message and put in pause the program until the user press enter
-            //System.out.println("Please introduce name file for wordlist:");
-            //String wordlist = br.readLine();
-            //System.out.println("Please introduce name file for output file:");
-            //String output_file = br.readLine();
-            //System.out.println("Please introduce name file with the hashes:");
-            //String hashes = br.readLine();
-
-            String wordlist = "";
-            String output_file = "";
-            String hashes = "";
-
-            //call to function hashcat in "Util.Hashcat" class
-            //Util.Hashcat.launch(route_hashcat, wordlist, output_file, hashes);
-
-        }
-        //variable "request" with json for getbalance in bitcoin
-        //String request = "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"getbalance\"}";
 
         //json for to get template for mining in bitcoin 0.22.0
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
@@ -82,21 +46,11 @@ public class Main {
             Transaction header = new Transaction();
             header.set(blockMined);
 
-            //Add header to transactions of the block mined
-            //blockMined.addHeader(header);
-
-            //set merkleRoot complete
-            //String str = header + blockMined.getMerkleRoot();
-            //blockMined.setMerkleRoot(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
-
             //Prepare to send block mined to the network
-            //String blockMinedString = Controller.Mining.blockMinedtoJSON(blockMined);
             String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
             //System.out.println(blockMinedString);
-
             System.out.println(blockMined.getTransactionsTwoOnly());
             System.out.println(header.transactiontoJSON());
-
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
@@ -104,7 +58,6 @@ public class Main {
 
 //            String response2 = sendRequest(request2);
 //            System.out.println(response2);
-
 
         }
     }
