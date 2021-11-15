@@ -182,10 +182,17 @@ public class Mining {
 //        nonce[2] = databyte[78] ;
 //        nonce[3] = databyte[79] ;
 
+        byte[] nonceMAX = new byte[4];
+        nonceMAX[0] = (byte)255;
+        nonceMAX[1] = (byte)255;
+        nonceMAX[2] = (byte)255;
+        nonceMAX[3] = (byte)255;
+        //System.out.println("nonceMAX: "+printByteArray(nonceMAX));
+
         ScryptHelp.incrementAtValue(nonce, nonce[0], 50);
         boolean found = false;
         //Loop over and increment nonce
-        while(!found){
+        while(nonce[0] < nonceMAX[0]){
             //Set the bytes of the data to the nonce
 //            databyte[76] = nonce[0];
 //            databyte[77] = nonce[1];
@@ -207,7 +214,7 @@ public class Mining {
             }
             //System.out.println(printByteArray(nonce));
         }
-        return null;
+        return printByteArray("00000000".getBytes(StandardCharsets.UTF_8));
     }
 
 
