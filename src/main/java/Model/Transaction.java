@@ -1,10 +1,7 @@
 package Model;
 
-import Core.Sha256Help;
 import Util.Util;
-import org.json.JSONArray;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Transaction {

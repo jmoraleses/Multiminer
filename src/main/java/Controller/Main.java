@@ -1,9 +1,7 @@
 package Controller;
 
-import Core.Sha256Help;
 import Model.Block;
 import Model.Transaction;
-import Model.TransactionMined;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -11,9 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.List;
 
 /**
  * (SHA256) Bitcoin

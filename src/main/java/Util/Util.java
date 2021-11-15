@@ -1,24 +1,18 @@
 package Util;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.interfaces.ECKey;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-
-import static Core.ScryptHelp.compactSize;
-
-import Model.Transaction;
 import Model.TransactionMined;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
-import org.spongycastle.util.encoders.Hex;
+
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import static Core.ScryptHelp.compactSize;
 
 public class Util {
 
@@ -95,15 +89,6 @@ public class Util {
         }
         return sb.toString();
     }
-
-//    //convertir string a hexadecimal
-//    public static String toHex(String s) {
-//        StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < s.length(); i++) {
-//            sb.append(String.format("%02x", (int) s.charAt(i)));
-//        }
-//        return sb.toString();
-//    }
 
     //Convertir hexadecimal a long
     public static long hexToLong(String hex) {

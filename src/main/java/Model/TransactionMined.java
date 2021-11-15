@@ -1,9 +1,6 @@
 package Model;
 
-import Core.Sha256Help;
 import Util.Util;
-
-import java.nio.charset.StandardCharsets;
 
 public class TransactionMined {
 
