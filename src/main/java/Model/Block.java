@@ -46,7 +46,7 @@ public class Block {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(this.getBits());
-        output += Util.reverseHash(this.getNonce());
+//        output += Util.reverseHash(this.getNonce()); /////////
 
         return output;
     }

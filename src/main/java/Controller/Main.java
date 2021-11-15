@@ -54,7 +54,7 @@ public class Main {
 
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
+            String blockMinedString =  blockMined.showBlock() + blockMined.getNonce() + header.showTransaction() ;
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";

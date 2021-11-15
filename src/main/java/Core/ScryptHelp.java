@@ -1,6 +1,7 @@
 package Core;
 
 import java.io.IOException;
+import Util.Util;
 
 import static Controller.Mining.blockhash;
 
@@ -18,6 +19,18 @@ public class ScryptHelp {
         }
         else {
             array[index]++;
+        }
+    }
+
+    public  static void  incrementAtValue(byte[] array, int index, long value) {
+        //Short method to increment the nonce
+        if (array[index] == Byte.MAX_VALUE) {
+            array[index] = 0;
+            if(index > 0)
+                incrementAtValue(array, index - 1, value);
+        }
+        else {
+            array[index] = Byte.parseByte(String.valueOf(value));
         }
     }
 

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import com.google.common.primitives.Bytes;
 
 import static Core.ScryptHelp.printByteArray;
 
@@ -176,22 +177,25 @@ public class Mining {
         System.out.println("Buscando para Sha256");
         //Initialize the nonce
         byte[] nonce = new byte[4];
-        nonce[0] = databyte[76] ;
-        nonce[1] = databyte[77] ;
-        nonce[2] = databyte[78] ;
-        nonce[3] = databyte[79] ;
-        boolean found = false;
+//        nonce[0] = databyte[76] ;
+//        nonce[1] = databyte[77] ;
+//        nonce[2] = databyte[78] ;
+//        nonce[3] = databyte[79] ;
 
+        ScryptHelp.incrementAtValue(nonce, nonce[0], 50);
+        boolean found = false;
         //Loop over and increment nonce
         while(!found){
             //Set the bytes of the data to the nonce
-            databyte[76] = nonce[0];
-            databyte[77] = nonce[1];
-            databyte[78] = nonce[2];
-            databyte[79] = nonce[3];
+//            databyte[76] = nonce[0];
+//            databyte[77] = nonce[1];
+//            databyte[78] = nonce[2];
+//            databyte[79] = nonce[3];
 
-            String scrypted = Util.blockHashByte(databyte);
-            System.out.println(printByteArray(nonce)+": "+scrypted+" - "+target);
+
+            byte[] hash = Bytes.concat(databyte, nonce);
+            String scrypted = Util.blockHashByte(hash);
+            //System.out.println(printByteArray(nonce)+": "+scrypted+" - "+target);
 
             if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
