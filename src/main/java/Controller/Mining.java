@@ -5,13 +5,16 @@ import Core.ScryptHelp;
 import Model.Block;
 import Util.Util;
 import com.lambdaworks.crypto.SCrypt;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -41,7 +44,7 @@ public class Mining {
         Block block = createBlock((String)list.get(0), (JSONArray)list.get(1), (String)list.get(2), (String)list.get(3), (String)list.get(4), (String)nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
-        nonce = doSHA256(block, block.getTarget());
+        nonce = doSha256(Converter.fromHexString(block.showBlock()), block.getTarget());
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), block.getTarget());
 
         block.setHash(blockhash);
@@ -158,10 +161,9 @@ public class Mining {
             databyte[79] = nonce[3];
 
             byte[] scrypted = (SCrypt.scryptJ(databyte,databyte, 1024, 1, 1, 32));//Scrypt the data with proper params
+            //System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
 
-            System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
-
-            if (!printByteArray(scrypted).startsWith(target)) {  //!
+            if (printByteArray(scrypted).startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
                 blockhash = printByteArray(scrypted);
                 return printByteArray(nonce);
@@ -174,25 +176,62 @@ public class Mining {
         return null;
     }
 
-    //Búsqueda del nonce para bitcoin
-    public static String doSHA256(Block block, String target) {
-        System.out.println("Buscando entre " + ini + " y " + fin);
-        int num = ini;
-        String blockhash = Util.blockHash((block.showBlock()) + String.valueOf(0));
-        while (!blockhash.startsWith(target) && num < fin) {
-            //nonce = charToHex();//Crear números aleatorios
 
-            num++;
-            block.setNonce(Util.numtoHex(num));
-            blockhash = Util.blockHash((block.showBlock()));
+    //Búsqueda de nonce para algoritmo Scrypt
+    public static String doSha256(byte[] databyte, String target) throws GeneralSecurityException {
+        System.out.println("Buscando para Sha256");
+        //Initialize the nonce
+        byte[] nonce = new byte[4];
+        nonce[0] = databyte[76] ;
+        nonce[1] = databyte[77] ;
+        nonce[2] = databyte[78] ;
+        nonce[3] = databyte[79] ;
+        boolean found = false;
 
-            if (!blockhash.startsWith(target)) {  //!
-                System.out.println("Nonce: " + String.valueOf(num));
-                return Util.numtoHex(num);
+        //Loop over and increment nonce
+        while(!found){
+            //Set the bytes of the data to the nonce
+            databyte[76] = nonce[0];
+            databyte[77] = nonce[1];
+            databyte[78] = nonce[2];
+            databyte[79] = nonce[3];
+
+            String scrypted = Util.blockHashByte(databyte);
+            //System.out.println(printByteArray(nonce)+": "+scrypted);
+
+            if (scrypted.startsWith(target)) {  //!
+                System.out.println(printByteArray(nonce)+": "+scrypted);
+                blockhash = scrypted;
+                return printByteArray(nonce);
             }
+            else{
+                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
+            }
+            //System.out.println(printByteArray(nonce));
         }
         return null;
     }
+
+
+    //Búsqueda del nonce para bitcoin
+//    public static String doSHA256(Block block, String target) {
+//        System.out.println("Buscando entre " + ini + " y " + fin);
+//        int num = ini;
+//        String blockhash = Util.blockHash((block.showBlock()) + String.valueOf(0));
+//        while (!blockhash.startsWith(target) && num < fin) {
+//            //nonce = charToHex();//Crear números aleatorios
+//
+//            num++;
+//            block.setNonce(Util.numtoHex(num));
+//            blockhash = Util.blockHash((block.showBlock()));
+//
+//            if (blockhash.startsWith(target)) {  //!
+//                System.out.println("Nonce: " + String.valueOf(num));
+//                return Util.numtoHex(num);
+//            }
+//        }
+//        return null;
+//    }
 
     //crear la función mineBlock(block, nonce)
 //    public static String mineBlock(Block block, String nonce) {

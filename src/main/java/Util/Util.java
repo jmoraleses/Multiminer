@@ -13,6 +13,7 @@ import static Core.ScryptHelp.compactSize;
 
 import Model.Transaction;
 import Model.TransactionMined;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +27,11 @@ public class Util {
     public static String blockHash(String input) {
         String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
         return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
+    }
+
+    public static String blockHashByte(byte[] input) {
+        String hash = DigestUtils.sha256Hex(input);
+        return DigestUtils.sha256Hex(hash);
     }
 
     //función de nombre toHex que convierte un número en 8 caracteres hexadecimales
