@@ -47,8 +47,6 @@ public class Mining {
         nonce = doSha256(Converter.fromHexString(block.showBlock()), block.getTarget());
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), block.getTarget());
 
-        block.setHash(blockhash);
-        block.setHash(nonce);
         //if (nonce == null) return null;
 
         block.setNonce(nonce);
