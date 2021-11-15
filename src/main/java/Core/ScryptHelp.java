@@ -22,17 +22,6 @@ public class ScryptHelp {
         }
     }
 
-    public  static void  incrementAtValue(byte[] array, int index, long value) {
-        //Short method to increment the nonce
-        if (array[index] == Byte.MAX_VALUE) {
-            array[index] = 0;
-            if(index > 0)
-                incrementAtValue(array, index - 1, value);
-        }
-        else {
-            array[index] = Byte.parseByte(String.valueOf(value));
-        }
-    }
 
     public static String prettyPrintByteArray(byte[] bites){
         //Method to convert a byte array to hex literal separated by bites.
