@@ -41,8 +41,8 @@ public class Mining {
         Block block = createBlock((String)list.get(0), (JSONArray)list.get(1), (String)list.get(2), (String)list.get(3), (String)list.get(4), (String)nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
-        //nonce = doSHA256(block, block.getTarget());
-        nonce = doScrypt(Converter.fromHexString(block.showBlock()), block.getTarget());
+        nonce = doSHA256(block, block.getTarget());
+        //nonce = doScrypt(Converter.fromHexString(block.showBlock()), block.getTarget());
 
         block.setHash(blockhash);
         block.setHash(nonce);

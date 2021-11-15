@@ -1,9 +1,24 @@
 package Util;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.interfaces.ECKey;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+
 import static Core.ScryptHelp.compactSize;
+
+import Model.Transaction;
+import Model.TransactionMined;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
+import org.spongycastle.util.encoders.Hex;
+
 public class Util {
 
 
@@ -27,16 +42,17 @@ public class Util {
         return String.format("%08x", ts.getEpochSecond());
     }
 
-    //función de nombre toHex, convierte un String de tipo ascii en un String de tipo hexadecimal
-    public static String asciiToHex(String ascii) {
-        byte[] bytes = ascii.getBytes(StandardCharsets.US_ASCII);
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b));
+    //función que convierte un string ascii a hexadecimal
+    public static String asciiToHex(String asciiValue)
+    {
+        char[] chars = asciiValue.toCharArray();
+        StringBuffer hex = new StringBuffer();
+        for (int i = 0; i < chars.length; i++)
+        {
+            hex.append(Integer.toHexString((int) chars[i]));
         }
-        return sb.toString();
+        return hex.toString();
     }
-
 
     //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
     public static String merkleRootTXLen(String merkleroot){
@@ -136,5 +152,22 @@ public class Util {
         }
         return sb.toString();
     }
+
+    //Convertir string con transacciones a lista de TransactionMined
+    public static List<TransactionMined> transactionToList(JSONArray transactions) throws JSONException {
+        List<TransactionMined> list = new ArrayList<>();
+        for (int i = 0; i < transactions.length() && i < 1000 ; i++) {
+            JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
+            String data = jsonObjectTransaction.getString("data");
+            String txid = jsonObjectTransaction.getString("txid");
+            String weight = jsonObjectTransaction.getString("weight");
+            String hash = jsonObjectTransaction.getString("hash");
+            String fee = jsonObjectTransaction.getString("fee");
+            TransactionMined transactionMined = new TransactionMined(data, txid, weight, hash, fee, i + 1);
+            list.add(transactionMined);
+        }
+        return list;
+    }
+
 
 }

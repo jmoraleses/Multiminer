@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Block {
     //crear todos los atributos de un bloque de bitcoin
@@ -23,10 +24,12 @@ public class Block {
     private String bits; //target is the same as difficulty
     private String target; //target
     public JSONArray transactions;
+//    public List<TransactionMined> transactionsMined;
     public String height;
 
     public String fee;
     public String blockHash; //hash válido?
+
 
     public String showBlock() {
         String output = "";
@@ -47,6 +50,7 @@ public class Block {
 
         return output;
     }
+
     //función toString de un bloque de bitcoin
     public String toString() {
         return "Model.Block{" +

@@ -1,7 +1,9 @@
 package Controller;
 
+import Core.Sha256Help;
 import Model.Block;
 import Model.Transaction;
+import Model.TransactionMined;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -9,7 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * (SHA256) Bitcoin
@@ -34,7 +38,7 @@ public class Main {
 
         //Use the function sendRequest to get gettemplate in bitcoin
         String response = sendRequest(request);
-        //System.out.println(response);
+        System.out.println(response);
 
         if (!response.equals("")) {
             //Create new block mined
@@ -48,11 +52,22 @@ public class Main {
             header.set(blockMined);
 
 
+
+            //System.out.println(blockMinedString);
+            //System.out.println(blockMined.getTransactionsTwoOnly());
+            System.out.println(header.transactiontoJSON());
+
+
+            header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
+
+
             //Prepare to send block mined to the network
             String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
-            //System.out.println(blockMinedString);
-            System.out.println(blockMined.getTransactionsTwoOnly());
-            System.out.println(header.transactiontoJSON());
+
+            //System.out.println(header.getAddress());
+            //String addressDecode = Sha256Help.calculateBitcoinAddress(header.getAddress().getBytes(StandardCharsets.UTF_8));
+
+
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";

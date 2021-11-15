@@ -1,10 +1,15 @@
 package Model;
 
+import Core.Sha256Help;
 import Util.Util;
+import org.json.JSONArray;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class Transaction {
 
-    private String address = "03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"; //bitcoin
+    private String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"); //Sha256Help.calculateBitcoinAddress("tb1qlr86jd32y3n47rs23lcy7z07vm48ynj5gfqwjc".getBytes(StandardCharsets.UTF_8)); //""03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"; //bitcoin publickey
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -30,24 +35,30 @@ public class Transaction {
     private String height;
     private String heightLength;
 
+    public List<TransactionMined> transactionMineds;
 
     public void set(Block block){
         version = block.getVersion();
-        inputCount = "01";
+
+        inputCount = "01"; //entrada de transaccion
         txid = "0000000000000000000000000000000000000000000000000000000000000000";  //blockhash?
         vout = "ffffffff";
-        height = block.getHeight();
+
+        height = Util.numtoHex(Integer.parseInt(block.getHeight())); ////////////////
         heightLength = "03";
-        scriptSig = heightLength + height + Util.asciiToHex(phrase);
+
+        scriptSig = heightLength + height + Util.asciiToHex(phrase); ///////////////////
         scriptSigSize = calculateScriptSigSize(scriptSig);
         sequence = "ffffffff";
 
-        outputCount = "01";
+        outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
-        scriptPubKey = "76a914" + Util.ripemd160(address) + "88ac"; //P2PKH
+//        scriptPubKey = "76a914" + Util.ripemd160(address) + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + address + "88ac"; //P2PKH
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
+
     }
 
     //concatenar valores de transacción coinbase
@@ -61,10 +72,15 @@ public class Transaction {
         output += this.getScriptSigSize();
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
-        output += this.getOutputCount();
-        output += this.getValue();
-        output += this.getScriptPubKeySize();
-        output += this.getScriptPubKey();
+
+        for(int i = 0; i < transactionMineds.size(); i++) {
+            output += transactionMineds.get(i).showTransactionMined();
+        }
+//        output += this.getOutputCount();
+//        output += this.getValue();
+//        output += this.getScriptPubKeySize();
+//        output += this.getScriptPubKey();
+
         output += Util.reverseHash(this.getLocktime());
         return output;
     }
@@ -90,6 +106,7 @@ public class Transaction {
         output += "}";
         return output;
     }
+
 
     public String calculateScriptSigSize(String scriptSig){
         return Util.toHex(scriptSig.length()/2);
@@ -221,5 +238,17 @@ public class Transaction {
 
     public void setHeightLength(String heightLength) {
         this.heightLength = heightLength;
+    }
+
+    public void addTransactionMineds(TransactionMined transactionMineds) {
+        this.transactionMineds.add(transactionMineds);
+    }
+
+    public List<TransactionMined> getTransactionMineds() {
+        return transactionMineds;
+    }
+
+    public void setTransactionMineds(List<TransactionMined> transactionMineds) {
+        this.transactionMineds = transactionMineds;
     }
 }

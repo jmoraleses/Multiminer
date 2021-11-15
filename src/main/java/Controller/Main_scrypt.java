@@ -102,7 +102,6 @@ public class Main_scrypt {
 
             //Prepare to send block mined to the network
             String blockMinedString = (header_coinbase.showTransaction() + Util.merkleRootTXLen(blockMined.getMerkleRoot()) + blockMined.showBlock() ); //+  blockMined.getTransactions();
-
             System.out.println("mined: "+blockMinedString);
             //System.out.println("Transactions serialized (only txid's): " + blockMined.getTransactionsSerialized());
 
