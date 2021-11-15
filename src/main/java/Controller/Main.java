@@ -48,29 +48,20 @@ public class Main {
             header.set(blockMined);
 
 
-
             //System.out.println(blockMinedString);
             //System.out.println(blockMined.getTransactionsTwoOnly());
             System.out.println(header.transactiontoJSON());
 
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-
-
-            //Prepare to send block mined to the network
             String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
-
-            //System.out.println(header.getAddress());
-            //String addressDecode = Sha256Help.calculateBitcoinAddress(header.getAddress().getBytes(StandardCharsets.UTF_8));
-
-
 
             //json for to get submitblock for mining in bitcoin 0.22.0
             String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
             System.out.println(request2);
 
-//            String response2 = sendRequest(request2);
-//            System.out.println(response2);
+            String response2 = sendRequest(request2);
+            System.out.println(response2);
 
         }
     }

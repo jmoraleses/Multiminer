@@ -30,12 +30,8 @@ public class Mining {
 
     public static String blockhash = "";
 
-    public static int min = 0;
-    public static int max = 100;
     public static int numThreads = Runtime.getRuntime().availableProcessors();
-    public static int ini =  500000;
-    public static int fin = 10000000;
-    //public static int nonceMAX = 4294967295;
+
     
 
     public static Block mining(String response) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
@@ -195,7 +191,7 @@ public class Mining {
             databyte[79] = nonce[3];
 
             String scrypted = Util.blockHashByte(databyte);
-            //System.out.println(printByteArray(nonce)+": "+scrypted);
+            System.out.println(printByteArray(nonce)+": "+scrypted);
 
             if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
@@ -211,36 +207,11 @@ public class Mining {
     }
 
 
-    //Búsqueda del nonce para bitcoin
-//    public static String doSHA256(Block block, String target) {
-//        System.out.println("Buscando entre " + ini + " y " + fin);
-//        int num = ini;
-//        String blockhash = Util.blockHash((block.showBlock()) + String.valueOf(0));
-//        while (!blockhash.startsWith(target) && num < fin) {
-//            //nonce = charToHex();//Crear números aleatorios
-//
-//            num++;
-//            block.setNonce(Util.numtoHex(num));
-//            blockhash = Util.blockHash((block.showBlock()));
-//
-//            if (blockhash.startsWith(target)) {  //!
-//                System.out.println("Nonce: " + String.valueOf(num));
-//                return Util.numtoHex(num);
-//            }
-//        }
-//        return null;
-//    }
-
-    //crear la función mineBlock(block, nonce)
-//    public static String mineBlock(Block block, String nonce) {
-//        String theblock = (block.getPreviousHash() + block.getData() + block.getDifficulty() + block.getTimestamp() + block.getVersion() + block.getMerkleRoot() + nonce);
-//        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(theblock);
-//    }
-
     public static String charToHex(){
         String nonce = "";
         String caracteresHex = "0123456789abcdef";
-
+        int min = 0;
+        int max = 0;
         //Crear números aleaotorios sin posibilidad de repetirse
         int randomNum1 = ThreadLocalRandom.current().nextInt(min, max + 1);
         int randomNum2 = ThreadLocalRandom.current().nextInt(min, max + 1);
