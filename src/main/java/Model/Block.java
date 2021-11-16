@@ -31,7 +31,8 @@ public class Block {
 //    public String blockHash; //hash válido?
 
 
-    public String showBlock() {
+    public String showBlock() { //Header
+
         String output = "";
         output += Util.reverseHash(this.getVersion());
         output += Util.reverseHash(this.getPreviousHash());

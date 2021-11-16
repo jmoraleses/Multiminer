@@ -51,6 +51,7 @@ public class TransactionMined {
     public String showTransactionMined(){
         String output = "" +
                 id +
+               // txid + ///////
                 fee +
                 sizeScryptPubKey +
                 scryptPubKey;

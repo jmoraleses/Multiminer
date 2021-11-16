@@ -42,14 +42,14 @@ public class Transaction {
         txid = "0000000000000000000000000000000000000000000000000000000000000000";  //blockhash?
         vout = "ffffffff";
 
-        height = Util.numtoHex(Integer.parseInt(block.getHeight())); ////////////////
+        height = Util.numtoHex(Integer.parseInt(block.getHeight()));
         heightLength = "03";
 
-        scriptSig = heightLength + height + Util.asciiToHex(phrase); ///////////////////
+        scriptSig = heightLength + height + Util.asciiToHex(phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
         sequence = "ffffffff";
 
-        outputCount = "01"; //salida de transaccion
+        outputCount = "01"; //salida de transaccion //Util.compactSize
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 //        scriptPubKey = "76a914" + Util.ripemd160(address) + "88ac"; //P2PKH
         scriptPubKey = "76a914" + address + "88ac"; //P2PKH
@@ -75,17 +75,12 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-        this.setOutputCount(Util.numtoHex(transactionMineds.size())); //output count
-        output += this.getOutputCount();
-
-        output += this.getValue();
-        output += this.getScriptPubKeySize();
-        output += this.getScriptPubKey();
-
+        //this.setOutputCount(Util.numtoHex(transactionMineds.size())); //output count
 //        output += this.getOutputCount();
 //        output += this.getValue();
 //        output += this.getScriptPubKeySize();
 //        output += this.getScriptPubKey();
+
 
         for(int i = 0; i < transactionMineds.size(); i++) {
             output += transactionMineds.get(i).showTransactionMined();

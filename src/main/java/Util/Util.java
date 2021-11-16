@@ -155,7 +155,7 @@ public class Util {
         for (byte b : out) {
             sb.append(String.format("%02x", b));
         }
-        return sb.substring(2, sb.length() - 8);
+        return sb.toString(); //.substring(2, sb.length() - 8);
 //        hash160 = hash160.substring(2, hash160.length());
 //        hash160 = hash160.substring(0, hash160.length()-8);
 //        System.out.println(hash160);
