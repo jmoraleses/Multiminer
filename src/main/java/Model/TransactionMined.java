@@ -11,8 +11,8 @@ public class TransactionMined {
 
     public String id;
     public String fee;
-    private final String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b");
-    public String scryptPubKey = "76a914" + address + "88ac";//P2PKH
+
+    public String scryptPubKey = "76a914" + Miner.address + "88ac";//P2PKH
     public String sizeScryptPubKey = Util.scriptPubKeyVarInt(scryptPubKey);
 
     public TransactionMined(String data, String txid, String weight, String hash, String fee, int count) {
@@ -36,17 +36,6 @@ public class TransactionMined {
                 '}';
         return output;
     }
-
-//    public String toString2(){
-//        String output = "TransactionMined{" +
-//                "id='" + id + '\'' +
-//                "txid='" + txid + '\'' +
-//                ", fee='" + fee + '\'' +
-//                ", sizeScryptPubKey='" + sizeScryptPubKey + '\'' +
-//                ", scryptPubKey='" + scryptPubKey + '\'' +
-//                '}';
-//        return output;
-//    }
 
     public String showTransactionMined(){
         String output = "" +

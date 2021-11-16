@@ -6,8 +6,7 @@ import java.util.List;
 
 public class Transaction {
 
-    private String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b");
-    private String phrase = "The Tree of Life";
+
     private String version;
 
     //inputs
@@ -40,31 +39,31 @@ public class Transaction {
         version = block.getVersion();
 
         inputCount = "01"; //entrada de transaccion
-        txid = "0000000000000000000000000000000000000000000000000000000000000000";  //blockhash?
+        txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
 
         height = Util.numtoHex(Integer.parseInt(block.getHeight()));
         heightLength = "03";
 
-        scriptSig = heightLength + height + Util.asciiToHex(phrase);
+        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
         sequence = "ffffffff";
 
-        outputCount = "01"; //salida de transaccion //Util.compactSize
+        outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-        scriptPubKey = "76a914" + address + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + Miner.address + "88ac"; //P2PKH
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
 
     }
 
+
     //concatenar valores de transacción coinbase
     public String showTransaction() {
         String output = "";
         //output += Util.toHex(transactionMineds.size()); //transactions total
-
         output += Util.reverseHash(this.getVersion()); //version
 
         output += this.getInputCount(); // input count
@@ -75,10 +74,10 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-//        output += this.getOutputCount();
-//        output += this.getValue();
-//        output += this.getScriptPubKeySize();
-//        output += this.getScriptPubKey();
+        //output += this.getOutputCount();
+        //output += this.getValue();
+        //output += this.getScriptPubKeySize();
+        //output += this.getScriptPubKey();
 
         for(int i = 0; i < transactionMineds.size(); i++) {
             output += transactionMineds.get(i).showTransactionMined();
@@ -116,13 +115,6 @@ public class Transaction {
 //        return Util.toHex(scriptSig.length()/2);
 //    }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getVersion() {
         return version;
@@ -218,14 +210,6 @@ public class Transaction {
 
     public void setLocktime(String locktime) {
         this.locktime = locktime;
-    }
-
-    public String getPhrase() {
-        return phrase;
-    }
-
-    public void setPhrase(String phrase) {
-        this.phrase = phrase;
     }
 
     public String getHeight() {
