@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * (SHA256) Bitcoin
@@ -45,13 +47,17 @@ public class Main {
 
                 Transaction header = new Transaction();
                 header.set(blockMined);
-
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
+
+                //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
+                List<String> hashes = new ArrayList<>();
+                hashes.add(blockMined.getBlockhash());
+                for(int i=0; i < header.getTransactionMineds().size(); i++){
+                    hashes.add(header.getTransactionMineds().get(i).getHash());
+                }
+                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes));
+
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
-
-                System.out.println(Util.hexToAscii("845468652054726565206f66204c696665"));
-
-
 
                 String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
                 System.out.println(request2);

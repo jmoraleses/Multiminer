@@ -118,11 +118,26 @@ public class Mining {
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
         if (list.size() == 0) return "";
-        else return calculateMerkleRoot(list);
+        else return "";//calculateMerkleRoot(list); ///
     }
 
     //calcute merkle root from a list of transactions
     public static String calculateMerkleRoot(List<String> data){
+        String merkleRoot = "";
+        if (data.size() == 1){
+            merkleRoot = data.get(0);
+        }else {
+            List<String> newData = new ArrayList<>();
+            for (int i = 0; i < data.size() -1; i = i + 2){
+                String str = data.get(i) + data.get(i + 1);
+                newData.add(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
+            }
+            merkleRoot = calculateMerkleRoot(newData);
+        }
+        return merkleRoot;
+    }
+
+    public static String lastHashMerkleRoot(List<String> data){
         String merkleRoot = "";
         if (data.size() == 1){
             merkleRoot = data.get(0);
@@ -190,7 +205,7 @@ public class Mining {
         while(nonce[0] != nonceMAX[0]){
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
-            //ystem.out.println(printByteArray(nonce)+": "+scrypted);
+            System.out.println(printByteArray(nonce)+": "+scrypted);
             if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
                     scrypted = scrypted.substring(0, scrypted.length()-1);
