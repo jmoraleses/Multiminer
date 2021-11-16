@@ -184,14 +184,17 @@ public class Mining {
         nonceMAX[1] = (byte)255;
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)64; //empieza en la mitad de todos los nonce permitidos
+        nonce[0] = (byte)00; //empieza en la mitad de todos los nonce permitidos: 128
         boolean found = false;
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0]){
             byte[] hash = Bytes.concat(databyte, nonce);
-            String scrypted = Util.reverseHash(Util.blockHashByte(hash));
-            //System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (scrypted.startsWith(target)) {  //!
+            String scrypted = Util.blockHashByte(hash);
+            //ystem.out.println(printByteArray(nonce)+": "+scrypted);
+            if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
+                if (scrypted.endsWith(target)){
+                    scrypted = scrypted.substring(0, scrypted.length()-1);
+                }
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
