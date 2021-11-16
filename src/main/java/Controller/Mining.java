@@ -190,8 +190,8 @@ public class Mining {
         while(nonce[0] != nonceMAX[0]){
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.reverseHash(Util.blockHashByte(hash));
-            System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (!scrypted.startsWith(target)) {  //!
+            //System.out.println(printByteArray(nonce)+": "+scrypted);
+            if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
