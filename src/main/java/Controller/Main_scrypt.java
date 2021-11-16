@@ -95,7 +95,7 @@ public class Main_scrypt {
 
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-            String blockMinedString =  blockMined.showBlock() + blockMined.getNonce() + header.showTransaction() ;
+            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
 
 
             //Prepare to send block mined to the network

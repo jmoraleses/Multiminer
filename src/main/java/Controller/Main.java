@@ -59,9 +59,9 @@ public class Main {
             //System.out.println(blockMined.showBlock());
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-            String blockMinedString =  blockMined.showBlock() + blockMined.getNonce() + header.showTransaction() ;
+            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
 
-            System.out.println(header.getTransactionMineds().get(1).toString());
+            //System.out.println(header.getTransactionMineds().get(1).toString());
 
 
             //json for to get submitblock for mining in bitcoin 0.22.0

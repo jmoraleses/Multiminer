@@ -41,7 +41,7 @@ public class Mining {
         Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
-        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
+        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()));
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
 
         if (nonceHash != null) {
@@ -191,7 +191,7 @@ public class Mining {
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
             //System.out.println(printByteArray(nonce)+": "+scrypted+" - "+target);
-            if (!scrypted.startsWith(target)) {  //!
+            if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);

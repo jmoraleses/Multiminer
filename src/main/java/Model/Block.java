@@ -30,6 +30,26 @@ public class Block {
     public String fee;
 //    public String blockHash; //hash válido?
 
+    public String showBlockWithoutNonce() { //Header
+
+        String output = "";
+        output += Util.reverseHash(this.getVersion());
+        output += Util.reverseHash(this.getPreviousHash());
+        output += Util.reverseHash(this.getMerkleRoot());
+
+        //timestamp = "1636560593731";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
+                .atZone(java.time.ZoneOffset.UTC)
+                .format(formatter);
+        Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
+        output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
+
+        output += Util.reverseHash(this.getBits());
+
+        return output;
+    }
+
 
     public String showBlock() { //Header
 
@@ -47,7 +67,7 @@ public class Block {
         output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
 
         output += Util.reverseHash(this.getBits());
-//        output += Util.reverseHash(this.getNonce()); /////////
+        output += Util.reverseHash(this.getNonce());
 
         return output;
     }
