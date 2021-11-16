@@ -56,7 +56,7 @@ public class Main {
             //System.out.println(blockMined.getTransactionsTwoOnly());
 //            System.out.println(header.transactiontoJSON());
 
-            System.out.println(blockMined.toString());
+//            System.out.println(blockMined.toString());
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
             String blockMinedString =  blockMined.showBlock() + blockMined.getNonce() + header.showTransaction() ;

@@ -191,11 +191,11 @@ public class Mining {
         nonceMAX[3] = (byte)255;
         //System.out.println("nonceMAX: "+printByteArray(nonceMAX));
 
-//        nonce[0] = (byte)64;
+        nonce[0] = (byte)64;
 
         boolean found = false;
         //Loop over and increment nonce
-        while(nonce[0] < nonceMAX[0]){
+        while(nonce[0] != nonceMAX[0]){
             //Set the bytes of the data to the nonce
 //            databyte[76] = nonce[0];
 //            databyte[77] = nonce[1];
