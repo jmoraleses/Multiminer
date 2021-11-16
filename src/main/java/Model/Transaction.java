@@ -77,17 +77,17 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-        output += this.getOutputCount();
-        output += this.getValue();
+        output += this.getOutputCount(); //01
+        output += this.getValue(); //fee
         output += this.getScriptPubKeySize();
         output += this.getScriptPubKey();
-        output += Util.reverseHash(this.getLocktime());
+        //output += Util.reverseHash(this.getLocktime());
 
         for(int i = 0; i < transactionMineds.size(); i++) {
             output += transactionMineds.get(i).showTransactionMined();
         }
 
-        output += Util.reverseHash(this.getLocktime());
+        output += Util.reverseHash(this.getLocktime()); /////
 
         return output;
     }
