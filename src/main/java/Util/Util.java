@@ -54,6 +54,18 @@ public class Util {
         return hex.toString();
     }
 
+    //función que decodifica un string hexadecimal a string ascii
+    public static String hexToAscii(String hexValue)
+    {
+        StringBuilder output = new StringBuilder("");
+        for (int i = 0; i < hexValue.length(); i += 2)
+        {
+            String str = hexValue.substring(i, i + 2);
+            output.append((char) Integer.parseInt(str, 16));
+        }
+        return output.toString();
+    }
+
     //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
     public static String merkleRootTXLen(String merkleroot){
         return compactSize(merkleroot.length() + 1);

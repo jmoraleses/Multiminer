@@ -49,6 +49,10 @@ public class Main {
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
 
+                System.out.println(Util.hexToAscii("845468652054726565206f66204c696665"));
+
+
+
                 String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
                 System.out.println(request2);
 

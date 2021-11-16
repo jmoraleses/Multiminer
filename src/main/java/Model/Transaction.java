@@ -42,9 +42,12 @@ public class Transaction {
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
 
-        height = Util.numtoHex(Integer.parseInt(block.getHeight()));
-        heightLength = "03";
+        height = Util.toHex(Integer.parseInt(block.getHeight()));
+        String phraseHex = height + Util.asciiToHex(Miner.phrase);
+//        heightLength = "03";
+        heightLength = Util.numtoHex(phraseHex.length());
 
+//        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //////
         scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
         sequence = "ffffffff";
@@ -63,7 +66,7 @@ public class Transaction {
     //concatenar valores de transacción coinbase
     public String showTransaction() {
         String output = "";
-        //output += Util.toHex(transactionMineds.size()); //transactions total
+
         output += Util.reverseHash(this.getVersion()); //version
 
         output += this.getInputCount(); // input count
@@ -74,10 +77,11 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-        //output += this.getOutputCount();
-        //output += this.getValue();
-        //output += this.getScriptPubKeySize();
-        //output += this.getScriptPubKey();
+        output += this.getOutputCount();
+        output += this.getValue();
+        output += this.getScriptPubKeySize();
+        output += this.getScriptPubKey();
+        output += Util.reverseHash(this.getLocktime());
 
         for(int i = 0; i < transactionMineds.size(); i++) {
             output += transactionMineds.get(i).showTransactionMined();
