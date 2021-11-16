@@ -214,7 +214,7 @@ public class Mining {
             }
             //System.out.println(printByteArray(nonce));
         }
-        return printByteArray("00000000".getBytes(StandardCharsets.UTF_8));
+        return printByteArray(nonceMAX);
     }
 
 
