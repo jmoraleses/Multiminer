@@ -29,7 +29,7 @@ public class Mining {
     public static double fee_for_mine = 10000;
     public static String fee_total;
 
-    public static String blockhash = "";
+//    public static String blockhash = "";
 
     public static int numThreads = Runtime.getRuntime().availableProcessors();
 
@@ -41,13 +41,13 @@ public class Mining {
         Block block = createBlock((String)list.get(0), (JSONArray)list.get(1), (String)list.get(2), (String)list.get(3), (String)list.get(4), (String)nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
-        nonce = doSha256(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
+        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
 
         //if (nonce == null) return null;
 
-        block.setNonce(nonce);
-        block.setBlockHash(blockhash);
+        block.setNonce(nonceHash.get(0));
+        block.setBlockhash(nonceHash.get(1));
         return block;
     }
 
@@ -100,7 +100,7 @@ public class Mining {
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
         //block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
-        block.setBlockHash(blockhash);
+//        block.setBlockHash(blockhash);
         block.setHeight(height);
         block.setTarget(target);
         return block;
@@ -160,7 +160,7 @@ public class Mining {
 
             if (printByteArray(scrypted).startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+printByteArray(scrypted));
-                blockhash = printByteArray(scrypted);
+//                blockhash = printByteArray(scrypted);
                 return printByteArray(nonce);
             }
             else{
@@ -173,8 +173,9 @@ public class Mining {
 
 
     //Búsqueda de nonce para algoritmo Scrypt
-    public static String doSha256(byte[] databyte, String target) throws GeneralSecurityException {
+    public static List<String> doSha256(byte[] databyte, String target) throws GeneralSecurityException {
         System.out.println("Buscando para Sha256");
+        List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];
 //        nonce[0] = databyte[76] ;
@@ -206,15 +207,17 @@ public class Mining {
 
             if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
-                blockhash = scrypted;
-                return printByteArray(nonce);
+//                blockhash = scrypted;
+                lista.add(printByteArray(nonce));
+                lista.add(scrypted);
+                return lista;
             }
             else{
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
             }
             //System.out.println(printByteArray(nonce));
         }
-        return printByteArray(nonceMAX);
+        return lista;
     }
 
 

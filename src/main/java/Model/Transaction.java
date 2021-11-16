@@ -35,6 +35,7 @@ public class Transaction {
     public List<TransactionMined> transactionMineds;
 
     public void set(Block block){
+
         version = block.getVersion();
 
         inputCount = "01"; //entrada de transaccion
@@ -62,10 +63,14 @@ public class Transaction {
     public String showTransaction() {
         //String heightHexLength = "03";
         String output = "";
-        output += Util.reverseHash(this.getVersion());
-        output += this.getInputCount();
-        output += Util.reverseHash(this.getTxid());
-        output += Util.reverseHash(this.getVout());
+        output += Util.toHex(transactionMineds.size()); //transactions
+
+        output += Util.reverseHash(this.getVersion()); //version
+
+        output += this.getInputCount(); // input count
+        output += Util.reverseHash(this.getTxid()); // 000...
+        output += Util.reverseHash(this.getVout()); //previous output
+
         output += this.getScriptSigSize();
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());

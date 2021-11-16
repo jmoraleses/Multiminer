@@ -3,7 +3,7 @@ package Core;
 import java.io.IOException;
 import Util.Util;
 
-import static Controller.Mining.blockhash;
+//import static Controller.Mining.blockhash;
 
 /**
  * Dogecoin, Litecoin
@@ -74,7 +74,7 @@ public class ScryptHelp {
     }
 
     //Función que comprueba si el bloque esta bien construido
-    public static boolean checkBlock(String block) throws IOException {
+    public static boolean checkBlock(String block, String blockhash) throws IOException {
         byte[] blockBytes = block.getBytes();
         byte[] outputBytes = org.spongycastle.crypto.generators.SCrypt.generate(blockBytes, new byte[16], 1024, 8, 1, 32);
         return org.spongycastle.util.encoders.Hex.toHexString(outputBytes).equals(blockhash);

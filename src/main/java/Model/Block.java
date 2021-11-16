@@ -19,7 +19,7 @@ public class Block {
     private String timestamp;
     private String merkleRoot;
     private String difficulty;
-    private String hash;
+    private String blockhash;
     private String version;
     private String bits; //target is the same as difficulty
     private String target; //target
@@ -28,7 +28,7 @@ public class Block {
     public String height;
 
     public String fee;
-    public String blockHash; //hash válido?
+//    public String blockHash; //hash válido?
 
 
     public String showBlock() {
@@ -53,13 +53,20 @@ public class Block {
 
     //función toString de un bloque de bitcoin
     public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
+                .atZone(java.time.ZoneOffset.UTC)
+                .format(formatter);
+        Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
+        String timestampX = Util.reverseHash(Util.timestampToHex(time)); //timestamp
+
         return "Model.Block{" +
                 "previousHash='" + this.getPreviousHash() + '\'' +
                 ",nonce='" + this.getNonce() + '\'' +
-                ",time='" + this.getTimestamp() + '\'' +
+                ",time='" + timestampX + '\'' +
                 ",merkleRoot='" + this.getMerkleRoot() + '\'' +
                 ",difficulty='" + this.getDifficulty() + '\'' +
-                ",hash='" + this.getHash() + '\'' +
+                ",hash='" + this.getBlockhash() + '\'' +
                 ",version='" + this.getVersion() + '\'' +
                 ",bits='" + this.getBits() + '\'' +
                 ",Height='" + this.getHeight() + '\'' +
@@ -113,13 +120,6 @@ public class Block {
 
     public void setBits(String bits) { this.bits = bits; }
 
-    public String getBlockHash() {
-        return blockHash;
-    }
-
-    public void setBlockHash(String blockHash) {
-        this.blockHash = blockHash;
-    }
 
     public void addHeader(Transaction header) throws JSONException {
         this.transactions = transactions.put(0, header);
@@ -174,12 +174,12 @@ public class Block {
         this.difficulty = difficulty;
     }
 
-    public String getHash() {
-        return hash;
+    public String getBlockhash() {
+        return blockhash;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setBlockhash(String blockhash) {
+        this.blockhash = blockhash;
     }
 
     public String getVersion() {
