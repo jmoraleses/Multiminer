@@ -37,21 +37,20 @@ public class TransactionMined {
         return output;
     }
 
-    public String toString2(){
-        String output = "TransactionMined{" +
-                "id='" + id + '\'' +
-                "txid='" + txid + '\'' +
-                ", fee='" + fee + '\'' +
-                ", sizeScryptPubKey='" + sizeScryptPubKey + '\'' +
-                ", scryptPubKey='" + scryptPubKey + '\'' +
-                '}';
-        return output;
-    }
+//    public String toString2(){
+//        String output = "TransactionMined{" +
+//                "id='" + id + '\'' +
+//                "txid='" + txid + '\'' +
+//                ", fee='" + fee + '\'' +
+//                ", sizeScryptPubKey='" + sizeScryptPubKey + '\'' +
+//                ", scryptPubKey='" + scryptPubKey + '\'' +
+//                '}';
+//        return output;
+//    }
 
     public String showTransactionMined(){
         String output = "" +
                 id +
-               // txid + ///////
                 fee +
                 sizeScryptPubKey +
                 scryptPubKey;

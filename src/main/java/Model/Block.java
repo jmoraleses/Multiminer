@@ -24,11 +24,9 @@ public class Block {
     private String bits; //target is the same as difficulty
     private String target; //target
     public JSONArray transactions;
-//    public List<TransactionMined> transactionsMined;
-    public String height;
 
+    public String height;
     public String fee;
-//    public String blockHash; //hash válido?
 
     public String showBlockWithoutNonce() { //Header
 
@@ -37,7 +35,6 @@ public class Block {
         output += Util.reverseHash(this.getPreviousHash());
         output += Util.reverseHash(this.getMerkleRoot());
 
-        //timestamp = "1636560593731";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
                 .atZone(java.time.ZoneOffset.UTC)
@@ -51,14 +48,13 @@ public class Block {
     }
 
 
-    public String showBlock() { //Header
+    public String showBlock() {
 
         String output = "";
         output += Util.reverseHash(this.getVersion());
         output += Util.reverseHash(this.getPreviousHash());
         output += Util.reverseHash(this.getMerkleRoot());
 
-        //timestamp = "1636560593731";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
                 .atZone(java.time.ZoneOffset.UTC)

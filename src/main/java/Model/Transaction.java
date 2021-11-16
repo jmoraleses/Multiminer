@@ -34,6 +34,7 @@ public class Transaction {
 
     public List<TransactionMined> transactionMineds;
 
+
     public void set(Block block){
 
         version = block.getVersion();
@@ -51,7 +52,7 @@ public class Transaction {
 
         outputCount = "01"; //salida de transaccion //Util.compactSize
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
-//        scriptPubKey = "76a914" + Util.ripemd160(address) + "88ac"; //P2PKH
+
         scriptPubKey = "76a914" + address + "88ac"; //P2PKH
         scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
 
@@ -61,9 +62,8 @@ public class Transaction {
 
     //concatenar valores de transacción coinbase
     public String showTransaction() {
-        //String heightHexLength = "03";
         String output = "";
-        //output += Util.toHex(transactionMineds.size()); //transactions ///////////##
+        //output += Util.toHex(transactionMineds.size()); //transactions total
 
         output += Util.reverseHash(this.getVersion()); //version
 
@@ -75,12 +75,10 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-        //this.setOutputCount(Util.numtoHex(transactionMineds.size())); //output count
 //        output += this.getOutputCount();
 //        output += this.getValue();
 //        output += this.getScriptPubKeySize();
 //        output += this.getScriptPubKey();
-
 
         for(int i = 0; i < transactionMineds.size(); i++) {
             output += transactionMineds.get(i).showTransactionMined();

@@ -43,33 +43,17 @@ public class Main {
 
             if (blockMined.getNonce() != null){
 
+                Transaction header = new Transaction();
+                header.set(blockMined);
 
-            //System.out.println(blockMined);
-            //System.out.println(blockMined.show());
+                header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
+                String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
 
-            //Create header for transactions
-            Transaction header = new Transaction();
-            header.set(blockMined);
+                String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+                System.out.println(request2);
 
-
-            //System.out.println(blockMinedString);
-            //System.out.println(blockMined.getTransactionsTwoOnly());
-//            System.out.println(header.transactiontoJSON());
-
-            //System.out.println(blockMined.showBlock());
-
-            header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
-
-            //System.out.println(header.getTransactionMineds().get(1).toString());
-
-
-            //json for to get submitblock for mining in bitcoin 0.22.0
-            String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
-            System.out.println(request2);
-
-            String response2 = sendRequest(request2);
-            System.out.println(response2);
+                String response2 = sendRequest(request2);
+                System.out.println(response2);
             }
         }
     }
