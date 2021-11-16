@@ -47,7 +47,6 @@ public class Transaction {
 //        heightLength = "03";
         heightLength = Util.numtoHex(phraseHex.length());
 
-//        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //////
         scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
         sequence = "ffffffff";
@@ -87,7 +86,7 @@ public class Transaction {
             output += transactionMineds.get(i).showTransactionMined();
         }
 
-        output += Util.reverseHash(this.getLocktime()); /////
+        output += Util.reverseHash(this.getLocktime()); //locktime
 
         return output;
     }
