@@ -191,7 +191,7 @@ public class Mining {
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
             //System.out.println(printByteArray(nonce)+": "+scrypted+" - "+target);
-            if (!scrypted.startsWith(target)) {  //!
+            if (scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
