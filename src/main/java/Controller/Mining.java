@@ -38,16 +38,17 @@ public class Mining {
     public static Block mining(String response) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
         List<Object> list = extractInfoFromJson(response);
         String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
-        Block block = createBlock((String)list.get(0), (JSONArray)list.get(1), (String)list.get(2), (String)list.get(3), (String)list.get(4), (String)nonce); //String previousHash, String transactions, String bits, String nonce
+        Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
 
         //buscamos el verdadero nounce
         List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
         //nonce = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()));
 
-        //if (nonce == null) return null;
+        if (nonceHash != null) {
+            block.setNonce(nonceHash.get(0));
+            block.setBlockhash(nonceHash.get(1));
+        }
 
-        block.setNonce(nonceHash.get(0));
-        block.setBlockhash(nonceHash.get(1));
         return block;
     }
 
@@ -190,7 +191,8 @@ public class Mining {
         nonceMAX[3] = (byte)255;
         //System.out.println("nonceMAX: "+printByteArray(nonceMAX));
 
-        nonce[0] = (byte)128;
+//        nonce[0] = (byte)64;
+
         boolean found = false;
         //Loop over and increment nonce
         while(nonce[0] < nonceMAX[0]){
@@ -217,7 +219,7 @@ public class Mining {
             }
             //System.out.println(printByteArray(nonce));
         }
-        return lista;
+        return null;
     }
 
 

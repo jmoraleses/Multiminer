@@ -40,6 +40,10 @@ public class Main {
             //Create new block mined
 
             Block blockMined = Mining.mining(response);
+
+            if (blockMined != null){
+
+
             //System.out.println(blockMined);
             //System.out.println(blockMined.show());
 
@@ -66,7 +70,7 @@ public class Main {
 
             String response2 = sendRequest(request2);
             System.out.println(response2);
-
+            }
         }
     }
 
