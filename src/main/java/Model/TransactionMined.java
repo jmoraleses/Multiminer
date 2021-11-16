@@ -12,11 +12,8 @@ public class TransactionMined {
     public String id;
     public String fee;
     private final String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b");
-
     public String scryptPubKey = "76a914" + address + "88ac";//P2PKH
-    //public String lockingScript = Sha256Help.calculateBitcoinAddress(address.getBytes(StandardCharsets.UTF_8));
     public String sizeScryptPubKey = Util.scriptPubKeyVarInt(scryptPubKey);
-    // public String sizeLockingScript = Util.numtoHex(lockingScript.length());
 
     public TransactionMined(String data, String txid, String weight, String hash, String fee, int count) {
         this.data = data;

@@ -179,37 +179,20 @@ public class Mining {
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];
-//        nonce[0] = databyte[76] ;
-//        nonce[1] = databyte[77] ;
-//        nonce[2] = databyte[78] ;
-//        nonce[3] = databyte[79] ;
-
         byte[] nonceMAX = new byte[4];
         nonceMAX[0] = (byte)255;
         nonceMAX[1] = (byte)255;
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
-        //System.out.println("nonceMAX: "+printByteArray(nonceMAX));
-
         nonce[0] = (byte)64;
-
         boolean found = false;
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0]){
-            //Set the bytes of the data to the nonce
-//            databyte[76] = nonce[0];
-//            databyte[77] = nonce[1];
-//            databyte[78] = nonce[2];
-//            databyte[79] = nonce[3];
-
-
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
             //System.out.println(printByteArray(nonce)+": "+scrypted+" - "+target);
-
-            if (scrypted.startsWith(target)) {  //!
+            if (!scrypted.startsWith(target)) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
-//                blockhash = scrypted;
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
                 return lista;

@@ -41,7 +41,7 @@ public class Main {
 
             Block blockMined = Mining.mining(response);
 
-            if (blockMined != null){
+            if (blockMined.getNonce() != null){
 
 
             //System.out.println(blockMined);
@@ -56,7 +56,7 @@ public class Main {
             //System.out.println(blockMined.getTransactionsTwoOnly());
 //            System.out.println(header.transactiontoJSON());
 
-//            System.out.println(blockMined.toString());
+            //System.out.println(blockMined.showBlock());
 
             header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
             String blockMinedString =  blockMined.showBlock() + blockMined.getNonce() + header.showTransaction() ;
@@ -65,7 +65,7 @@ public class Main {
 
 
             //json for to get submitblock for mining in bitcoin 0.22.0
-            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+            String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
             System.out.println(request2);
 
             String response2 = sendRequest(request2);

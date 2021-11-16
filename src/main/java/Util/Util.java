@@ -129,6 +129,20 @@ public class Util {
         return data;
     }
 
+//    public static String ripemd160(String input) {
+//        String hash160 = "";
+//        ArrayList[] table = new ArrayList[Integer.parseInt("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")];
+//        for (int i = 0; i < input.length(); i++) {
+//            hash160 += table[input.charAt(i)];
+//        }
+//        hash160 = String.format("%50x", hash160);
+//
+//        hash160 = hash160.substring(2, hash160.length());
+//        hash160 = hash160.substring(0, hash160.length()-8);
+//        return hash160;
+//    }
+
+
     //función RIPEMD160
     public static String ripemd160(String input) {
         String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
@@ -141,7 +155,11 @@ public class Util {
         for (byte b : out) {
             sb.append(String.format("%02x", b));
         }
-        return sb.toString();
+        return sb.substring(2, sb.length() - 8);
+//        hash160 = hash160.substring(2, hash160.length());
+//        hash160 = hash160.substring(0, hash160.length()-8);
+//        System.out.println(hash160);
+//        return hash160;
     }
 
     //Convertir string con transacciones a lista de TransactionMined

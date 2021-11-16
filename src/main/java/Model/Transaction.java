@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Transaction {
 
-    private String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"); //Sha256Help.calculateBitcoinAddress("tb1qlr86jd32y3n47rs23lcy7z07vm48ynj5gfqwjc".getBytes(StandardCharsets.UTF_8)); //""03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b"; //bitcoin publickey
+    private String address = Util.ripemd160("03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b");
     private String phrase = "The Tree of Life";
     private String version;
 
@@ -46,7 +46,7 @@ public class Transaction {
         heightLength = "03";
 
         scriptSig = heightLength + height + Util.asciiToHex(phrase); ///////////////////
-        scriptSigSize = calculateScriptSigSize(scriptSig);
+        scriptSigSize = Util.toHex(scriptSig.length());
         sequence = "ffffffff";
 
         outputCount = "01"; //salida de transaccion
@@ -63,7 +63,7 @@ public class Transaction {
     public String showTransaction() {
         //String heightHexLength = "03";
         String output = "";
-        output += Util.toHex(transactionMineds.size()); //transactions
+        //output += Util.toHex(transactionMineds.size()); //transactions ///////////##
 
         output += Util.reverseHash(this.getVersion()); //version
 
@@ -75,15 +75,24 @@ public class Transaction {
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
-        for(int i = 0; i < transactionMineds.size(); i++) {
-            output += transactionMineds.get(i).showTransactionMined();
-        }
+        this.setOutputCount(Util.numtoHex(transactionMineds.size())); //output count
+        output += this.getOutputCount();
+
+        output += this.getValue();
+        output += this.getScriptPubKeySize();
+        output += this.getScriptPubKey();
+
 //        output += this.getOutputCount();
 //        output += this.getValue();
 //        output += this.getScriptPubKeySize();
 //        output += this.getScriptPubKey();
 
+        for(int i = 0; i < transactionMineds.size(); i++) {
+            output += transactionMineds.get(i).showTransactionMined();
+        }
+
         output += Util.reverseHash(this.getLocktime());
+
         return output;
     }
 
@@ -110,9 +119,9 @@ public class Transaction {
     }
 
 
-    public String calculateScriptSigSize(String scriptSig){
-        return Util.toHex(scriptSig.length()/2);
-    }
+//    public String calculateScriptSigSize(String scriptSig){
+//        return Util.toHex(scriptSig.length()/2);
+//    }
 
     public String getAddress() {
         return address;
