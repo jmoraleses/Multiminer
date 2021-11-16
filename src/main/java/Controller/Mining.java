@@ -177,7 +177,8 @@ public class Mining {
             System.out.println(printByteArray(nonce)+": "+scrypted);
             if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
-                    scrypted = scrypted.substring(0, scrypted.length());
+                    StringBuilder strb = new StringBuilder(scrypted);
+                    scrypted = strb.reverse().toString();
                 }
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
@@ -212,7 +213,8 @@ public class Mining {
             System.out.println(printByteArray(nonce)+": "+scrypted);
             if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
-                    scrypted = scrypted.substring(0, scrypted.length()-1);
+                    StringBuilder strb = new StringBuilder(scrypted);
+                    scrypted = strb.reverse().toString();
                 }
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
