@@ -32,7 +32,7 @@ public class Transaction {
     private String heightLength;
 
     public List<TransactionMined> transactionMineds;
-
+    private String byteCoinbase;
 
     public void set(Block block){
 
@@ -43,19 +43,20 @@ public class Transaction {
         vout = "ffffffff";
 
         height = Util.toHex(Integer.parseInt(block.getHeight()));
-        String phraseHex = height + Util.asciiToHex(Miner.phrase);
-//        heightLength = "03";
-        heightLength = Util.numtoHex(phraseHex.length());
+        //String phraseHex = height + Util.asciiToHex(Miner.phrase);
+        heightLength = "03";
+        //heightLength = Util.numtoHex(phraseHex.length());
 
         scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
-        sequence = "ffffffff";
+
+        sequence = "ffffffff"; //FFFFFFFF
 
         outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
         scriptPubKey = "76a914" + Miner.address + "88ac"; //P2PKH
-        scriptPubKeySize = Util.scriptPubKeyVarInt(scriptPubKey);
+        scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
 
@@ -77,14 +78,14 @@ public class Transaction {
         output += Util.reverseHash(this.getSequence());
 
         output += this.getOutputCount(); //01
-        output += this.getValue(); //fee
+        output += this.getValue(); //fee in satoshis
         output += this.getScriptPubKeySize();
         output += this.getScriptPubKey();
         //output += Util.reverseHash(this.getLocktime());
 
-        for(int i = 0; i < transactionMineds.size(); i++) {
-            output += transactionMineds.get(i).showTransactionMined();
-        }
+//        for(int i = 0; i < transactionMineds.size(); i++) {
+//            output += transactionMineds.get(i).showTransactionMined();
+//        }
 
         output += Util.reverseHash(this.getLocktime()); //locktime
 
