@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * (Scrypt) Dogecoin, Litecoin
@@ -30,29 +32,36 @@ public class Main_scrypt {
         //String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         String request = "{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", \"method\": \"getblocktemplate\", \"params\": [] }";
 
-        String response = "";
         Block blockMined = null;
-        response = sendRequest(request);
-//        System.out.println(response);
-
+        String response = "";
+        while(blockMined == null){
+            long startTime = System.currentTimeMillis();
+            response = sendRequest(request);
+            blockMined = Mining.mining(response, startTime);
+        }
         if (!response.equals("")) {
+            if (blockMined.getNonce() != null){
 
-            blockMined = Mining.mining(response);
+                Transaction header = new Transaction();
+                header.set(blockMined);
+                header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
 
-            Transaction header = new Transaction();
-            header.set(blockMined);
+                //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
+                List<String> hashes = new ArrayList<>();
+                hashes.add(blockMined.getBlockhash());
+                for(int i=0; i < header.getTransactionMineds().size(); i++){
+                    hashes.add(header.getTransactionMineds().get(i).getHash());
+                }
+                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes));
 
-            header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
-            String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
-            System.out.println("Block mined: "+blockMinedString);
+                String blockMinedString =  blockMined.showBlock() + header.showTransaction() ;
 
-            String request2 = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
-            System.out.println(request2);
+                String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
+                System.out.println(request2);
 
-//            String response2 = sendRequest(request2);
-//            System.out.println(response2);
-
-
+                String response2 = sendRequest(request2);
+                System.out.println(response2);
+            }
         }
     }
 

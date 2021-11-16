@@ -50,7 +50,7 @@ public class Transaction {
         scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
 
-        sequence = "ffffffff"; //FFFFFFFF
+        sequence = "00000000"; //FFFFFFFF //00000000
 
         outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas

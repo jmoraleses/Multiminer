@@ -33,16 +33,14 @@ public class Main {
 
         //json for to get template for mining in bitcoin 0.22.0
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
-
-        //Use the function sendRequest to get gettemplate in bitcoin
-        String response = sendRequest(request);
-//        System.out.println(response);
-
+        Block blockMined = null;
+        String response = "";
+        while(blockMined == null){
+            long startTime = System.currentTimeMillis();
+            response = sendRequest(request);
+            blockMined = Mining.mining(response, startTime);
+        }
         if (!response.equals("")) {
-            //Create new block mined
-
-            Block blockMined = Mining.mining(response);
-
             if (blockMined.getNonce() != null){
 
                 Transaction header = new Transaction();
