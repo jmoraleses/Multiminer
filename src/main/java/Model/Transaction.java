@@ -58,7 +58,7 @@ public class Transaction {
 
         scriptPubKey = "76a914" + Miner.PubKeyHash + "88ac"; //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
-        scriptPubKeySize = Util.toHex(Miner.PubKeyHash.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
+        scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
 
@@ -85,10 +85,10 @@ public class Transaction {
         output += this.getScriptPubKey();
 
 
-        output += Util.numtoHex(transactionMineds.size());
-        for(int i = 0; i < transactionMineds.size(); i++) {
-            output += transactionMineds.get(i).showTransactionMined();
-        }
+//        output += Util.numtoHex(transactionMineds.size());
+//        for(int i = 0; i < transactionMineds.size(); i++) {
+//            output += transactionMineds.get(i).showTransactionMined();
+//        }
 
         output += Util.reverseHash(this.getLocktime()); //locktime
 
