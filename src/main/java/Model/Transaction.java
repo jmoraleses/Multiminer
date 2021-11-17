@@ -42,7 +42,7 @@ public class Transaction {
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
 
-        height = Util.toHex(Integer.parseInt(block.getHeight()));
+        height = Util.reverseHash(Util.toHex(Integer.parseInt(block.getHeight())));
         //String phraseHex = height + Util.asciiToHex(Miner.phrase);
         heightLength = "03";
         //heightLength = Util.numtoHex(phraseHex.length());
