@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * (SHA256) Bitcoin
@@ -36,10 +37,14 @@ public class Main {
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         Block blockMined = null;
         String response = "";
+        Miner.generatePublicAndSignature(Miner.seed); //incializar public key and signature
+
+
         while(blockMined == null){
             long startTime = System.currentTimeMillis();
             response = sendRequest(request);
             blockMined = Mining.mining(response, startTime);
+            TimeUnit.SECONDS.sleep(1);
         }
         if (!response.equals("")) {
             if (blockMined.getNonce() != null){
@@ -64,7 +69,8 @@ public class Main {
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
 
-                System.out.println(Miner.address);
+                System.out.println(Miner.show());
+
             }
         }
     }

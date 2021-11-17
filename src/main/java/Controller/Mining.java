@@ -37,17 +37,20 @@ public class Mining {
 
     public static Block mining(String response, long startTime) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
         List<Object> list = extractInfoFromJson(response);
-        String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
-        Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
+        if(response != null && !response.equals("")) {
+            String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
+            Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
 
-        //buscamos el verdadero nounce
+            //buscamos el verdadero nounce
 //        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
-        List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()), startTime);
+            List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()), startTime);
 
-        if (nonceHash != null) {
-            block.setNonce(nonceHash.get(0));
-            block.setBlockhash(nonceHash.get(1));
-            return block;
+            if (nonceHash != null) {
+                block.setNonce(nonceHash.get(0));
+                block.setBlockhash(nonceHash.get(1));
+                return block;
+            }
+            return null;
         }
         return null;
 
@@ -172,7 +175,7 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
+            if (!scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();

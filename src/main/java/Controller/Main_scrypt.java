@@ -2,6 +2,7 @@ package Controller;
 
 import Core.ScryptHelp;
 import Model.Block;
+import Model.Miner;
 import Model.Transaction;
 import Util.Util;
 

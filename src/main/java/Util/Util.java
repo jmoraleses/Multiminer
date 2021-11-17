@@ -3,11 +3,15 @@ package Util;
 import Model.TransactionMined;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bitcoinj.core.ECKey;
+import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,11 +146,34 @@ public class Util {
         return data;
     }
 
+    //funtion hash160 with RIPEMD160Digest
+    public static String hash160(String h) {
+        try {
+            byte[] hash = h.getBytes(StandardCharsets.UTF_8);
+            RIPEMD160Digest digest160 = new RIPEMD160Digest();
+            digest160.update(hash, 0, hash.length);
+            byte[] hash160Bytes =  new byte[digest160.getDigestSize()];
+            digest160.doFinal(hash160Bytes, 0);
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(hash160Bytes);
+
+            return String.format("%064x", new BigInteger(1, hashBytes));
+            //return printByteArray(hash160Bytes);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
     //función RIPEMD160
-//    public static String ripemd160(String input) {
-//        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+//    public static String hash160(String input) {
 //        RIPEMD160Digest digest = new RIPEMD160Digest();
-//        digest.update(data.getBytes(StandardCharsets.US_ASCII), 0, data.getBytes(StandardCharsets.US_ASCII).length);
+//        digest.update(input.getBytes(StandardCharsets.US_ASCII), 0, input.getBytes(StandardCharsets.US_ASCII).length);
+//        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(digest.toString());
 //        byte[] out = new byte[20];
 //        digest.doFinal(out, 0);
 //        //bytes[] to string

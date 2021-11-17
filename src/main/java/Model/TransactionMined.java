@@ -12,7 +12,7 @@ public class TransactionMined {
     public String id;
     public String fee;
 
-    public String scryptPubKey = "76a914" + Miner.publicKey + "88ac";//P2PKH
+    public String scryptPubKey = "76a914" + Miner.address + "88ac";//P2PKH
     public String sizeScryptPubKey = Util.scriptPubKeyVarInt(scryptPubKey);
 
     public TransactionMined(String data, String txid, String weight, String hash, String fee, int count) {
@@ -39,7 +39,7 @@ public class TransactionMined {
 
     public String showTransactionMined(){
         String output = "" +
-                id +
+               // id +
                 fee +
                 sizeScryptPubKey +
                 scryptPubKey;
