@@ -65,7 +65,7 @@ public class Miner {
         byte[] sighash = Sha256Hash.hash(messageBytes); //sighash = sha256(seed)
         ECKey.ECDSASignature signature_ = key.sign(Sha256Hash.wrap(sighash), keyparameter); //firma = (sighash + privatekey)
         String pubk = Util.hash160(printByteArray(privateKeyBytes)); //pubkey = hash160(privatekey)
-        ScriptSig = printByteArray(signature_.encodeToDER()) + "01"; //script de desbloqueo
+        ScriptSig = printByteArray(signature_.encodeToDER())+ "01"; //script de desbloqueo
         scriptPubKey = pubk;
         sigHash = printByteArray(sighash);
         signature = printByteArray(signature_.encodeToDER());

@@ -43,7 +43,7 @@ public class Mining {
 
             //buscamos el verdadero nounce
 //        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
-            List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlock()), Util.getDifficulty(block.getTarget()), startTime);
+            List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
 
             if (nonceHash != null) {
                 block.setNonce(nonceHash.get(0));
@@ -175,7 +175,7 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
+            if (!scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();

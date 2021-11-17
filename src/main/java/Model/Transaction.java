@@ -36,61 +36,67 @@ public class Transaction {
 
     public void set(Block block){
 
-        version = block.getVersion();
+        version = Util.numtoHex(1);
 
-        inputCount = "01"; //entrada de transaccion
+        inputCount = Util.toHex(1); //entrada de transaccion
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
 
         height = Util.toHex(Integer.parseInt(block.getHeight()));
         //String phraseHex = height + Util.asciiToHex(Miner.phrase);
-        //heightLength = "03";
+        heightLength = "03";
         //heightLength = Util.numtoHex(phraseHex.length());
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
-        scriptSig = Miner.ScriptSig; //script de desbloqueo
+        scriptSig = heightLength + height + Miner.ScriptSig; //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length());
 
-        sequence = "ffffffff"; //FFFFFFFF //00000000
+        sequence = "ffffffff"; //ffffffff //00000000
 
-        outputCount = "01"; //salida de transaccion
+        outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
         scriptPubKey = "76a914" + Miner.PubKeyHash + "88ac"; //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
-        locktime = "00000000";
+        locktime = Util.numtoHex(0);
 
     }
 
 
     //concatenar valores de transacción coinbase
     public String showTransaction() {
+        //outputCount = Util.toHex(this.transactionMineds.size());
         String output = "";
 
         output += Util.reverseHash(this.getVersion()); //version
 
-        output += this.getInputCount(); // input count
-        output += Util.reverseHash(this.getTxid()); // 000...
-        output += Util.reverseHash(this.getVout()); //previous output
+        //output += "00"; //witness_marker
+        //output += "01"; //witness_flag
+
+        output += this.getInputCount(); // input count //num_inputs
+        output += Util.reverseHash(this.getTxid()); // 000... //prev_hash
+        output += Util.reverseHash(this.getVout()); //previous output // prev_hash_index
 
         output += this.getScriptSigSize();
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
         output += this.getOutputCount(); //01: se aplica a todas las salidas
-        output += this.getValue(); //fee in satoshis
+
+        output += Util.reverseHash(this.getValue()); //fee in satoshis
         output += this.getScriptPubKeySize();
         output += this.getScriptPubKey();
 
 
-        output += Util.numtoHex(transactionMineds.size());
-        for(int i = 0; i < transactionMineds.size(); i++) {
-            output += transactionMineds.get(i).showTransactionMined();
-        }
+//        output += Util.numtoHex(transactionMineds.size());
+//        for(int i = 0; i < transactionMineds.size(); i++) {
+//            output += transactionMineds.get(i).showTransactionMined();
+//        }
 
-        output += Util.reverseHash(this.getLocktime()); //locktime
+
+        output += this.getLocktime(); //locktime
 
         return output;
     }
