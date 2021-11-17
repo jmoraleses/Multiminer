@@ -85,10 +85,10 @@ public class Transaction {
         output += this.getScriptPubKey();
 
 
-//        output += Util.numtoHex(transactionMineds.size());
-//        for(int i = 0; i < transactionMineds.size(); i++) {
-//            output += transactionMineds.get(i).showTransactionMined();
-//        }
+        output += Util.numtoHex(transactionMineds.size());
+        for(int i = 0; i < transactionMineds.size(); i++) {
+            output += transactionMineds.get(i).showTransactionMined();
+        }
 
         output += Util.reverseHash(this.getLocktime()); //locktime
 
