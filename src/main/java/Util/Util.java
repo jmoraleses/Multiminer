@@ -2,10 +2,10 @@ package Util;
 
 import Model.TransactionMined;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static Core.ScryptHelp.compactSize;
+import static Core.ScryptHelp.printByteArray;
 
 public class Util {
 
@@ -141,25 +142,22 @@ public class Util {
         return data;
     }
 
-
     //función RIPEMD160
-    public static String ripemd160(String input) {
-        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-        RIPEMD160Digest digest = new RIPEMD160Digest();
-        digest.update(data.getBytes(StandardCharsets.US_ASCII), 0, data.getBytes(StandardCharsets.US_ASCII).length);
-        byte[] out = new byte[20];
-        digest.doFinal(out, 0);
-        //bytes[] to string
-        StringBuilder sb = new StringBuilder();
-        for (byte b : out) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString(); //.substring(2, sb.length() - 8);
-//        hash160 = hash160.substring(2, hash160.length());
-//        hash160 = hash160.substring(0, hash160.length()-8);
-//        System.out.println(hash160);
+//    public static String ripemd160(String input) {
+//        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+//        RIPEMD160Digest digest = new RIPEMD160Digest();
+//        digest.update(data.getBytes(StandardCharsets.US_ASCII), 0, data.getBytes(StandardCharsets.US_ASCII).length);
+//        byte[] out = new byte[20];
+//        digest.doFinal(out, 0);
+//        //bytes[] to string
+//        StringBuilder sb = new StringBuilder();
+//        for (byte b : out) {
+//            sb.append(String.format("%02x", b));
+//        }
+//        String hash160 = sb.substring(2, sb.length() - 8);
 //        return hash160;
-    }
+//    }
+
 
     //Convertir string con transacciones a lista de TransactionMined
     public static List<TransactionMined> transactionToList(JSONArray transactions) throws JSONException {

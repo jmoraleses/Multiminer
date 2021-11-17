@@ -164,10 +164,10 @@ public class Mining {
         nonceMAX[1] = (byte)255;
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
+        nonce[0] = (byte)24; //empieza en la mitad de todos los nonce permitidos: 128
         boolean found = false;
         //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 6000*1000)){ //1 minute
+        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //1 minute  !!!
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 

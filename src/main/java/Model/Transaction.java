@@ -50,12 +50,14 @@ public class Transaction {
         scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase);
         scriptSigSize = Util.toHex(scriptSig.length());
 
-        sequence = "00000000"; //FFFFFFFF //00000000
+        sequence = "ffffffff"; //FFFFFFFF //00000000
 
         outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-        scriptPubKey = "76a914" + Miner.address + "88ac"; //P2PKH
+//        scriptPubKey = "76a914" + Miner.address + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + Miner.publicKey + "88ac"; //P2PKH
+
         scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
