@@ -56,9 +56,9 @@ public class Transaction {
         outputCount = "01"; //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-//        scriptPubKey = "76a914" + Miner.address + "88ac"; //P2PKH
-        scriptPubKey = Miner.scriptPubKey; //P2PKH
-        scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
+        scriptPubKey = "76a914" + Miner.PubKeyHash + "88ac"; //P2PKH
+//        scriptPubKey = Miner.publicKey; //P2PKH
+        scriptPubKeySize = Util.toHex(Miner.PubKeyHash.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
         locktime = "00000000";
 
