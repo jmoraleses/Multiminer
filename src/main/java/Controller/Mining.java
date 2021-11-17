@@ -175,7 +175,7 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
+            if (!scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
                 if (scrypted.endsWith(target)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
