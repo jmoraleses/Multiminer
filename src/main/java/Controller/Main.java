@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Block;
+import Model.Miner;
 import Model.Transaction;
 import Util.Util;
 
@@ -62,6 +63,8 @@ public class Main {
 
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
+
+                System.out.println(Miner.address);
             }
         }
     }

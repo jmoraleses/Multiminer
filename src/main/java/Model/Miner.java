@@ -10,9 +10,11 @@ import static Core.ScryptHelp.printByteArray;
 
 public class Miner {
 
+
     public static final String seed = "seed3";
     public static final String publicKey = generatePublicKey(seed);
     public static final String privateKey = generatePrivateKey(seed);
+    public static final String address = generateAddress(privateKey);
     public static final String phrase = "The tree of life 3000";
 
 
@@ -28,6 +30,13 @@ public class Miner {
         byte[] seedBytes = seed.getBytes(StandardCharsets.UTF_8);
         byte[] pubKey = ECKey.fromPrivate(seedBytes).getPubKeyHash();
         return printByteArray(pubKey);
+    }
+
+    //generar address from private key
+    public static String generateAddress(String privateKey){
+        byte[] privateKeyBytes = Util.hexStringToByteArray(privateKey);
+        byte[] pubKey = ECKey.fromPrivate(privateKeyBytes).getPubKeyHash();
+        return Base58.encode(pubKey);
     }
 
 }
