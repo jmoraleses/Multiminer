@@ -99,7 +99,7 @@ public class Miner {
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
         System.out.println("pub: "+pub);
-        System.out.println("private key: "+pvt);
+        System.out.println("private key: "+printByteArray(pvt.getEncoded()));
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey)pvt;
