@@ -52,35 +52,33 @@ public class Miner {
         scriptSig = "";
     }
 
-    public static void generate2(String nonce){
-        //firmar ECDSA con clave privada y nonce
-
-
-        ECKey key= new ECKey();
-        KeyParameter keyparameter = new KeyParameter(key.getPrivKeyBytes());
-
-        byte[] sighash = Sha256Hash.hash(nonce.getBytes(StandardCharsets.UTF_8)); //sighash = sha256(seed)
-        ECKey.ECDSASignature signature = key.sign(Sha256Hash.wrap(sighash), keyparameter); //firma = (sighash + privatekey)
-
-        System.out.println("signature (firma): " + printByteArray(signature.encodeToDER()));
-        System.out.println("signature (r): " + printByteArray(signature.r.toByteArray()));
-        System.out.println("signature (s): " + printByteArray(signature.s.toByteArray()));
-
-        String pubkey = "04" + printByteArray(key.getPubKey());
-        System.out.println("publicKey (clave pública): " + pubkey);
-        scriptSig = printByteArray(signature.encodeToDER()) + pubkey;
-
-        String pubKeyHash2 = "0014" + printByteArray(key.getPubKeyHash());
-        System.out.println("pubKeyHash (hash de la clave pública): " + pubKeyHash2);
-        scriptPubKey = pubKeyHash2;
-        //scriptPubKey = "03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b";
-
-        System.out.println("scriptPubKey: "+scriptPubKey);
-        System.out.println("scriptSig: "+scriptSig);
-
-
-
-    }
+//    public static void generate2(String nonce){
+//        //firmar ECDSA con clave privada y nonce
+//
+//
+//        ECKey key= new ECKey();
+//        KeyParameter keyparameter = new KeyParameter(key.getPrivKeyBytes());
+//
+//        byte[] sighash = Sha256Hash.hash(nonce.getBytes(StandardCharsets.UTF_8)); //sighash = sha256(seed)
+//        ECKey.ECDSASignature signature = key.sign(Sha256Hash.wrap(sighash), keyparameter); //firma = (sighash + privatekey)
+//
+//        System.out.println("signature (firma): " + printByteArray(signature.encodeToDER()));
+//        System.out.println("signature (r): " + printByteArray(signature.r.toByteArray()));
+//        System.out.println("signature (s): " + printByteArray(signature.s.toByteArray()));
+//
+//        String pubkey = "04" + printByteArray(key.getPubKey());
+//        System.out.println("publicKey (clave pública): " + pubkey);
+//        scriptSig = printByteArray(signature.encodeToDER()) + pubkey;
+//
+//        String pubKeyHash2 = "0014" + printByteArray(key.getPubKeyHash());
+//        System.out.println("pubKeyHash (hash de la clave pública): " + pubKeyHash2);
+//        scriptPubKey = pubKeyHash2;
+//        //scriptPubKey = "03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b";
+//
+//        System.out.println("scriptPubKey: "+scriptPubKey);
+//        System.out.println("scriptSig: "+scriptSig);
+//
+//    }
 
 
     public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
@@ -100,6 +98,8 @@ public class Miner {
         KeyPair kp = keyGen.generateKeyPair();
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
+        System.out.println("pub: "+pub);
+        System.out.println("private key: "+pvt);
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey)pvt;
