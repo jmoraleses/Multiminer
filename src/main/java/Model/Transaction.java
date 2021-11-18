@@ -42,13 +42,14 @@ public class Transaction {
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
 
+        heightLength = "03";
         height = Util.reverseHash(Util.toHex(Integer.parseInt(block.getHeight())));
         //String phraseHex = height + Util.asciiToHex(Miner.phrase);
-        heightLength = "03";
         //heightLength = Util.numtoHex(phraseHex.length());
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
-        scriptSig = heightLength + height + Miner.ScriptSig; //script de desbloqueo
+//        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
+        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length());
 
         sequence = "ffffffff"; //ffffffff //00000000
@@ -56,7 +57,7 @@ public class Transaction {
         outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-        scriptPubKey = "76a914" + Miner.PubKeyHash + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + Miner.scriptPubKey + "88ac"; //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
@@ -72,8 +73,9 @@ public class Transaction {
 
         output += Util.reverseHash(this.getVersion()); //version
 
-        //output += "00"; //witness_marker
-        //output += "01"; //witness_flag
+        //Witness 0014
+//        output += "00"; //witness_marker
+//        output += "10"; //witness_flag
 
         output += this.getInputCount(); // input count //num_inputs
         output += Util.reverseHash(this.getTxid()); // 000... //prev_hash

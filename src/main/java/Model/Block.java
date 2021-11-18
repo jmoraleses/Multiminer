@@ -52,7 +52,7 @@ public class Block {
 
         String output = "";
         output += Util.reverseHash(this.getVersion());
-        System.out.println(this.getVersion());
+
         output += Util.reverseHash(this.getPreviousHash());
         output += Util.reverseHash(this.getMerkleRoot());
 

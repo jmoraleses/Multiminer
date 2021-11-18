@@ -15,6 +15,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.spongycastle.crypto.tls.CipherType.stream;
+
 /**
  * (SHA256) Bitcoin
  */
@@ -37,7 +39,7 @@ public class Main {
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         Block blockMined = null;
         String response = "";
-        Miner.generatePublicAndSignature(Miner.seed); //incializar public key and signature
+        Miner.generate(Miner.seed); //incializar public key and signature
 
 
         while(blockMined == null){
@@ -48,6 +50,7 @@ public class Main {
         }
         if (!response.equals("")) {
             if (blockMined.getNonce() != null){
+
 
                 Transaction header = new Transaction();
                 header.set(blockMined); //configura el header (coinbase transaction)
@@ -63,13 +66,16 @@ public class Main {
 
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
 
+
                 String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
                 System.out.println(request2);
 
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
 
-                System.out.println(Miner.show());
+                //System.out.println(Miner.show());
+//                System.out.println(blockMined);
+//                System.out.println(header.transactiontoJSON());
 
             }
         }

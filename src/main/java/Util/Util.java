@@ -150,15 +150,16 @@ public class Util {
     public static String hash160(String h) {
         try {
             byte[] hash = h.getBytes(StandardCharsets.UTF_8);
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(hash);
+
             RIPEMD160Digest digest160 = new RIPEMD160Digest();
-            digest160.update(hash, 0, hash.length);
+            digest160.update(hashBytes, 0, hashBytes.length);
             byte[] hash160Bytes =  new byte[digest160.getDigestSize()];
             digest160.doFinal(hash160Bytes, 0);
 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(hash160Bytes);
-
-            return String.format("%064x", new BigInteger(1, hashBytes));
+            return String.format("%64x", new BigInteger(1, hash160Bytes));
             //return printByteArray(hash160Bytes);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
