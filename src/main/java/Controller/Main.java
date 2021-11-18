@@ -39,7 +39,6 @@ public class Main {
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         Block blockMined = null;
         String response = "";
-        Miner.generate(Miner.seed); //incializar public key and signature
 
 
         while(blockMined == null){

@@ -2,6 +2,8 @@ package Model;
 
 import Util.Util;
 
+import java.io.UnsupportedEncodingException;
+import java.security.*;
 import java.util.List;
 
 public class Transaction {
@@ -34,8 +36,8 @@ public class Transaction {
     public List<TransactionMined> transactionMineds;
     private String byteCoinbase;
 
-    public void set(Block block){
-
+    public void set(Block block) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException {
+        Miner miner = new Miner();
         version = Util.numtoHex(1);
 
         inputCount = Util.toHex(1); //entrada de transaccion
@@ -49,7 +51,7 @@ public class Transaction {
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
 //        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
-        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
+        scriptSig = heightLength + height + miner.getScriptSig(); //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length());
 
         sequence = "ffffffff"; //ffffffff //00000000
@@ -57,7 +59,7 @@ public class Transaction {
         outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-        scriptPubKey = "76a914" + Miner.scriptPubKey + "88ac"; //P2PKH
+        scriptPubKey = "76a914" + miner.getScriptPubKey() + "88ac"; //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 

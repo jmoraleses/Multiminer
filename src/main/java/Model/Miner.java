@@ -46,13 +46,11 @@ public class Miner {
         return output;
     }
 
-
-    public static void generate3(String seed) {
-        scriptPubKey = "03779c54c2c8aa4deb4f606953204f4c3b734ac51d30cc1152a98ebb603b010a1b";
-        scriptSig = "";
+    public Miner() throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException {
+        generate(phrase);
     }
 
-//    public static void generate2(String nonce){
+    //    public static void generate2(String nonce){
 //        //firmar ECDSA con clave privada y nonce
 //
 //
@@ -123,7 +121,7 @@ public class Miner {
         }else{
             bcPubCompress = "03" + sx;
         }
-        System.out.println("pubkey comprimida: " + "02" + sx );
+        System.out.println("pubkey comprimida: " + bcPubCompress );
         scriptPubKey = bcPubCompress; //clave pública
 
         //Hash160
@@ -159,7 +157,7 @@ public class Miner {
         byte[] signatureBytes = signature.sign();
         System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
         setSignature(printByteArray(signatureBytes)); //signature
-        scriptSig = "47" + signature + "01" + bcPubCompress;
+        scriptSig = "47" + printByteArray(signatureBytes) + "01" + bcPubCompress;
 
     }
 
@@ -198,7 +196,7 @@ public class Miner {
     }
 
     public static String getSignature() {
-        return signature;
+        return signature.toString();
     }
 
     public static void setSignature(String signature) {
