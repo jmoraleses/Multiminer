@@ -83,7 +83,7 @@ public class Miner {
     }
 
 
-    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -103,17 +103,25 @@ public class Miner {
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey)pvt;
-        String sepvt = adjustTo64(epvt.getS().toString(16)).toUpperCase();
+        String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
         System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
 
         //clave publica
         ECPublicKey epub = (ECPublicKey)pub;
         ECPoint pt = epub.getW();
-        String sx = adjustTo64(pt.getAffineX().toString(16)).toUpperCase();
-        String sy = adjustTo64(pt.getAffineY().toString(16)).toUpperCase();
+        String sx = adjustTo64(pt.getAffineX().toString(16)).toLowerCase();
+        String sy = adjustTo64(pt.getAffineY().toString(16)).toLowerCase();
         String bcPub = "04" + sx + sy;
         System.out.println("bcPub: " + bcPub);
-        scriptPubKey = bcPub; //clave pública
+        //comprimir clave publica
+        String bcPubCompress = null;
+        if ( pt.getAffineY().bitLength() % 2 == 0){
+            bcPubCompress = "02" + sx;
+        }else{
+            bcPubCompress = "03" + sx;
+        }
+        System.out.println("pubkey comprimida: " + "02" + sx );
+        scriptPubKey = bcPubCompress; //clave pública
 
         //Hash160
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
@@ -141,6 +149,14 @@ public class Miner {
 
         System.out.println("  adr: " + Base58.encode(a1));
 
+        //create signature from privatekey
+        Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
+        signature.initSign(pvt);
+        signature.update(bcPub.getBytes("UTF-8"));
+        byte[] signatureBytes = signature.sign();
+        System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
+        setSignature(printByteArray(signatureBytes)); //signature
+        scriptSig = "47" + signature + "01" + bcPubCompress;
 
     }
 
@@ -154,6 +170,52 @@ public class Miner {
         }
     }
 
+    public static String getSeed() {
+        return seed;
+    }
 
+    public static void setSeed(String seed) {
+        Miner.seed = seed;
+    }
+
+    public static String getScriptSig() {
+        return scriptSig;
+    }
+
+    public static void setScriptSig(String scriptSig) {
+        Miner.scriptSig = scriptSig;
+    }
+
+    public static String getScriptPubKey() {
+        return scriptPubKey;
+    }
+
+    public static void setScriptPubKey(String scriptPubKey) {
+        Miner.scriptPubKey = scriptPubKey;
+    }
+
+    public static String getSignature() {
+        return signature;
+    }
+
+    public static void setSignature(String signature) {
+        Miner.signature = signature;
+    }
+
+    public static String getAddress() {
+        return address;
+    }
+
+    public static void setAddress(String address) {
+        Miner.address = address;
+    }
+
+    public static String getPubKeyHash() {
+        return PubKeyHash;
+    }
+
+    public static void setPubKeyHash(String pubKeyHash) {
+        PubKeyHash = pubKeyHash;
+    }
 }
 
