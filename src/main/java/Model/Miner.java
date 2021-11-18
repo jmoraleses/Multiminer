@@ -22,12 +22,12 @@ public class Miner {
     public static String seed = "seed3";
     public static String scriptSig;
     public static String scriptPubKey;
-    public static String sigHash;
+//    public static String sigHash;
     public static String signature;
 
     public static String address;
     public static String publicKey;
-    public static String PubKeyHash;
+//    public static String PubKeyHash;
     public static String privKey;
 
     public static final String phrase = "The tree of life 3000";
@@ -37,11 +37,11 @@ public class Miner {
         String output = "" +
                 "ScriptSig = " + scriptSig + "\n" +
                 "scriptPubKey = " + scriptPubKey + "\n" +
-                "sigHash = " + sigHash + "\n" +
+//                "sigHash = " + sigHash + "\n" +
                 "signature = " + signature + "\n" +
                 "address = " + address + "\n" +
                 "publicKey = " + publicKey + "\n" +
-                "PubKeyHash = " + PubKeyHash + "\n" +
+//                "PubKeyHash = " + PubKeyHash + "\n" +
                 "privKey = " + privKey + "\n";
         return output;
     }
@@ -100,6 +100,9 @@ public class Miner {
         PrivateKey pvt = kp.getPrivate(); //privatekey
         System.out.println("pub: "+pub);
         System.out.println("private key: "+printByteArray(pvt.getEncoded()));
+        System.out.println("public key: "+printByteArray(pub.getEncoded()));
+        privKey = printByteArray(pvt.getEncoded());
+        publicKey = printByteArray(pub.getEncoded());;
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey)pvt;
@@ -210,12 +213,5 @@ public class Miner {
         Miner.address = address;
     }
 
-    public static String getPubKeyHash() {
-        return PubKeyHash;
-    }
-
-    public static void setPubKeyHash(String pubKeyHash) {
-        PubKeyHash = pubKeyHash;
-    }
 }
 
