@@ -6,14 +6,20 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.ECPointUtil;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
+import org.bouncycastle.jce.spec.ECNamedCurveSpec;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
-import java.security.spec.ECGenParameterSpec;
-import java.security.spec.ECPoint;
+import java.security.spec.*;
 
 import static Core.ScryptHelp.printByteArray;
 
@@ -46,7 +52,7 @@ public class Miner {
         return output;
     }
 
-    public Miner() throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException {
+    public Miner() throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException, InvalidKeySpecException {
         generate(phrase);
     }
 
@@ -79,7 +85,7 @@ public class Miner {
 //    }
 
 
-    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
+    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException, InvalidKeySpecException {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -96,23 +102,30 @@ public class Miner {
         KeyPair kp = keyGen.generateKeyPair();
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
-        System.out.println("pub: "+pub);
+//        System.out.println("pub: "+printByteArray(pub.getEncoded()));
         System.out.println("private key: "+printByteArray(pvt.getEncoded()));
-        System.out.println("public key: "+printByteArray(pub.getEncoded()));
+//        System.out.println("public key: "+printByteArray(pub.getEncoded()));
         privKey = printByteArray(pvt.getEncoded());
         publicKey = printByteArray(pub.getEncoded());;
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey)pvt;
         String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
-        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
+//        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
+
 
         //clave publica
         ECPublicKey epub = (ECPublicKey)pub;
         ECPoint pt = epub.getW();
         String sx = adjustTo64(pt.getAffineX().toString(16)).toLowerCase();
         String sy = adjustTo64(pt.getAffineY().toString(16)).toLowerCase();
+        //extract s low value
+        String s = sx + sy;
+        System.out.println("r: " + s); //clave publica
         String bcPub = "04" + sx + sy;
+        //x y sy y clave publica
+//        System.out.println("(r)x[" + sx.length() + "]: " + sx);
+//        System.out.println("(s)y[" + sy.length() + "]: " + sy);
         System.out.println("bcPub: " + bcPub);
         //comprimir clave publica
         String bcPubCompress = null;
@@ -124,11 +137,30 @@ public class Miner {
         System.out.println("pubkey comprimida: " + bcPubCompress );
         scriptPubKey = bcPubCompress; //clave pública
 
+        //////////////////////////
+////        KeyPairGenerator kg = KeyPairGenerator.getInstance ("EC");
+//        keyGen.initialize (new ECGenParameterSpec ("secp256k1"));
+//        ECParameterSpec p = ((ECPublicKey) keyGen.generateKeyPair().getPublic()).getParams();
+//        System.out.println ("p=(dec)" + ((ECFieldFp) p.getCurve().getField()).getP() );
+//        ECPoint G = p.getGenerator();
+//        System.out.format ("Gx=(hex)%032x%n", G.getAffineX());
+//        System.out.format ("Gy=(hex)%032x%n", G.getAffineY());
+//        byte[] privatekey_enc = DatatypeConverter.parseHexBinary(printByteArray(pvt.getEncoded())); //clave privada encriptada
+//        // note fixed prefix for PKCS8-EC-secp256k1 plus your private value
+//        KeyFactory kf = KeyFactory.getInstance("EC");
+//        PrivateKey k1 = kf.generatePrivate(new PKCS8EncodedKeySpec(privatekey_enc));
+//        ECParameterSpec p2 = ((ECPrivateKey) k1).getParams();
+//        System.out.println ("again p=(dec)" + ((ECFieldFp) p2.getCurve().getField()).getP() );
+        //////////////////////////
+        //calcular n  = x - y
+//        BigInteger n = epub.getW().getAffineX().subtract(epub.getW().getAffineY());
+//        System.out.println("n: "+n);
+        //////////////////////////
+
         //Hash160
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
         byte[] s1 = sha.digest(bcPub.getBytes("UTF-8"));
-//        System.out.println("  sha: " + printByteArray(s1).toUpperCase());
-
+        //System.out.println("  sha: " + printByteArray(s1).toUpperCase());
         MessageDigest rmd = MessageDigest.getInstance("RipeMD160", "BC");
         byte[] r1 = rmd.digest(s1);
 
@@ -136,28 +168,33 @@ public class Miner {
         byte[] r2 = new byte[r1.length + 1];
         r2[0] = 0;
         for (int i = 0 ; i < r1.length ; i++) r2[i+1] = r1[i];
-//        System.out.println("  rmd: " + printByteArray(r2).toUpperCase());
+        //System.out.println("  rmd: " + printByteArray(r2).toUpperCase());
 
         //sha256 dos veces
         byte[] s2 = sha.digest(r2);
-//        System.out.println("  sha: " + printByteArray(s2).toUpperCase());
+        //System.out.println("  sha: " + printByteArray(s2).toUpperCase());
         byte[] s3 = sha.digest(s2);
-//        System.out.println("  sha: " + printByteArray(s3).toUpperCase());
+        //System.out.println("  sha: " + printByteArray(s3).toUpperCase());
 
         byte[] a1 = new byte[25];
         for (int i = 0 ; i < r2.length ; i++) a1[i] = r2[i];
         for (int i = 0 ; i < 5 ; i++) a1[20 + i] = s3[i];
 
-        System.out.println("  adr: " + Base58.encode(a1));
+        System.out.println("  adr: " + Base58.encode(a1)); //address
 
         //create signature from privatekey
-        Signature signature = Signature.getInstance("SHA256withECDSA", "BC");
-        signature.initSign(pvt);
-        signature.update(bcPub.getBytes("UTF-8"));
-        byte[] signatureBytes = signature.sign();
-        System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
+        Signature signature_ = Signature.getInstance("SHA256withECDSA", "BC");
+        signature_.initSign(pvt);
+        signature_.update(bcPub.getBytes("UTF-8"));
+        byte[] signatureBytes = signature_.sign();
+//        System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
         setSignature(printByteArray(signatureBytes)); //signature
-        scriptSig = "47" + printByteArray(signatureBytes) + "01" + bcPubCompress;
+//        signature = "47" + printByteArray(signatureBytes) + "01" ;
+        signature = "30440220" + sx  + "0220" + sy + "01"; //scriptSig
+//        scriptSig = "47" + printByteArray(signatureBytes) + "01" + "02" + bcPub; //scriptSig
+        scriptSig = "47" + signature +  Util.toHex(bcPubCompress.length()) + bcPubCompress;
+        System.out.println("scriptSig: "+scriptSig);
+
 
     }
 

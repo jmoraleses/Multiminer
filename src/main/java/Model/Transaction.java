@@ -4,6 +4,7 @@ import Util.Util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public class Transaction {
@@ -36,7 +37,7 @@ public class Transaction {
     public List<TransactionMined> transactionMineds;
     private String byteCoinbase;
 
-    public void set(Block block) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException {
+    public void set(Block block) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException, InvalidKeySpecException {
         Miner miner = new Miner();
         version = Util.numtoHex(1);
 
@@ -51,7 +52,7 @@ public class Transaction {
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
 //        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
-        scriptSig = heightLength + height + miner.getScriptSig(); //script de desbloqueo
+        scriptSig =  miner.getScriptSig(); //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length());
 
         sequence = "ffffffff"; //ffffffff //00000000
