@@ -31,6 +31,11 @@ public class Util {
         return DigestUtils.sha256Hex(hash);
     }
 
+    //función que dado un string encripta a hexadecimal
+    public static String hexString(String input) {
+        return String.format("%040x", new BigInteger(1, input.getBytes(StandardCharsets.UTF_8)));
+    }
+
     //función de nombre toHex que convierte un número en 8 caracteres hexadecimales
     public static String numtoHex(int n) {
         return String.format("%08x", n);

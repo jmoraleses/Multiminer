@@ -52,8 +52,8 @@ public class Transaction {
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
 //        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
-        scriptSig = Util.asciiToHex(Miner.phrase); //script de desbloqueo
-
+        scriptSig = heightLength + height + Util.hexString(Miner.phrase); //script de desbloqueo
+        System.out.println(scriptSig);
         scriptSigSize = Util.toHex(scriptSig.length()/2);
 
         sequence = "ffffffff"; //ffffffff //00000000
@@ -86,7 +86,9 @@ public class Transaction {
         output += Util.reverseHash(this.getTxid()); // 000... //prev_hash
         output += Util.reverseHash(this.getVout()); //previous output // prev_hash_index
 
-        output += this.getScriptSigSize();///////
+
+        output += this.getScriptSigSize();//
+
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
