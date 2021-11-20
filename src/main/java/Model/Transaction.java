@@ -51,9 +51,10 @@ public class Transaction {
         //heightLength = Util.numtoHex(phraseHex.length());
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
-        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
+//        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
+        scriptSig = Util.asciiToHex(Miner.phrase); //script de desbloqueo
 
-        scriptSigSize = Util.toHex(scriptSig.length());
+        scriptSigSize = Util.toHex(scriptSig.length()/2);
 
         sequence = "ffffffff"; //ffffffff //00000000
 
@@ -63,7 +64,7 @@ public class Transaction {
 //        scriptPubKey = "76a914" + miner.getScriptPubKey() + "88ac"; //P2PKH
         scriptPubKey = miner.getScriptPubKey(); //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
-        scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
+        scriptPubKeySize = Util.toHex(scriptPubKey.length()/2);
 
         locktime = Util.numtoHex(0);
 
