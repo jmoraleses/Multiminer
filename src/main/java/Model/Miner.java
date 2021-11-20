@@ -55,7 +55,7 @@ public class Miner {
         return Base58.encode(hash);
     }
 
-    public static void generate(String seed) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, UnsupportedEncodingException, InvalidAlgorithmParameterException, SignatureException {
+    public static void generate1(String seed) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, UnsupportedEncodingException, InvalidAlgorithmParameterException, SignatureException {
         //calcular la private key desde seed
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -74,7 +74,18 @@ public class Miner {
 
 
         //calcular public key from private key
-        publicKey = printByteArray(pub.getEncoded());
+        //comprimir clave publica
+        ECPublicKey epub = (ECPublicKey)pub;
+        ECPoint pt = epub.getW();
+        String sx = adjustTo64(pt.getAffineX().toString(16)).toLowerCase();
+        String sy = adjustTo64(pt.getAffineY().toString(16)).toLowerCase();
+        String bcPubCompress = null;
+        if ( pt.getAffineY().bitLength() % 2 == 0){
+            bcPubCompress = "02" + sx;
+        }else{
+            bcPubCompress = "03" + sx;
+        }
+        publicKey = bcPubCompress;
         System.out.println("publicKey: "+publicKey);
 
         //calcular el hash160 desde la public key
@@ -89,36 +100,27 @@ public class Miner {
         address = calculateAddress(pubKeyHash);
         System.out.println("address: "+address);
 
-        //calcular scriptSig
-        scriptSig = calculateScriptSig(publicKey);
-        System.out.println("scriptSig: "+scriptSig);
+//        scriptPubKey = calculateScriptPubKey(pubKeyHash);
 
-        scriptPubKey = calculateScriptPubKey(pubKeyHash);
+        scriptPubKey = "76a914" + pubKeyHash + "88ac"; //scriptpubkey
         System.out.println("scriptPubKey: "+scriptPubKey);
 
+        //calcular scriptSig
+        scriptSig = "47" + signature + "01" + publicKey;
+        System.out.println("scriptSig: "+scriptSig);
 
-        System.out.println(verifySignature(publicKey, signature, scriptSig));
-
+//        System.out.println(verifyScriptPubKey(pubKeyHash));
+//        System.out.println(verifySignature(publicKey, signature, scriptSig));
 
     }
 
 
-    //create scripSig from public key and signature and return it
-    public static String calculateScriptSig(String publicKey) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        String scriptSig = "";
-        scriptSig = "04" + publicKey + signature;
-        return scriptSig;
-    }
 
-    //función verificar scriptSignature
-    public static boolean verifySignature(String publicKey, String signature, String scriptSig) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        String scriptPubKey = "";
-        scriptPubKey += "41" + publicKey.length()/2 + publicKey;
-        scriptPubKey += "41" + signature.length()/2 + signature;
-        scriptPubKey += "00";
-        String scriptSigHash = calculateScriptSigHash(scriptSig);
-        String scriptPubKeyHash = calculateScriptPubKeyHash(scriptPubKey);
-        return scriptSigHash.equals(scriptPubKeyHash);
+    //verificar scriptpubkey
+    public static boolean verifyScriptPubKey(String scriptPubKey) throws UnsupportedEncodingException {
+        String pubKeyHash = scriptPubKey.substring(8, 24);
+        String address = calculateAddress(pubKeyHash);
+        return address.equals(scriptPubKey.substring(2, 42));
     }
 
     //calculate scriptPubKeyHash from scriptPubKey
@@ -223,18 +225,29 @@ public class Miner {
         return hex64;
     }
 
-    //Función que dado el hash160 calcula la address en dogecoin
-    public static String calculateAddress(String hash160) throws UnsupportedEncodingException {
-        byte[] addr = new byte[1 + 1 + 20];
-        addr[0] = 0x1e;
-        addr[1] = 0x0f;
-        System.arraycopy(hash160.getBytes(StandardCharsets.UTF_8), 0, addr, 2, 20);
-        return Base58.encode(addr);
+    //Función que dado el hash160 calcula la address
+    public static String calculateAddress(String pubKeyHash) {
+        String address = "";
+        String version = "00";
+        String checksum = calculateChecksum(version + pubKeyHash);
+        address = version + pubKeyHash + checksum;
+        return address;
+    }
+
+    private static String calculateChecksum(String s) {
+        byte[] hash = new byte[32];
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(s.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return printByteArray(hash);
     }
 
     //****************************************************************************************************************
 
-    public static void generate2(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException, InvalidKeySpecException {
+    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException, InvalidKeySpecException {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -260,7 +273,7 @@ public class Miner {
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey) pvt;
         String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
-        //System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
+        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
 
 
         //clave publica
@@ -293,14 +306,17 @@ public class Miner {
         MessageDigest rmd = MessageDigest.getInstance("RipeMD160", "BC");
         byte[] r1 = rmd.digest(s1);
         System.out.println("r1: "+printByteArray(r1)); //pubkeyhash?
-        pubKeyHash = printByteArray(r1);
-        scriptPubKey = "76a914" + pubKeyHash + "88ac"; //scriptpubkey
 
         //agregamos byte al comienzo 0x00
         byte[] r2 = new byte[r1.length + 1];
         r2[0] = 0;
         for (int i = 0 ; i < r1.length ; i++) r2[i+1] = r1[i];
         System.out.println("  rmd: " + printByteArray(r2).toUpperCase());
+
+        pubKeyHash = printByteArray(r1);
+        scriptPubKey = "76a914" + pubKeyHash + "88ac"; //scriptpubkey
+        System.out.println("scriptPubKey: "+scriptPubKey);
+
 
         //sha256 dos veces
         byte[] s2 = sha.digest(r2);
@@ -327,7 +343,7 @@ public class Miner {
 //        scriptSig = "47" + printByteArray(signatureBytes) + "01" + "02" + bcPub; //scriptSig
 //        scriptSig = "47" + signature +  Util.toHex(bcPubCompress.length()) + bcPubCompress;
 //        scriptSig = "47" + signature  + bcPubCompress;
-        scriptSig = "47" + signature + "01" + publicKey;
+        scriptSig = "47" + signature + "21" + publicKey;
         System.out.println("scriptSig: "+scriptSig);
 
 
