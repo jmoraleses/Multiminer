@@ -37,7 +37,7 @@ public class Transaction {
     public List<TransactionMined> transactionMineds;
     private String byteCoinbase;
 
-    public void set(Block block) throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException, InvalidKeySpecException {
+    public void set(Block block) throws Exception {
         Miner miner = new Miner();
         version = Util.numtoHex(1);
 
@@ -53,7 +53,7 @@ public class Transaction {
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
 //        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
         scriptSig = heightLength + height + Util.hexString(Miner.phrase); //script de desbloqueo
-        System.out.println(scriptSig);
+
         scriptSigSize = Util.toHex(scriptSig.length()/2);
 
         sequence = "ffffffff"; //ffffffff //00000000
@@ -95,7 +95,7 @@ public class Transaction {
         output += this.getOutputCount(); //01: se aplica a todas las salidas
 
         output += Util.reverseHash(this.getValue()); //fee in satoshis
-        output += this.getScriptPubKeySize();/////////
+        output += this.getScriptPubKeySize();//
         output += this.getScriptPubKey();
 
 

@@ -23,7 +23,7 @@ public class Miner {
 //    public static String sigHash;
     public static String signature;
 
-    public static String address;
+    public static String address = getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv");
     public static String publicKey;
     public static String pubKeyHash;
     public static String privKey;
@@ -44,7 +44,7 @@ public class Miner {
         return output;
     }
 
-    public Miner() throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException, InvalidKeyException, InvalidKeySpecException {
+    public Miner() throws Exception {
         generate(seed);
     }
 
@@ -238,7 +238,7 @@ public class Miner {
 
     //****************************************************************************************************************
 
-    public static void generate(String seed) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException, InvalidKeySpecException {
+    public static void generate(String seed) throws Exception {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -255,16 +255,16 @@ public class Miner {
         KeyPair kp = keyGen.generateKeyPair();
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
-        System.out.println("pub: "+printByteArray(pub.getEncoded()));
-        System.out.println("private key: "+printByteArray(pvt.getEncoded()));
-        System.out.println("public key: "+printByteArray(pub.getEncoded()));
+//        System.out.println("pub: "+printByteArray(pub.getEncoded()));
+//        System.out.println("private key: "+printByteArray(pvt.getEncoded()));
+//        System.out.println("public key: "+printByteArray(pub.getEncoded()));
         privKey = printByteArray(pvt.getEncoded());
         publicKey = printByteArray(pub.getEncoded());;
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey) pvt;
         String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
-        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
+//        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
 
 
         //clave publica
@@ -277,8 +277,8 @@ public class Miner {
         //System.out.println("r: " + s); //clave publica
         String bcPub = "04" + sx + sy;
         //x y sy y clave publica
-        System.out.println("(r)x[" + sx.length() + "]: " + sx);
-        System.out.println("(s)y[" + sy.length() + "]: " + sy);
+//        System.out.println("(r)x[" + sx.length() + "]: " + sx);
+//        System.out.println("(s)y[" + sy.length() + "]: " + sy);
         System.out.println("bcPub: " + bcPub);
         //comprimir clave publica
         String bcPubCompress = null;
@@ -318,7 +318,7 @@ public class Miner {
         byte[] a1 = new byte[25];
         for (int i = 0 ; i < r2.length ; i++) a1[i] = r2[i];
         for (int i = 0 ; i < 5 ; i++) a1[20 + i] = s3[i];
-
+        //address = Base58.encode(a1);
         System.out.println("  adr: " + Base58.encode(a1)); //address
 
         //create signature from privatekey
@@ -337,6 +337,7 @@ public class Miner {
         scriptSig = "47" + signature + "21" + publicKey;
         System.out.println("scriptSig: "+scriptSig);
 
+        System.out.println(getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv"));
     }
 
     //función adjustTo64
@@ -346,6 +347,22 @@ public class Miner {
             hex64 = "0" + hex64;
         }
         return hex64;
+    }
+
+
+
+    //adress to pubkeyhash in dogecoin
+    public static String getPubKeyHash(String address) {
+        String pubKeyHash = null;
+        try {
+            byte[] addressBytes = Base58.decode(address);
+            byte[] pubKeyHashBytes = new byte[21];
+            for (int i = 0 ; i < 21 ; i++) pubKeyHashBytes[i] = addressBytes[i];
+            pubKeyHash = printByteArray(pubKeyHashBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pubKeyHash;
     }
 
 
