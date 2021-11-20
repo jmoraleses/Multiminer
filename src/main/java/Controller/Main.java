@@ -15,8 +15,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.spongycastle.crypto.tls.CipherType.stream;
-
 /**
  * (SHA256) Bitcoin
  */
@@ -56,12 +54,15 @@ public class Main {
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<TransactionMined>
 
                 //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
-                List<String> hashes = new ArrayList<>();
-                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
+                ArrayList<String> hashes = new ArrayList<>();
+                //hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 for(int i=0; i < header.getTransactionMineds().size(); i++){
                     hashes.add(header.getTransactionMineds().get(i).getHash()); //agrega los hashes de las transacciones a una lista
                 }
+                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes)); //calcula el merkle root y lo guarda en el atributo del bloque minado
+
+                //header.setTxid(Miner.calculateCoinbaseTxid(blockMined.showBlock()));
 
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
 

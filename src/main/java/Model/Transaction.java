@@ -51,8 +51,8 @@ public class Transaction {
         //heightLength = Util.numtoHex(phraseHex.length());
 
 //        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
-//        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
-        scriptSig =  miner.getScriptSig(); //script de desbloqueo
+        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
+
         scriptSigSize = Util.toHex(scriptSig.length());
 
         sequence = "ffffffff"; //ffffffff //00000000
@@ -60,7 +60,8 @@ public class Transaction {
         outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
 
-        scriptPubKey = "76a914" + miner.getScriptPubKey() + "88ac"; //P2PKH
+//        scriptPubKey = "76a914" + miner.getScriptPubKey() + "88ac"; //P2PKH
+        scriptPubKey = miner.getScriptPubKey(); //P2PKH
 //        scriptPubKey = Miner.publicKey; //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()); //Util.scriptPubKeyVarInt(scriptPubKey);
 
@@ -84,14 +85,14 @@ public class Transaction {
         output += Util.reverseHash(this.getTxid()); // 000... //prev_hash
         output += Util.reverseHash(this.getVout()); //previous output // prev_hash_index
 
-        output += this.getScriptSigSize();
+        output += this.getScriptSigSize();///////
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
 
         output += this.getOutputCount(); //01: se aplica a todas las salidas
 
         output += Util.reverseHash(this.getValue()); //fee in satoshis
-        output += this.getScriptPubKeySize();
+        output += this.getScriptPubKeySize();/////////
         output += this.getScriptPubKey();
 
 

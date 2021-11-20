@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class Block {
     //crear todos los atributos de un bloque de bitcoin

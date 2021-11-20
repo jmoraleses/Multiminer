@@ -5,22 +5,21 @@ import Core.ScryptHelp;
 import Model.Block;
 import Util.Util;
 import com.lambdaworks.crypto.SCrypt;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import com.google.common.primitives.Bytes;
 
 import static Core.ScryptHelp.printByteArray;
+import static java.time.LocalDateTime.*;
 
 public class Mining {
 
@@ -151,14 +150,15 @@ public class Mining {
                 String str = data.get(i) + data.get(i + 1);
                 newData.add(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
             }
-            merkleRoot = calculateMerkleRoot(newData);
+            merkleRoot = lastHashMerkleRoot(newData);
         }
         return merkleRoot;
     }
 
     //Búsqueda de nonce para algoritmo Scrypt
     public static List<String> doScrypt(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        System.out.println("Buscando para Scrypt");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        System.out.println("Buscando para Scrypt " + dtf.format(now()) );
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];
@@ -195,7 +195,8 @@ public class Mining {
 
     //Búsqueda de nonce para algoritmo SHA256
     public static List<String> doSha256(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        System.out.println("Buscando para Sha256");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        System.out.println("Buscando para Sha256" + dtf.format(now()));
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];

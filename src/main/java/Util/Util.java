@@ -2,7 +2,6 @@ package Util;
 
 import Model.TransactionMined;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.bitcoinj.core.ECKey;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static Core.ScryptHelp.compactSize;
-import static Core.ScryptHelp.printByteArray;
 
 public class Util {
 
