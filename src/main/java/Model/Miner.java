@@ -21,8 +21,8 @@ public class Miner {
     public static String seed = "seed3";
     public static String scriptSig;
     public static String scriptPubKey;
-//    public static String sigHash;
     public static String signature;
+    public static String sigHash;
 
     public static String address = getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv");
     public static String publicKey;
