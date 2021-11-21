@@ -143,9 +143,6 @@ public class Miner {
         System.out.println("signature: " + printByteArray(signatureBytes));
 //        signature = "47" + printByteArray(signatureBytes) + "01" ;
     //    signature = "30440220" + sx  + "0220" + printByteArray(r1) + "01"; //scriptSig
-//        scriptSig = "47" + printByteArray(signatureBytes) + "01" + "02" + bcPub; //scriptSig
-//        scriptSig = "47" + signature +  Util.toHex(bcPubCompress.length()) + bcPubCompress;
-//        scriptSig = "47" + signature  + bcPubCompress;
         scriptSig = "47" + signature + "21" + publicKey;
         System.out.println("scriptSig: "+scriptSig);
 
