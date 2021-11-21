@@ -22,12 +22,12 @@ public class Miner {
     public static String scriptSig;
     public static String scriptPubKey;
     public static String signature;
-    public static String sigHash;
+    //public static String sigHash;
 
     public static String address = getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv");
     public static String publicKey;
     public static String pubKeyHash;
-    public static String privKey;
+    public static String privateKey;
 
     public static final String phrase = "3000 /birds/ sing in the /tree/ of /life/, they say /pio/ /pio/ /pio/...";
 
@@ -41,7 +41,7 @@ public class Miner {
                 "address = " + address + "\n" +
                 "publicKey = " + publicKey + "\n" +
                 "PubKeyHash = " + pubKeyHash + "\n" +
-                "privKey = " + privKey + "\n";
+                "privKey = " + privateKey + "\n";
         return output;
     }
 
@@ -70,7 +70,7 @@ public class Miner {
 //        System.out.println("pub: "+printByteArray(pub.getEncoded()));
         System.out.println("private key: "+printByteArray(pvt.getEncoded()));
 //        System.out.println("public key: "+printByteArray(pub.getEncoded()));
-        privKey = printByteArray(pvt.getEncoded());
+        privateKey = printByteArray(pvt.getEncoded());
         publicKey = printByteArray(pub.getEncoded());;
 
         //clave privada: la que almacenan las wallets
