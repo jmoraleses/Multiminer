@@ -19,12 +19,11 @@ public class Miner {
     public static String privateKey;
     public static String scriptSig;
     public static String signature;
+    //public static String sigHash;
 
     public static String publicKey = "03e7efaf51e64595f6db2980b49843da2e46fbec3e41f79ac8ef3bcf5308be02c1"; //example public key: testnet
     public static String pubKeyHash = Util.hash160(publicKey);
     public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
-
-    //public static String sigHash;
 
     public static final String phrase = "3000 /birds/ sing in the /tree/ of /life/, they say /pio/ /pio/ /pio/...";
 
@@ -33,7 +32,7 @@ public class Miner {
         String output = "" +
                 "ScriptSig = " + scriptSig + "\n" +
                 "scriptPubKey = " + scriptPubKey + "\n" +
-//                "sigHash = " + sigHash + "\n" +
+                //"sigHash = " + sigHash + "\n" +
                 "signature = " + signature + "\n" +
                 "address = " + address + "\n" +
                 "publicKey = " + publicKey + "\n" +
@@ -73,7 +72,6 @@ public class Miner {
         ECPrivateKey epvt = (ECPrivateKey) pvt;
         String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
         //System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
-
 
         //clave publica
         ECPublicKey epub = (ECPublicKey)pub;
@@ -116,7 +114,6 @@ public class Miner {
         scriptPubKey = "76a914" + pubKeyHash + "88ac"; //scriptpubkey
         System.out.println("scriptPubKey: "+scriptPubKey);
 
-
         //sha256 dos veces
         byte[] s2 = sha.digest(r2);
         //System.out.println("  sha: " + printByteArray(s2).toUpperCase());
@@ -152,22 +149,6 @@ public class Miner {
         }
         return hex64;
     }
-
-
-    //adress to pubkeyhash in dogecoin
-//    public static String getPubKeyHash(String address) {
-//        String pubKeyHash = null;
-//        try {
-//            byte[] addressBytes = Base58.decode(address);
-//            byte[] pubKeyHashBytes = new byte[21];
-//            for (int i = 0 ; i < 21 ; i++) pubKeyHashBytes[i] = addressBytes[i];
-//            pubKeyHash = printByteArray(pubKeyHashBytes);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return pubKeyHash;
-//    }
-
 
     public static String getSeed() {
         return seed;

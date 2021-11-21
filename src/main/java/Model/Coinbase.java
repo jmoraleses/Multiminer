@@ -55,8 +55,8 @@ public class Coinbase {
 
     //concatenar valores de transacción coinbase
     public String showTransaction() {
-        //outputCount = Util.toHex(this.transactions.size());
-        String output = "01";
+        String output = Util.toHex(this.transactions.size());
+        //String output = "01";
 
         output += Util.reverseHash(this.getVersion()); //version
         output += this.getInputCount(); // input count //num_inputs

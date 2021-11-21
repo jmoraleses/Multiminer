@@ -198,7 +198,8 @@ public class Mining {
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
-            System.out.println(printByteArray(nonce)+": "+scrypted);
+
+            System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
             if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //!
                 if (scrypted.endsWith(target)){
                     StringBuilder strb = new StringBuilder(scrypted);
