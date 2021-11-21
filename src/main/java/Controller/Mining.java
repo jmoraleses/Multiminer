@@ -118,7 +118,7 @@ public class Mining {
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
         if (list.size() == 0) return "";
-        else return "";//calculateMerkleRoot(list); ///
+        else return calculateMerkleRoot(list); //
     }
 
     //calcute merkle root from a list of transactions
@@ -137,19 +137,9 @@ public class Mining {
         return merkleRoot;
     }
 
-    public static String lastHashMerkleRoot(List<String> data){
-        String merkleRoot = "";
-        if (data.size() == 1){
-            merkleRoot = data.get(0);
-        }else {
-            List<String> newData = new ArrayList<>();
-            for (int i = 0; i < data.size() -1; i = i + 2){
-                String str = data.get(i) + data.get(i + 1);
-                newData.add(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
-            }
-            merkleRoot = lastHashMerkleRoot(newData);
-        }
-        return merkleRoot;
+    public static String lastHashMerkleRoot(String merkleroot, String blockhash){
+        String str = merkleroot + blockhash;
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(str);
     }
 
     //Búsqueda de nonce para algoritmo Scrypt
@@ -168,13 +158,13 @@ public class Mining {
         nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
         boolean found = false;
         //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute  !!!
+        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 50*1000)){ //1 minute in dogecoin
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
-                if (scrypted.startsWith(difficulty)){
+            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty))) {//&& (scrypted.compareTo(target)<0) ) {  //!
+                if (scrypted.endsWith(difficulty)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
                 }

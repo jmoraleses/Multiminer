@@ -20,7 +20,7 @@ public class Miner {
     public static String scriptSig;
     public static String signature;
 
-    public static String publicKey = "021f02b632f05f0146e85eb4c8a24374bf95be8d9ff40a903e504ded7bfc502d92"; //example public key: testnet
+    public static String publicKey = "03e7efaf51e64595f6db2980b49843da2e46fbec3e41f79ac8ef3bcf5308be02c1"; //example public key: testnet
     public static String pubKeyHash = Util.hash160(publicKey);
     public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
 
@@ -64,15 +64,15 @@ public class Miner {
         KeyPair kp = keyGen.generateKeyPair();
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
-//        System.out.println("pub: "+printByteArray(pub.getEncoded()));
+        //System.out.println("pub: "+printByteArray(pub.getEncoded()));
         System.out.println("private key: "+printByteArray(pvt.getEncoded()));
-//        System.out.println("public key: "+printByteArray(pub.getEncoded()));
+        //System.out.println("public key: "+printByteArray(pub.getEncoded()));
         privateKey = printByteArray(pvt.getEncoded());
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey) pvt;
         String sepvt = adjustTo64(epvt.getS().toString(16)).toLowerCase();
-//        System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
+        //System.out.println("s[" + sepvt.length() + "]: " + sepvt); //clave privada
 
 
         //clave publica
@@ -85,8 +85,8 @@ public class Miner {
         //System.out.println("r: " + s); //clave publica
         String bcPub = "04" + sx + sy;
         //x y sy y clave publica
-//        System.out.println("(r)x[" + sx.length() + "]: " + sx);
-//        System.out.println("(s)y[" + sy.length() + "]: " + sy);
+        //System.out.println("(r)x[" + sx.length() + "]: " + sx);
+        //System.out.println("(s)y[" + sy.length() + "]: " + sy);
         System.out.println("bcPub: " + bcPub);
         //comprimir clave publica
         String bcPubCompress = null;
@@ -135,11 +135,10 @@ public class Miner {
         signature_.initSign(pvt);
         signature_.update(bcPub.getBytes("UTF-8"));
         byte[] signatureBytes = signature_.sign();
-//        System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
+        //System.out.println("signature: " + printByteArray(signatureBytes).toLowerCase());
         signature = printByteArray(signatureBytes); //signature
         System.out.println("signature: " + printByteArray(signatureBytes));
-//        signature = "47" + printByteArray(signatureBytes) + "01" ;
-    //    signature = "30440220" + sx  + "0220" + printByteArray(r1) + "01"; //scriptSig
+        //signature = "30440220" + sx  + "0220" + printByteArray(r1) + "01"; //scriptSig
         scriptSig = "47" + signature + "21" + publicKey;
         System.out.println("scriptSig: "+scriptSig);
 

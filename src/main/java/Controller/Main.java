@@ -30,51 +30,33 @@ public class Main {
         System.out.println("## Welcome to Breaking Hash ##");
         System.out.println("##############################");
 
-
         //json for to get template for mining in bitcoin 0.22.0
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         Block blockMined = null;
         String response = "";
 
-
         while(blockMined == null){
             long startTime = System.currentTimeMillis();
             response = sendRequest(request);
-            blockMined = Mining.mining(response, startTime);
+            blockMined = Mining.mining(response, startTime); //Busca el blochash dado los parametros
             TimeUnit.SECONDS.sleep(1);
         }
         if (!response.equals("")) {
             if (blockMined.getNonce() != null){
 
-
                 Coinbase header = new Coinbase();
                 header.set(blockMined); //configura el header (coinbase transaction)
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
-                //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
-                ArrayList<String> hashes = new ArrayList<>();
-                //hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
-                for(int i=0; i < header.getTransactionMineds().size(); i++){
-                    hashes.add(header.getTransactionMineds().get(i).getHash()); //agrega los hashes de las transacciones a una lista
-                }
-                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
-                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes)); //calcula el merkle root y lo guarda en el atributo del bloque minado
-
-                //header.setTxid(Miner.calculateCoinbaseTxid(blockMined.showBlock()));
+                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getMerkleRoot(), blockMined.getBlockhash())); //calcula el merkle root habiendo encontrado el blockhah
 
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
-
 
                 String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
                 System.out.println(request2);
 
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
-
-
-                //System.out.println(Miner.show());
-//                System.out.println(blockMined);
-//                System.out.println(header.transactiontoJSON());
 
             }
         }
