@@ -50,18 +50,6 @@ public class Util {
         return String.format("%08x", ts.getEpochSecond());
     }
 
-    //función que convierte un string ascii a hexadecimal
-    public static String asciiToHex(String asciiValue)
-    {
-        char[] chars = asciiValue.toCharArray();
-        StringBuffer hex = new StringBuffer();
-        for (int i = 0; i < chars.length; i++)
-        {
-            hex.append(Integer.toHexString((int) chars[i]));
-        }
-        return hex.toString();
-    }
-
     //función que decodifica un string hexadecimal a string ascii
     public static String hexToAscii(String hexValue)
     {
@@ -170,26 +158,6 @@ public class Util {
         return null;
     }
 
-
-
-
-    //función RIPEMD160
-//    public static String hash160(String input) {
-//        RIPEMD160Digest digest = new RIPEMD160Digest();
-//        digest.update(input.getBytes(StandardCharsets.US_ASCII), 0, input.getBytes(StandardCharsets.US_ASCII).length);
-//        String data = org.apache.commons.codec.digest.DigestUtils.sha256Hex(digest.toString());
-//        byte[] out = new byte[20];
-//        digest.doFinal(out, 0);
-//        //bytes[] to string
-//        StringBuilder sb = new StringBuilder();
-//        for (byte b : out) {
-//            sb.append(String.format("%02x", b));
-//        }
-//        String hash160 = sb.substring(2, sb.length() - 8);
-//        return hash160;
-//    }
-
-
     //Convertir string con transacciones a lista de TransactionMined
     public static List<TransactionMined> transactionToList(JSONArray transactions) throws JSONException {
         List<TransactionMined> list = new ArrayList<>();
@@ -205,6 +173,8 @@ public class Util {
         }
         return list;
     }
+
+
 
 
 }

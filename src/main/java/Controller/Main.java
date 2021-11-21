@@ -1,8 +1,7 @@
 package Controller;
 
 import Model.Block;
-import Model.Miner;
-import Model.Transaction;
+import Model.Coinbase;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -12,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,17 +47,17 @@ public class Main {
             if (blockMined.getNonce() != null){
 
 
-                Transaction header = new Transaction();
+                Coinbase header = new Coinbase();
                 header.set(blockMined); //configura el header (coinbase transaction)
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<TransactionMined>
 
                 //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
                 ArrayList<String> hashes = new ArrayList<>();
-                //hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
+                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 for(int i=0; i < header.getTransactionMineds().size(); i++){
                     hashes.add(header.getTransactionMineds().get(i).getHash()); //agrega los hashes de las transacciones a una lista
                 }
-                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
+//                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes)); //calcula el merkle root y lo guarda en el atributo del bloque minado
 
                 //header.setTxid(Miner.calculateCoinbaseTxid(blockMined.showBlock()));
@@ -72,6 +70,7 @@ public class Main {
 
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
+
 
                 //System.out.println(Miner.show());
 //                System.out.println(blockMined);

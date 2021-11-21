@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
 public class Block {
-    //crear todos los atributos de un bloque de bitcoin
 
     private String previousHash;
     private String data;
@@ -138,9 +137,8 @@ public class Block {
     public void setBits(String bits) { this.bits = bits; }
 
 
-    public void addHeader(Transaction header) throws JSONException {
+    public void addHeader(Coinbase header) throws JSONException {
         this.transactions = transactions.put(0, header);
-        //Scrypt_do.TransactiontoJSON(header) + this.transactions;
     }
 
     public String getPreviousHash() {

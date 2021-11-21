@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.Block;
-import Model.Transaction;
+import Model.Coinbase;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -41,7 +41,7 @@ public class Main_scrypt {
         if (!response.equals("")) {
             if (blockMined.getNonce() != null){
 
-                Transaction header = new Transaction();
+                Coinbase header = new Coinbase();
                 header.set(blockMined);
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions()));
 

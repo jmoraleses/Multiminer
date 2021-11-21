@@ -7,8 +7,7 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
-public class Transaction {
-
+public class Coinbase {
 
     private String version;
 
@@ -40,32 +39,18 @@ public class Transaction {
     public void set(Block block) throws Exception {
         Miner miner = new Miner();
         version = Util.numtoHex(1);
-
         inputCount = Util.toHex(1); //entrada de transaccion
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
-
         heightLength = "03";
         height = Util.reverseHash(Util.toHex(Integer.parseInt(block.getHeight())));
-        //String phraseHex = height + Util.asciiToHex(Miner.phrase);
-        //heightLength = Util.numtoHex(phraseHex.length());
-
-//        scriptSig = heightLength + height + Util.asciiToHex(Miner.phrase); //script de desbloqueo
-//        scriptSig = heightLength + height + Miner.scriptSig; //script de desbloqueo
         scriptSig = heightLength + height + Util.hexString(Miner.phrase); //script de desbloqueo
-
         scriptSigSize = Util.toHex(scriptSig.length()/2);
-
         sequence = "ffffffff"; //ffffffff //00000000
-
         outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
-
-//        scriptPubKey = "76a914" + miner.getScriptPubKey() + "88ac"; //P2PKH
         scriptPubKey = miner.getScriptPubKey(); //P2PKH
-//        scriptPubKey = Miner.publicKey; //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()/2);
-
         locktime = Util.numtoHex(0);
 
     }
@@ -77,36 +62,23 @@ public class Transaction {
         String output = "01";
 
         output += Util.reverseHash(this.getVersion()); //version
-
-        //Witness 0014
-//        output += "00"; //witness_marker
-//        output += "10"; //witness_flag
-
         output += this.getInputCount(); // input count //num_inputs
         output += Util.reverseHash(this.getTxid()); // 000... //prev_hash
         output += Util.reverseHash(this.getVout()); //previous output // prev_hash_index
-
-
         output += this.getScriptSigSize();//
-
         output += this.getScriptSig();
         output += Util.reverseHash(this.getSequence());
-
         output += this.getOutputCount(); //01: se aplica a todas las salidas
-
         output += Util.reverseHash(this.getValue()); //fee in satoshis
         output += this.getScriptPubKeySize();//
         output += this.getScriptPubKey();
-
 
 //        output += Util.numtoHex(transactionMineds.size());
 //        for(int i = 0; i < transactionMineds.size(); i++) {
 //            output += transactionMineds.get(i).showTransactionMined();
 //        }
 
-
         output += this.getLocktime(); //locktime
-
         return output;
     }
 
@@ -131,11 +103,6 @@ public class Transaction {
         output += "}";
         return output;
     }
-
-
-//    public String calculateScriptSigSize(String scriptSig){
-//        return Util.toHex(scriptSig.length()/2);
-//    }
 
 
     public String getVersion() {

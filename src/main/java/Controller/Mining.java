@@ -28,11 +28,8 @@ public class Mining {
     public static double fee_for_mine = 10000;
     public static String fee_total;
 
-//    public static String blockhash = "";
+    //public static int numThreads = Runtime.getRuntime().availableProcessors();
 
-    public static int numThreads = Runtime.getRuntime().availableProcessors();
-
-    
 
     public static Block mining(String response, long startTime) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
         List<Object> list = extractInfoFromJson(response);
@@ -42,7 +39,7 @@ public class Mining {
 
             //buscamos el verdadero nounce
 //        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
-            List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
+            List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
 
             if (nonceHash != null) {
                 block.setNonce(nonceHash.get(0));
@@ -158,6 +155,7 @@ public class Mining {
     //Búsqueda de nonce para algoritmo Scrypt
     public static List<String> doScrypt(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String difficulty = Util.getDifficulty(target);
         System.out.println("Buscando para Scrypt " + dtf.format(now()) );
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
@@ -174,9 +172,9 @@ public class Mining {
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
-//            System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (!scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
-                if (scrypted.endsWith(target)){
+            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
+            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
+                if (scrypted.endsWith(difficulty)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
                 }
@@ -196,6 +194,7 @@ public class Mining {
     //Búsqueda de nonce para algoritmo SHA256
     public static List<String> doSha256(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String difficulty = Util.getDifficulty(target);
         System.out.println("Buscando para Sha256" + dtf.format(now()));
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
@@ -212,7 +211,7 @@ public class Mining {
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = Util.blockHashByte(hash);
             System.out.println(printByteArray(nonce)+": "+scrypted);
-            if (scrypted.startsWith(target) || scrypted.endsWith(target)) {  //!
+            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
                 if (scrypted.endsWith(target)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
