@@ -48,7 +48,7 @@ public class Main {
                 header.set(blockMined); //configura el header (coinbase transaction)
                 header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
-                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getMerkleRoot(), blockMined.getBlockhash())); //calcula el merkle root habiendo encontrado el blockhah
+                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getMerkleRoot(), blockMined.getBlockhash())); //calcula el merkle root habiendo encontrado el blockhash
 
                 String blockMinedString =  blockMined.showBlock() + header.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
 

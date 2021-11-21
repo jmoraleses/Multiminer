@@ -37,8 +37,8 @@ public class Mining {
             String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
             Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
 
-            //buscamos el verdadero nounce
-//        List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
+            //Buscamos el nonce
+            //List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
             List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
 
             if (nonceHash != null) {
