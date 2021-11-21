@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -154,18 +155,18 @@ public class Mining {
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
         nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
-        boolean found = false;
+        //boolean found = false;
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 50*1000)){ //1 minute in dogecoin
             byte[] hash = Bytes.concat(databyte, nonce);
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //!
-                if (scrypted.endsWith(difficulty)){
-                    StringBuilder strb = new StringBuilder(scrypted);
-                    scrypted = strb.reverse().toString();
-                }
+            if ((scrypted.startsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //! // || scrypted.endsWith(difficulty)
+//                if (scrypted.endsWith(difficulty)){
+//                    StringBuilder strb = new StringBuilder(scrypted);
+//                    scrypted = strb.reverse().toString();
+//                }
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
@@ -200,11 +201,7 @@ public class Mining {
             String scrypted = Util.blockHashByte(hash);
 
             System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //!
-                if (scrypted.endsWith(target)){
-                    StringBuilder strb = new StringBuilder(scrypted);
-                    scrypted = strb.reverse().toString();
-                }
+            if ((scrypted.startsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
                 System.out.println(printByteArray(nonce)+": "+scrypted);
                 lista.add(printByteArray(nonce));
                 lista.add(scrypted);
@@ -218,6 +215,7 @@ public class Mining {
         return null;
     }
 
+    //lottery
     public static String charToHex(){
         String nonce = "";
         String caracteresHex = "0123456789abcdef";
@@ -237,5 +235,25 @@ public class Mining {
         return nonce;
     }
 
+    public static List<String> POW (byte[] databyte, String target, long startTime) throws GeneralSecurityException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String difficulty = Util.getDifficulty(target);
+        System.out.println("POW" + dtf.format(now()));
+        List<String> lista = new ArrayList<>();
+        int target_count = Util.getDifficulty(target).length();
+
+        for (int nonce = 0; (System.currentTimeMillis() - startTime < 55*1000); nonce++) {  // 55 seconds
+            String scrypted = Bytes.concat(databyte, Util.numtoHex(nonce).getBytes(StandardCharsets.UTF_8)).toString();
+            //scrypted = Util.blockHashByte(scrypted.getBytes(StandardCharsets.UTF_8));
+            //scrypted = printByteArray(SCrypt.scryptJ(scrypted.getBytes(StandardCharsets.UTF_8), scrypted.getBytes(StandardCharsets.UTF_8), 1024, 1, 1, 32));
+            if (scrypted.startsWith(difficulty)) {
+                System.out.println(Util.numtoHex(nonce)+": "+scrypted + "" + target);
+                lista.add(Util.numtoHex(nonce));
+                lista.add(scrypted);
+                return lista;
+            }
+        }
+        return null;
+    }
 
 }
