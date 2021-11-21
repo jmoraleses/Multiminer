@@ -1,6 +1,6 @@
 package Util;
 
-import Model.Transactions;
+import Model.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.json.JSONArray;
@@ -158,9 +158,9 @@ public class Util {
         return null;
     }
 
-    //Convertir string con transacciones a lista de Transactions
-    public static List<Transactions> transactionToList(JSONArray transactions) throws JSONException {
-        List<Transactions> list = new ArrayList<>();
+    //Convertir string con transacciones a lista de Transaction
+    public static List<Transaction> transactionToList(JSONArray transactions) throws JSONException {
+        List<Transaction> list = new ArrayList<>();
         for (int i = 0; i < transactions.length() && i < 1000 ; i++) {
             JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
             String data = jsonObjectTransaction.getString("data");
@@ -168,7 +168,7 @@ public class Util {
             String weight = jsonObjectTransaction.getString("weight");
             String hash = jsonObjectTransaction.getString("hash");
             String fee = jsonObjectTransaction.getString("fee");
-            Transactions transactionMined = new Transactions(data, txid, weight, hash, fee, i + 1);
+            Transaction transactionMined = new Transaction(data, txid, weight, hash, fee, i + 1);
             list.add(transactionMined);
         }
         return list;

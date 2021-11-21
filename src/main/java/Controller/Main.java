@@ -49,7 +49,7 @@ public class Main {
 
                 Coinbase header = new Coinbase();
                 header.set(blockMined); //configura el header (coinbase transaction)
-                header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transactions>
+                header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
                 //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
                 ArrayList<String> hashes = new ArrayList<>();

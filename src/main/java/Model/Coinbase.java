@@ -30,7 +30,7 @@ public class Coinbase {
     private String height;
     private String heightLength;
 
-    public List<Transactions> transactions;
+    public List<Transaction> transactions;
     private String byteCoinbase;
 
     public void set(Block block) throws Exception {
@@ -214,15 +214,15 @@ public class Coinbase {
         this.heightLength = heightLength;
     }
 
-    public void addTransactionMineds(Transactions transactionMineds) {
+    public void addTransactionMineds(Transaction transactionMineds) {
         this.transactions.add(transactionMineds);
     }
 
-    public List<Transactions> getTransactionMineds() {
+    public List<Transaction> getTransactionMineds() {
         return transactions;
     }
 
-    public void setTransactionMineds(List<Transactions> transactions) {
+    public void setTransactionMineds(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 }
