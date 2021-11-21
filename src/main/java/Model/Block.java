@@ -30,8 +30,8 @@ public class Block {
 
         String output = "";
         output += Util.reverseHash(this.getVersion());
-        output += Util.reverseHash(this.getPreviousHash());
-        output += Util.reverseHash(this.getMerkleRoot());
+        output +=this.getPreviousHash();
+        output += this.getMerkleRoot();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
@@ -50,8 +50,8 @@ public class Block {
 
         String output = "";
         output += Util.reverseHash(this.getVersion());
-        output += Util.reverseHash(this.getPreviousHash());
-        output += Util.reverseHash(this.getMerkleRoot());
+        output += this.getPreviousHash();
+        output += this.getMerkleRoot();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)

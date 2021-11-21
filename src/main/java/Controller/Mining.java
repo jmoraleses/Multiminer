@@ -156,9 +156,10 @@ public class Mining {
         nonceMAX[3] = (byte)255;
         nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
         //boolean found = false;
+
         //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 50*1000)){ //1 minute in dogecoin
-            byte[] hash = Bytes.concat(databyte, nonce);
+        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 55*1000)){ //1 minute in dogecoin
+            byte[] hash = Bytes.concat(databyte, Util.reverseHashByte(nonce));
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
@@ -194,10 +195,11 @@ public class Mining {
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
         nonce[0] = (byte)24; //empieza en la mitad de todos los nonce permitidos: 128
-        boolean found = false;
+        //boolean found = false;
+
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
-            byte[] hash = Bytes.concat(databyte, nonce);
+            byte[] hash = Bytes.concat(databyte, Util.reverseHashByte(nonce));
             String scrypted = Util.blockHashByte(hash);
 
             System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
@@ -243,7 +245,7 @@ public class Mining {
         int target_count = Util.getDifficulty(target).length();
 
         for (int nonce = 0; (System.currentTimeMillis() - startTime < 55*1000); nonce++) {  // 55 seconds
-            String scrypted = Bytes.concat(databyte, Util.numtoHex(nonce).getBytes(StandardCharsets.UTF_8)).toString();
+            String scrypted = Bytes.concat(databyte, Util.reverseHashByte(Util.numtoHex(nonce).getBytes(StandardCharsets.UTF_8))).toString();
             //scrypted = Util.blockHashByte(scrypted.getBytes(StandardCharsets.UTF_8));
             //scrypted = printByteArray(SCrypt.scryptJ(scrypted.getBytes(StandardCharsets.UTF_8), scrypted.getBytes(StandardCharsets.UTF_8), 1024, 1, 1, 32));
             if (scrypted.startsWith(difficulty)) {

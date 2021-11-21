@@ -98,6 +98,16 @@ public class Util {
         return sb.toString();
     }
 
+    //dar la vuelta al hash en bytes de dos en dos
+    public static byte[] reverseHashByte(byte[] hash) {
+        byte[] sb = new byte[hash.length];
+        for (int i = hash.length - 2; i >= 0; i -= 2) {
+            sb[i] = hash[i];
+            sb[i + 1] = hash[i + 1];
+        }
+        return sb;
+    }
+
     //Convertir hexadecimal a long
     public static long hexToLong(String hex) {
         return Long.parseLong(hex, 16);

@@ -58,6 +58,8 @@ public class Main {
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
 
+//                System.out.println(blockMined.getMerkleRoot());
+//                System.out.println(blockMined.getBlockhash());
             }
         }
     }
