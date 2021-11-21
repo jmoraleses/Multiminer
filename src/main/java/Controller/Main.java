@@ -53,11 +53,11 @@ public class Main {
 
                 //Calculamos el merkleroot para todas las transacciones, incluida la coinbase
                 ArrayList<String> hashes = new ArrayList<>();
-                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
+                //hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 for(int i=0; i < header.getTransactionMineds().size(); i++){
                     hashes.add(header.getTransactionMineds().get(i).getHash()); //agrega los hashes de las transacciones a una lista
                 }
-//                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
+                hashes.add(blockMined.getBlockhash()); //agrega el hash del bloque a la lista temporal de hashes
                 blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(hashes)); //calcula el merkle root y lo guarda en el atributo del bloque minado
 
                 //header.setTxid(Miner.calculateCoinbaseTxid(blockMined.showBlock()));

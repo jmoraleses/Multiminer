@@ -173,8 +173,8 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //!
-                if (scrypted.endsWith(difficulty)){
+            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
+                if (scrypted.startsWith(difficulty)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
                 }
