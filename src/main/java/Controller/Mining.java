@@ -96,12 +96,10 @@ public class Mining {
             zeros += "0";
         }
         block.setDifficulty(zeros);
-        //block.setHash(mineBlock(block, nonce));
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        //block.setBlockHash(Scrypt.scrypt(Scrypt.showBlock(block)));
-//        block.setBlockHash(blockhash);
+        //block.setBlockHash(blockhash);
         block.setHeight(height);
         block.setTarget(target);
         return block;
@@ -163,7 +161,7 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash,hash, 1024, 1, 1, 32));
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty))) {//&& (scrypted.compareTo(target)<0) ) {  //!
+            if ((scrypted.startsWith(difficulty) || scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //!
                 if (scrypted.endsWith(difficulty)){
                     StringBuilder strb = new StringBuilder(scrypted);
                     scrypted = strb.reverse().toString();
@@ -218,7 +216,6 @@ public class Mining {
         }
         return null;
     }
-
 
     public static String charToHex(){
         String nonce = "";
