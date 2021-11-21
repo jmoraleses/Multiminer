@@ -14,16 +14,17 @@ import static Core.ScryptHelp.printByteArray;
 
 public class Miner {
 
-    public static String seed = "seed3";
-    public static String scriptSig;
-    public static String scriptPubKey;
-    public static String signature;
-    //public static String sigHash;
-
-    public static String address = getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv");
-    public static String publicKey;
-    public static String pubKeyHash;
+    public static String seed = "seed42";
+    public static String address;
     public static String privateKey;
+    public static String scriptSig;
+    public static String signature;
+
+    public static String publicKey = "021f02b632f05f0146e85eb4c8a24374bf95be8d9ff40a903e504ded7bfc502d92"; //example public key: testnet
+    public static String pubKeyHash = Util.hash160(publicKey);
+    public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
+
+    //public static String sigHash;
 
     public static final String phrase = "3000 /birds/ sing in the /tree/ of /life/, they say /pio/ /pio/ /pio/...";
 
@@ -42,7 +43,7 @@ public class Miner {
     }
 
     public Miner() throws Exception {
-        generate(seed);
+        //generate(seed);
     }
 
 
@@ -67,7 +68,6 @@ public class Miner {
         System.out.println("private key: "+printByteArray(pvt.getEncoded()));
 //        System.out.println("public key: "+printByteArray(pub.getEncoded()));
         privateKey = printByteArray(pvt.getEncoded());
-        publicKey = printByteArray(pub.getEncoded());;
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey) pvt;
@@ -128,6 +128,7 @@ public class Miner {
         for (int i = 0 ; i < 5 ; i++) a1[20 + i] = s3[i];
         //address = Base58.encode(a1);
         System.out.println("  adr: " + Base58.encode(a1)); //address
+        address = Base58.encode(a1);
 
         //create signature from privatekey
         Signature signature_ = Signature.getInstance("SHA256withECDSA", "BC");
@@ -142,7 +143,6 @@ public class Miner {
         scriptSig = "47" + signature + "21" + publicKey;
         System.out.println("scriptSig: "+scriptSig);
 
-        System.out.println(getPubKeyHash("ne1Cqt1kz64w3hk8iGJq9t7JcGihcEDYqv"));
     }
 
     //función adjustTo64
@@ -155,20 +155,19 @@ public class Miner {
     }
 
 
-
     //adress to pubkeyhash in dogecoin
-    public static String getPubKeyHash(String address) {
-        String pubKeyHash = null;
-        try {
-            byte[] addressBytes = Base58.decode(address);
-            byte[] pubKeyHashBytes = new byte[21];
-            for (int i = 0 ; i < 21 ; i++) pubKeyHashBytes[i] = addressBytes[i];
-            pubKeyHash = printByteArray(pubKeyHashBytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return pubKeyHash;
-    }
+//    public static String getPubKeyHash(String address) {
+//        String pubKeyHash = null;
+//        try {
+//            byte[] addressBytes = Base58.decode(address);
+//            byte[] pubKeyHashBytes = new byte[21];
+//            for (int i = 0 ; i < 21 ; i++) pubKeyHashBytes[i] = addressBytes[i];
+//            pubKeyHash = printByteArray(pubKeyHashBytes);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return pubKeyHash;
+//    }
 
 
     public static String getSeed() {

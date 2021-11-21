@@ -26,7 +26,7 @@ public class Block {
     public String height;
     public String fee;
 
-    public String showBlockWithoutNonce() { //Header
+    public String showBlockWithoutNonce() {
 
         String output = "";
         output += Util.reverseHash(this.getVersion());
