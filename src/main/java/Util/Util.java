@@ -162,7 +162,7 @@ public class Util {
             byte[] hash160Bytes =  new byte[digest160.getDigestSize()];
             digest160.doFinal(hash160Bytes, 0);
 
-            return String.format("%64x", new BigInteger(1, hash160Bytes));
+            return String.format("%40x", new BigInteger(1, hash160Bytes));
             //return printByteArray(hash160Bytes);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

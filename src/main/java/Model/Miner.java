@@ -12,6 +12,7 @@ import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.*;
 import java.util.Arrays;
+import Util.Util;
 
 import static Core.ScryptHelp.printByteArray;
 
@@ -304,7 +305,7 @@ public class Miner {
         for (int i = 0 ; i < r1.length ; i++) r2[i+1] = r1[i];
         System.out.println("  rmd: " + printByteArray(r2).toUpperCase());
 
-        pubKeyHash = printByteArray(r1);
+        pubKeyHash = Util.hash160(publicKey);
         scriptPubKey = "76a914" + pubKeyHash + "88ac"; //scriptpubkey
         System.out.println("scriptPubKey: "+scriptPubKey);
 
