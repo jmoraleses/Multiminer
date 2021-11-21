@@ -34,7 +34,6 @@ public class Coinbase {
     private String byteCoinbase;
 
     public void set(Block block) throws Exception {
-        Miner miner = new Miner();
         version = Util.numtoHex(1);
         inputCount = Util.toHex(1); //entrada de transaccion
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
@@ -46,18 +45,17 @@ public class Coinbase {
         sequence = "ffffffff"; //ffffffff //00000000
         outputCount = Util.toHex(1); // Util.toHex(this.transactions.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
-        scriptPubKey = miner.getScriptPubKey(); //P2PKH
+        scriptPubKey = Miner.getScriptPubKey(); //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()/2);
         locktime = Util.numtoHex(0);
 
     }
 
-
     //concatenar valores de transacción coinbase
     public String showTransaction() {
-        String output = Util.toHex(this.transactions.size());
-        //String output = "01";
 
+        //String output = Util.toHex(this.transactions.size());
+        String output = "01";
         output += Util.reverseHash(this.getVersion()); //version
         output += this.getInputCount(); // input count //num_inputs
         output += Util.reverseHash(this.getTxid()); // 000... //prev_hash

@@ -41,11 +41,6 @@ public class Miner {
         return output;
     }
 
-    public Miner() throws Exception {
-        //generate(seed);
-    }
-
-
     public static void generate(String seed) throws Exception {
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
