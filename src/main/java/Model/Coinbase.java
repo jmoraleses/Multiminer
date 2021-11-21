@@ -2,9 +2,6 @@ package Model;
 
 import Util.Util;
 
-import java.io.UnsupportedEncodingException;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 public class Coinbase {
@@ -33,7 +30,7 @@ public class Coinbase {
     private String height;
     private String heightLength;
 
-    public List<TransactionMined> transactionMineds;
+    public List<Transactions> transactions;
     private String byteCoinbase;
 
     public void set(Block block) throws Exception {
@@ -47,7 +44,7 @@ public class Coinbase {
         scriptSig = heightLength + height + Util.hexString(Miner.phrase); //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length()/2);
         sequence = "ffffffff"; //ffffffff //00000000
-        outputCount = Util.toHex(1); // Util.toHex(this.transactionMineds.size()); //salida de transaccion
+        outputCount = Util.toHex(1); // Util.toHex(this.transactions.size()); //salida de transaccion
         value = String.valueOf(block.getFee()); //no debe exceder las recompensas
         scriptPubKey = miner.getScriptPubKey(); //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()/2);
@@ -58,7 +55,7 @@ public class Coinbase {
 
     //concatenar valores de transacción coinbase
     public String showTransaction() {
-        //outputCount = Util.toHex(this.transactionMineds.size());
+        //outputCount = Util.toHex(this.transactions.size());
         String output = "01";
 
         output += Util.reverseHash(this.getVersion()); //version
@@ -73,9 +70,9 @@ public class Coinbase {
         output += this.getScriptPubKeySize();//
         output += this.getScriptPubKey();
 
-//        output += Util.numtoHex(transactionMineds.size());
-//        for(int i = 0; i < transactionMineds.size(); i++) {
-//            output += transactionMineds.get(i).showTransactionMined();
+//        output += Util.numtoHex(transactions.size());
+//        for(int i = 0; i < transactions.size(); i++) {
+//            output += transactions.get(i).showTransactionMined();
 //        }
 
         output += this.getLocktime(); //locktime
@@ -217,15 +214,15 @@ public class Coinbase {
         this.heightLength = heightLength;
     }
 
-    public void addTransactionMineds(TransactionMined transactionMineds) {
-        this.transactionMineds.add(transactionMineds);
+    public void addTransactionMineds(Transactions transactionMineds) {
+        this.transactions.add(transactionMineds);
     }
 
-    public List<TransactionMined> getTransactionMineds() {
-        return transactionMineds;
+    public List<Transactions> getTransactionMineds() {
+        return transactions;
     }
 
-    public void setTransactionMineds(List<TransactionMined> transactionMineds) {
-        this.transactionMineds = transactionMineds;
+    public void setTransactionMineds(List<Transactions> transactions) {
+        this.transactions = transactions;
     }
 }

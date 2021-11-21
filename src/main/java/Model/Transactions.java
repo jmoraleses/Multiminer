@@ -2,7 +2,7 @@ package Model;
 
 import Util.Util;
 
-public class TransactionMined {
+public class Transactions {
 
     public String txid;
     public String data;
@@ -12,10 +12,10 @@ public class TransactionMined {
     public String id;
     public String fee;
 
-    public String scryptPubKey = "76a914" + Miner.getScriptPubKey() + "88ac"; //P2PKH
-    public String sizeScryptPubKey = Util.toHex(scryptPubKey.length());
+    public String scryptPubKey = Miner.getScriptPubKey(); //P2PKH
+    public String sizeScryptPubKey = Util.toHex(scryptPubKey.length()/2);
 
-    public TransactionMined(String data, String txid, String weight, String hash, String fee, int count) {
+    public Transactions(String data, String txid, String weight, String hash, String fee, int count) {
         this.data = data;
         this.txid = txid;
         this.weight = weight;
@@ -26,7 +26,7 @@ public class TransactionMined {
     }
 
     public String toString(){
-        String output = "TransactionMined{" +
+        String output = "Transactions{" +
                 "id='" + id + '\'' +
                 "txid='" + txid + '\'' +
                 ", data='" + data + '\'' +
