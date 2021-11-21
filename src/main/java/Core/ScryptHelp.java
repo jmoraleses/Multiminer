@@ -21,7 +21,6 @@ public class ScryptHelp {
         }
     }
 
-
     public static String prettyPrintByteArray(byte[] bites){
         //Method to convert a byte array to hex literal separated by bites.
         String str = "";

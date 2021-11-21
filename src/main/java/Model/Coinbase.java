@@ -48,7 +48,6 @@ public class Coinbase {
         scriptPubKey = Miner.getScriptPubKey(); //P2PKH
         scriptPubKeySize = Util.toHex(scriptPubKey.length()/2);
         locktime = Util.numtoHex(0);
-
     }
 
     //concatenar valores de transacción coinbase

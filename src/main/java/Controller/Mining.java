@@ -4,6 +4,7 @@ import Core.Scrypt.Converter;
 import Core.ScryptHelp;
 import Model.Block;
 import Util.Util;
+import com.google.common.primitives.Bytes;
 import com.lambdaworks.crypto.SCrypt;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,11 +17,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
-import com.google.common.primitives.Bytes;
 
 import static Core.ScryptHelp.printByteArray;
-import static java.time.LocalDateTime.*;
+import static java.time.LocalDateTime.now;
 
 public class Mining {
 
@@ -215,26 +214,6 @@ public class Mining {
             //System.out.println(printByteArray(nonce));
         }
         return null;
-    }
-
-    //lottery
-    public static String charToHex(){
-        String nonce = "";
-        String caracteresHex = "0123456789abcdef";
-        int min = 0;
-        int max = 0;
-        //Crear números aleaotorios sin posibilidad de repetirse
-        int randomNum1 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum2 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum3 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum4 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum5 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum6 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum7 = ThreadLocalRandom.current().nextInt(min, max + 1);
-        int randomNum8 = ThreadLocalRandom.current().nextInt(min, max + 1);
-
-        nonce = String.valueOf(caracteresHex.charAt(randomNum1 % 16)) + String.valueOf(caracteresHex.charAt(randomNum2 % 16)) + String.valueOf(caracteresHex.charAt(randomNum3 % 16)) + String.valueOf(caracteresHex.charAt(randomNum4 % 16)) + String.valueOf(caracteresHex.charAt(randomNum5 % 16)) + String.valueOf(caracteresHex.charAt(randomNum6 % 16)) + String.valueOf(caracteresHex.charAt(randomNum7 % 16)) + String.valueOf(caracteresHex.charAt(randomNum8 % 16));
-        return nonce;
     }
 
     public static List<String> POW (byte[] databyte, String target, long startTime) throws GeneralSecurityException {
