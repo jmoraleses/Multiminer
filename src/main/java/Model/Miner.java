@@ -1,18 +1,14 @@
 package Model;
 
+import Util.Util;
 import org.bitcoinj.core.Base58;
-import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
-import java.security.spec.*;
-import java.util.Arrays;
-import Util.Util;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECPoint;
 
 import static Core.ScryptHelp.printByteArray;
 
