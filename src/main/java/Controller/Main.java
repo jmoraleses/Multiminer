@@ -44,13 +44,13 @@ public class Main {
         if (!response.equals("")) {
             if (blockMined.getNonce() != null){
 
-                Coinbase header = new Coinbase();
-                header.set(blockMined); //configura el header (coinbase transaction)
-                header.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
+                Coinbase coinbase = new Coinbase();
+                coinbase.set(blockMined); //configura el header (coinbase transaction)
+                coinbase.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
-                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getBlockhash(), blockMined.getMerkleRoot())); //calcula el merkle root habiendo encontrado el blockhash
+                //blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getMerkleRoot(), blockMined.getBlockhash())); //calcula el merkle root habiendo encontrado el blockhash
 
-                String blockMinedString =  blockMined.showBlock() + header.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
+                String blockMinedString =  blockMined.showBlock() + coinbase.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
 
                 String request2 = "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"submitblock\", \"params\": [" + blockMinedString + "]}";
                 System.out.println(request2);

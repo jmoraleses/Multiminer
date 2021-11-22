@@ -99,7 +99,6 @@ public class Mining {
         block.setTransactions(transactions);
         block.setMerkleRoot(extractMerkleRoot(transactions));
         block.setFee(fee_total);
-        //block.setBlockHash(blockhash);
         block.setHeight(height);
         block.setTarget(target);
         return block;
