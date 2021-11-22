@@ -97,7 +97,7 @@ public class Mining {
         }
         block.setDifficulty(zeros);
         block.setTransactions(transactions);
-        block.setMerkleRoot(extractMerkleRoot(transactions));
+        block.setMerkleRoot(Util.reverseHash(extractMerkleRoot(transactions)));
         block.setFee(fee_total);
         block.setHeight(height);
         block.setTarget(target);
@@ -110,7 +110,7 @@ public class Mining {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < transactions.length(); i++) {
             JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
-            list.add(jsonObjectTransaction.getString("hash"));
+            list.add(jsonObjectTransaction.getString("txid"));
             fee_transactions += Long.parseLong(jsonObjectTransaction.getString("fee"));
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
@@ -126,8 +126,8 @@ public class Mining {
         }else {
             List<String> newData = new ArrayList<>();
             for (int i = 0; i < data.size() -1; i = i + 2){
-                String str = data.get(i) + data.get(i + 1);
-                newData.add(org.apache.commons.codec.digest.DigestUtils.sha256Hex(str));
+                String str = Util.reverseHash(data.get(i)) + Util.reverseHash(data.get(i + 1));
+                newData.add(Util.blockHash(str));
             }
             merkleRoot = calculateMerkleRoot(newData);
         }
@@ -135,8 +135,8 @@ public class Mining {
     }
 
     public static String lastHashMerkleRoot(String merkleroot, String blockhash){
-        String str = merkleroot + blockhash;
-        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(str);
+        String str = Util.reverseHash(merkleroot) + Util.reverseHash(blockhash);
+        return Util.reverseHash(Util.blockHash(str));
     }
 
     //Búsqueda de nonce para algoritmo Scrypt
@@ -162,6 +162,7 @@ public class Mining {
 
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
             if ((scrypted.startsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //! // || scrypted.endsWith(difficulty)
+//            if (!(scrypted.startsWith(difficulty)) ) {  //! // || scrypted.endsWith(difficulty)
 //                if (scrypted.endsWith(difficulty)){
 //                    StringBuilder strb = new StringBuilder(scrypted);
 //                    scrypted = strb.reverse().toString();
