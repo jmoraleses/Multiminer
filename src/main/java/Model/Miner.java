@@ -59,9 +59,9 @@ public class Miner {
         PublicKey pub = kp.getPublic(); //publickey
         PrivateKey pvt = kp.getPrivate(); //privatekey
         //System.out.println("pub: "+printByteArray(pub.getEncoded()));
-        System.out.println("private key: "+printByteArray(pvt.getEncoded()));
         //System.out.println("public key: "+printByteArray(pub.getEncoded()));
         privateKey = printByteArray(pvt.getEncoded());
+        System.out.println("private key: "+privateKey);
 
         //clave privada: la que almacenan las wallets
         ECPrivateKey epvt = (ECPrivateKey) pvt;
@@ -88,8 +88,8 @@ public class Miner {
         }else{
             bcPubCompress = "03" + sx;
         }
-        System.out.println("pubkey comprimida: " + bcPubCompress );
         publicKey = bcPubCompress; //clave pública
+        System.out.println("pubkey comprimida: " + publicKey );
 
         //Hash160 de la clave pública: bcPub
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
