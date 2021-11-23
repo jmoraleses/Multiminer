@@ -180,7 +180,7 @@ public class Util {
             String weight = jsonObjectTransaction.getString("weight");
             String hash = jsonObjectTransaction.getString("hash");
             String fee = jsonObjectTransaction.getString("fee");
-            Transaction transactionMined = new Transaction(data, txid, weight, hash, fee, i + 1);
+            Transaction transactionMined = new Transaction(data, txid, weight, hash, fee, i + 2); // i+1
             list.add(transactionMined);
         }
         return list;

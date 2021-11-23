@@ -146,18 +146,19 @@ public class Mining {
         nonceMAX[1] = (byte)255;
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
-        //nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
+        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
         //boolean found = false;
 
         //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
+//        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
+        while(nonce[0] != nonceMAX[0]){ //1 minute in dogecoin
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             String scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-            if ((scrypted.startsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {
-//          if ( (new BigInteger(scrypted, 16)).compareTo(new BigInteger(target, 16))<0 ) {  //! // || scrypted.endsWith(difficulty)
-//            if (!(scrypted.startsWith(difficulty)) ) {  //! // || scrypted.endsWith(difficulty)
+//            if ((scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {
+//          if ((scrypted.endsWith(difficulty)) && (new BigInteger(Util.littleEndian(scrypted), 16)).compareTo(new BigInteger(target, 16))<0 ) {  //! // || scrypted.endsWith(difficulty)
+            if ((scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //! // || scrypted.endsWith(difficulty)
 
 
                 System.out.println(printByteArray(nonce)+": "+scrypted);

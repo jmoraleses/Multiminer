@@ -53,6 +53,7 @@ public class Main {
                 System.out.println();
                 System.out.println("Coinbase: "+coinbase.transactiontoJSON());
                 System.out.println("Merkleroot: "+blockMined.getMerkleRoot());
+                System.out.println("Transcations: "+coinbase.getTransactionMineds());
                 System.out.println(blockMined.toString());
                 System.out.println();
 
