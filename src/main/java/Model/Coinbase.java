@@ -39,7 +39,7 @@ public class Coinbase {
         txid = "0000000000000000000000000000000000000000000000000000000000000000";
         vout = "ffffffff";
         heightLength = "03";
-        height = Util.reverseHash(Util.toHex(Integer.parseInt(block.getHeight())));
+        height = Util.littleEndian(Util.toHex(Integer.parseInt(block.getHeight()))); //height //
         scriptSig = heightLength + height + Util.hexString(Miner.phrase); //script de desbloqueo
         scriptSigSize = Util.toHex(scriptSig.length()/2);
         sequence = "ffffffff"; //ffffffff //00000000
@@ -53,17 +53,17 @@ public class Coinbase {
     //concatenar valores de transacción coinbase
     public String showTransaction() {
 
-        //String output = Util.toHex(this.transactions.size());
+//        String output = Util.toHex(this.transactions.size());
         String output = "01";
-        output += Util.reverseHash(this.getVersion()); //version
+        output += Util.littleEndian(this.getVersion()); //version
         output += this.getInputCount(); // input count //num_inputs
-        output += Util.reverseHash(this.getTxid()); // 000... //prev_hash
-        output += Util.reverseHash(this.getVout()); //previous output // prev_hash_index
+        output += (this.getTxid()); // 000... //prev_hash
+        output += (this.getVout()); //previous output // prev_hash_index
         output += this.getScriptSigSize();//
         output += this.getScriptSig();
-        output += Util.reverseHash(this.getSequence());
+        output += (this.getSequence());
         output += this.getOutputCount(); //01: se aplica a todas las salidas
-        output += Util.reverseHash(this.getValue()); //fee in satoshis
+        output += Util.littleEndian(this.getValue()); //fee in satoshis
         output += this.getScriptPubKeySize();//
         output += this.getScriptPubKey();
 

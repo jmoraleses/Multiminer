@@ -22,7 +22,7 @@ public class Transaction {
         this.hash = hash;
 
         this.id = Util.toHex(count);
-        this.fee = Util.reverseHash(Util.satoshisToHex(Double.parseDouble(fee)));
+        this.fee = Util.littleEndian(Util.satoshisToHex(Double.parseDouble(fee)));
     }
 
     public String toString(){

@@ -25,7 +25,7 @@ public class Miner {
     public static String pubKeyHash = Util.hash160(publicKey);
     public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
 
-    public static final String phrase = "3000 /birds/ sing in the /tree/ of /life/, they say /pio/ /pio/ /pio/...";
+    public static final String phrase = "3000 /birds/ sing in the /tree/ of /life/, they say /pio/ /pio!!";
 
 
     public static String show(){

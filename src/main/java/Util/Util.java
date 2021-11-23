@@ -1,5 +1,6 @@
 package Util;
 
+import Controller.Mining;
 import Model.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
@@ -19,9 +20,12 @@ import static Core.ScryptHelp.compactSize;
 
 public class Util {
 
+    public static String sha256(String input){
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+    }
 
-    //función hacer dos sha256 para obtener el block hash
-    public static String blockHash(String input) {
+    //función hacer dos hash256 para obtener el block hash
+    public static String hash256(String input) {
         String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
         return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
     }
@@ -48,18 +52,6 @@ public class Util {
 
     public static String timestampToHex(Instant ts) {
         return String.format("%08x", ts.getEpochSecond());
-    }
-
-    //función que decodifica un string hexadecimal a string ascii
-    public static String hexToAscii(String hexValue)
-    {
-        StringBuilder output = new StringBuilder("");
-        for (int i = 0; i < hexValue.length(); i += 2)
-        {
-            String str = hexValue.substring(i, i + 2);
-            output.append((char) Integer.parseInt(str, 16));
-        }
-        return output.toString();
     }
 
     //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
@@ -90,7 +82,7 @@ public class Util {
     }
 
     //dar la vuelta al hash de dos en dos
-    public static String reverseHash(String hash) {
+    public static String littleEndian(String hash) {
         StringBuilder sb = new StringBuilder();
         for (int i = hash.length() - 2; i >= 0; i -= 2) {
             sb.append(hash, i, i + 2);
@@ -99,7 +91,7 @@ public class Util {
     }
 
     //dar la vuelta al hash en bytes de dos en dos
-    public static byte[] reverseHashByte(byte[] hash) {
+    public static byte[] littleEndianByte(byte[] hash) {
         byte[] sb = new byte[hash.length];
         for (int i = hash.length - 2; i >= 0; i -= 2) {
             sb[i] = hash[i];
@@ -107,6 +99,16 @@ public class Util {
         }
         return sb;
     }
+
+    //swapendianness
+    public static String swapEndianness(String hex) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = hex.length() - 2; i >= 0; i -= 2) {
+            sb.append(hex, i, i + 2);
+        }
+        return sb.toString();
+    }
+
 
     //Convertir hexadecimal a long
     public static long hexToLong(String hex) {
@@ -171,7 +173,7 @@ public class Util {
     //Convertir string con transacciones a lista de Transaction
     public static List<Transaction> transactionToList(JSONArray transactions) throws JSONException {
         List<Transaction> list = new ArrayList<>();
-        for (int i = 0; i < transactions.length() && i < 1000 ; i++) {
+        for (int i = 0; i < transactions.length() /*&& i < 1000 */; i++) {
             JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
             String data = jsonObjectTransaction.getString("data");
             String txid = jsonObjectTransaction.getString("txid");
@@ -184,7 +186,32 @@ public class Util {
         return list;
     }
 
+    //comprobar merkleroot
+//    public static boolean checkMerkleRoot(String merkleRoot, List<Transaction> list) {
+//        List<String> listHashes = new ArrayList<>();
+//        for (Transaction transaction : list) {
+//            listHashes.add(transaction.getHash());
+//        }
+//        String hash = Mining.calculateMerkleRoot(listHashes);
+//        return hash.equals(merkleRoot);
+//    }
 
+    //Función merkle root
+    public static String calculateMerkleRoot(List<String> listHashes) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < listHashes.size(); i += 2) {
+            if (i + 1 < listHashes.size()) {
+                list.add(Util.hash256(listHashes.get(i) + listHashes.get(i + 1)));
+            } else {
+                list.add(Util.hash256(listHashes.get(i)));
+            }
+        }
+        if (list.size() % 2 == 1) {
+            return list.get(0);
+        } else {
+            return calculateMerkleRoot(list);
+        }
+    }
 
 
 }

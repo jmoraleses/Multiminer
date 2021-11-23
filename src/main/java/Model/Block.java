@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -29,18 +30,17 @@ public class Block {
     public String showBlockWithoutNonce() {
 
         String output = "";
-        output += Util.reverseHash(this.getVersion());
-        output +=this.getPreviousHash();
-        output += this.getMerkleRoot();
+        output += Util.littleEndian(this.getVersion());
+        output += Util.littleEndian(this.getPreviousHash());
+        output += Util.littleEndian(this.getMerkleRoot());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
                 .atZone(java.time.ZoneOffset.UTC)
                 .format(formatter);
         Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
-        output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
-
-        output += Util.reverseHash(this.getBits());
+        output += (Util.timestampToHex(time)); //timestamp
+        output += Util.littleEndian(this.getBits());
 
         return output;
     }
@@ -49,19 +49,19 @@ public class Block {
     public String showBlock() {
 
         String output = "";
-        output += Util.reverseHash(this.getVersion());
-        output += this.getPreviousHash();
-        output += this.getMerkleRoot();
+        output += Util.littleEndian(this.getVersion());
+        output += Util.littleEndian(this.getPreviousHash());
+        output += Util.littleEndian(this.getMerkleRoot());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDtm = Instant.ofEpochSecond(Long.parseLong(this.getTimestamp())/1000)
                 .atZone(java.time.ZoneOffset.UTC)
                 .format(formatter);
         Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
-        output += Util.reverseHash(Util.timestampToHex(time)); //timestamp
+        output += (Util.timestampToHex(time)); //timestamp
 
-        output += Util.reverseHash(this.getBits());
-        output += Util.reverseHash(this.getNonce());
+        output += Util.littleEndian(this.getBits());
+        output += Util.littleEndian(this.getNonce());
 
         return output;
     }
@@ -73,7 +73,7 @@ public class Block {
                 .atZone(java.time.ZoneOffset.UTC)
                 .format(formatter);
         Instant time = Timestamp.valueOf(formattedDtm).toLocalDateTime().toInstant(java.time.ZoneOffset.UTC);
-        String timestampX = Util.reverseHash(Util.timestampToHex(time)); //timestamp
+        String timestampX = Util.littleEndian(Util.timestampToHex(time)); //timestamp
 
         return "Model.Block{" +
                 "previousHash='" + this.getPreviousHash() + '\'' +

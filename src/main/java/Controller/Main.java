@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Block;
 import Model.Coinbase;
+import Model.MerkleTree;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -18,8 +19,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
-    public static int total_process = 10;
-    public static int total_process_parallel = 2;
+//    public static int total_process = 10;
+//    public static int total_process_parallel = 2;
 
     /**
      * @param args the command line arguments
@@ -48,7 +49,12 @@ public class Main {
                 coinbase.set(blockMined); //configura el header (coinbase transaction)
                 coinbase.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
-                blockMined.setMerkleRoot(Mining.lastHashMerkleRoot(blockMined.getMerkleRoot(), blockMined.getBlockhash())); //calcula el merkle root habiendo encontrado el blockhash
+
+                System.out.println();
+                System.out.println("Coinbase: "+coinbase.transactiontoJSON());
+                System.out.println("Merkleroot: "+blockMined.getMerkleRoot());
+                System.out.println(blockMined.toString());
+                System.out.println();
 
                 String blockMinedString =  blockMined.showBlock() + coinbase.showTransaction() ; //muestra la información del bloque y la información de la transaccion coinbase
 
@@ -58,8 +64,11 @@ public class Main {
                 String response2 = sendRequest(request2);
                 System.out.println(response2);
 
-                System.out.println(blockMined.getMerkleRoot());
-                System.out.println(blockMined.getBlockhash());
+//                System.out.println("MerkleRoot: "+blockMined.getMerkleRoot());
+//                System.out.println(Util.checkMerkleRoot(blockMined.getMerkleRoot(), coinbase.getTransactionMineds() ));
+                System.out.println("Blockhash: "+blockMined.getBlockhash());
+
+
             }
         }
     }
