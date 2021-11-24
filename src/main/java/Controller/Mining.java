@@ -137,6 +137,7 @@ public class Mining {
     public static List<String> doScrypt(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
+        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
         System.out.println("Buscando para Scrypt " + dtf.format(now()) );
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
@@ -151,25 +152,22 @@ public class Mining {
 
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
-//        while(nonce[0] != nonceMAX[0]){ //1 minute in dogecoin
+        //while(nonce < Long.MAX_VALUE){ //1 minute in dogecoin
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             String scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-//            if ((scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {
-          if ((scrypted.endsWith(difficulty)) && (new BigInteger(Util.littleEndian(scrypted), 16)).compareTo(new BigInteger(target, 16))<0 ) {  //! // || scrypted.endsWith(difficulty)
-//            if ((scrypted.endsWith(difficulty)) && (scrypted.compareTo(target)<0) ) {  //! // || scrypted.endsWith(difficulty)
-
-
-                System.out.println(printByteArray(nonce)+": "+scrypted);
-                lista.add(printByteArray(nonce));
-                lista.add(scrypted);
-                return lista;
+            if (scrypted.startsWith(difficulty)){
+                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
+                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
+                    lista.add(printByteArray(nonce));
+                    lista.add(scrypted);
+                    return lista;
+                }
             }
             else{
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
             }
-            //System.out.println(printByteArray(nonce));
         }
         return null;
     }
