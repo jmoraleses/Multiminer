@@ -3,7 +3,6 @@ package Controller;
 import Core.Scrypt.Converter;
 import Core.ScryptHelp;
 import Model.Block;
-import Model.MerkleTree;
 import Util.Util;
 import com.google.common.primitives.Bytes;
 import com.lambdaworks.crypto.SCrypt;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +57,7 @@ public class Mining {
     }
 
     //crear un bloque de minado correcto según el BIP22
-    public static Block createBlock(String previousHash, JSONArray transactions, String bits, String height, String target, String nonce) throws JSONException, IOException {
+    public static Block createBlock(String previousHash, JSONArray transactions, String bits, String height, String target, String nonce) throws JSONException, IOException, NoSuchAlgorithmException {
         Block block = new Block();
         block.setPreviousHash(previousHash);
         block.setNonce(nonce);
@@ -109,12 +109,12 @@ public class Mining {
     }
 
     //calcular el merkleroot a partir  de una array de transacciones
-    public static String extractMerkleRoot(JSONArray transactions) throws JSONException {
+    public static String extractMerkleRoot(JSONArray transactions) throws JSONException, NoSuchAlgorithmException {
         fee_transactions = 0;
         ArrayList<String> list = new ArrayList<>();
         for (int i = 0; i < transactions.length(); i++) {
             JSONObject jsonObjectTransaction = transactions.getJSONObject(i);
-            list.add(Util.littleEndian(jsonObjectTransaction.getString("txid")));
+            list.add(jsonObjectTransaction.getString("txid"));
             fee_transactions += Long.parseLong(jsonObjectTransaction.getString("fee"));
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
@@ -157,13 +157,13 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-            if (scrypted.startsWith(difficulty)){
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
+            if (!scrypted.startsWith(difficulty)){ //!
+                //if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
                     System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
                     lista.add(printByteArray(nonce));
                     lista.add(scrypted);
                     return lista;
-                }
+                //}
             }
             else{
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce

@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Block;
 import Model.Coinbase;
-import Model.MerkleTree;
 import Util.Util;
 
 import java.io.BufferedReader;
@@ -10,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +46,6 @@ public class Main {
                 Coinbase coinbase = new Coinbase();
                 coinbase.set(blockMined); //configura el header (coinbase transaction)
                 coinbase.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
-
 
                 System.out.println();
                 System.out.println("Coinbase: "+coinbase.transactiontoJSON());

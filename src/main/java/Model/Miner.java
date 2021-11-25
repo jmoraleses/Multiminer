@@ -21,7 +21,7 @@ public class Miner {
     public static String signature;
     //public static String sigHash;
 
-    public static String publicKey = "03e7efaf51e64595f6db2980b49843da2e46fbec3e41f79ac8ef3bcf5308be02c1"; //example public key: testnet
+    public static String publicKey = "0286b7a409720d1940f67135e0969c5cc099ace92d170f5a63f7d3fb2d29e2aa6d"; //example public key: testnet
     public static String pubKeyHash = Util.hash160(publicKey);
     public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
 

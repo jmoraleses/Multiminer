@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Node;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -14,9 +15,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static Core.ScryptHelp.compactSize;
+import static Core.ScryptHelp.printByteArray;
 
 public class Util {
 
@@ -139,15 +142,15 @@ public class Util {
     }
 
     //función hexStringToByteArray
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
+//    public static byte[] hexStringToByteArray(String s) {
+//        int len = s.length();
+//        byte[] data = new byte[len / 2];
+//        for (int i = 0; i < len; i += 2) {
+//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+//                    + Character.digit(s.charAt(i+1), 16));
+//        }
+//        return data;
+//    }
 
     //funtion hash160 with RIPEMD160Digest
     public static String hash160(String h) {
@@ -197,13 +200,21 @@ public class Util {
 //    }
 
     //Función merkle root
-    public static String calculateMerkleRoot(List<String> listHashes) {
+    public static String calculateMerkleRoot(List<String> listHashes) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
         List<String> list = new ArrayList<>();
         for (int i = 0; i < listHashes.size(); i += 2) {
             if (i + 1 < listHashes.size()) {
-                list.add(Util.hash256(listHashes.get(i) + listHashes.get(i + 1)));
+                byte[] A = Util.swapEndianness(Util.hexStringToByteArray(listHashes.get(i)));
+                byte[] B = Util.swapEndianness(Util.hexStringToByteArray(listHashes.get(i + 1)));
+                byte[] AB = Arrays.copyOf(A, A.length + B.length);
+                System.arraycopy(B, 0, AB, A.length, B.length);
+                String result = Util.getHex(Util.swapEndianness(Util.SHA256(Util.SHA256(AB))));
+//                byte[] result = concat(listHashes.get(i).getBytes(StandardCharsets.UTF_8), listHashes.get(i + 1).getBytes(StandardCharsets.UTF_8));
+                list.add(result);
             } else {
-                list.add(Util.hash256(listHashes.get(i)));
+                String result = Util.getHex(Util.swapEndianness(Util.SHA256(Util.SHA256(listHashes.get(i).getBytes(StandardCharsets.UTF_8)))));
+                list.add(result);
             }
         }
         if (list.size() % 2 == 1) {
@@ -211,6 +222,56 @@ public class Util {
         } else {
             return calculateMerkleRoot(list);
         }
+    }
+
+
+    public static byte[] concat(byte[]...arrays)
+    {
+        // Determine the length of the result array
+        int totalLength = 0;
+        for (int i = 0; i < arrays.length; i++)
+        {
+            totalLength += arrays[i].length;
+        }
+        // create the result array
+        byte[] result = new byte[totalLength];
+        // copy the source arrays into the result array
+        int currentIndex = 0;
+        for (int i = 0; i < arrays.length; i++)
+        {
+            System.arraycopy(arrays[i], 0, result, currentIndex, arrays[i].length);
+            currentIndex += arrays[i].length;
+        }
+        return result;
+    }
+
+    public static byte[] swapEndianness(byte[] hash) {
+        byte[] result = new byte[hash.length];
+        for (int i = 0; i < hash.length; i++) {
+            result[i] = hash[hash.length-i-1];
+        }
+        return result;
+    }
+    public static byte[] SHA256(byte[] obytes) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        return digest.digest(obytes);
+    }
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+    private static final String    HEXES    = "0123456789abcdef";
+    public static String getHex(byte[] raw) {
+        final StringBuilder hex = new StringBuilder(2 * raw.length);
+        for (final byte b : raw) {
+            hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
+        }
+        return hex.toString();
     }
 
 
