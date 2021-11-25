@@ -3,6 +3,7 @@ package Util;
 import Model.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
+import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +22,9 @@ import static Core.ScryptHelp.compactSize;
 public class Util {
 
     public static byte[] sha3(byte[] input){
-        return org.apache.commons.codec.digest.DigestUtils.sha384(input);
+        SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
+        return digestSHA3.digest(input);
+//        return org.apache.commons.codec.digest.DigestUtils.sha384(input);
     }
 
     public static String sha256(String input){
