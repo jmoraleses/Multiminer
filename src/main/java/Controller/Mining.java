@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class Mining {
 
@@ -20,7 +21,7 @@ public class Mining {
     public static double fee_for_mine = Main.fee_for_mine;
     public static String fee_total;
 
-    public static Block mining(String response, long startTime, String algorithm) throws JSONException, IOException, GeneralSecurityException {
+    public static Block mining(String response, long startTime, String algorithm) throws JSONException, IOException, GeneralSecurityException, InterruptedException {
         System.out.println("Comienza:");
         List<Object> list = extractInfoFromJson(response);
         if(response != null && !response.equals("")) {
@@ -36,7 +37,7 @@ public class Mining {
                     return block;
                 }
                 return null;
-            }
+            }else TimeUnit.SECONDS.sleep(60);
         }
         return null;
 
