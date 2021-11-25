@@ -43,7 +43,8 @@ public class Mining {
                 //Buscamos el nonce
                 //List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
 //                List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                List<String> nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                List<String> nonceHash = doZCash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                //List<String> nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
 
                 if (nonceHash != null) {
                     block.setNonce(nonceHash.get(0));
@@ -184,7 +185,7 @@ public class Mining {
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
             if (scrypted.startsWith(difficulty)){ //!
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
+                if (new BigInteger(scrypted, 16).compareTo(targetValue) < 0) {  //!
                     System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
                     lista.add(printByteArray(nonce));
                     lista.add(scrypted);
@@ -218,7 +219,7 @@ public class Mining {
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = Util.sha256(Arrays.toString(hash));
+            String scrypted = Util.sha256(hash.toString());
 
             System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
             if (scrypted.startsWith(difficulty)){ //!
@@ -233,6 +234,44 @@ public class Mining {
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
             }
             //System.out.println(printByteArray(nonce));
+        }
+        return null;
+    }
+
+    //Búsqueda de nonce para algoritmo Scrypt
+    public static List<String> doZCash(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String difficulty = Util.getDifficulty(target);
+        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
+        System.out.println("Buscando para ZCash " + dtf.format(now()) );
+        List<String> lista = new ArrayList<>();
+        //Initialize the nonce
+        byte[] nonce = new byte[4];
+        byte[] nonceMAX = new byte[4];
+        nonceMAX[0] = (byte)255;
+        nonceMAX[1] = (byte)255;
+        nonceMAX[2] = (byte)255;
+        nonceMAX[3] = (byte)255;
+        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
+
+        //Loop over and increment nonce
+        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
+            //while(nonce < Long.MAX_VALUE){ //1 minute in dogecoin
+            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
+            String scrypted = Util.blake2AsU8a(hash).toString();
+            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
+
+            if (scrypted.startsWith(difficulty)){ //!
+                if (new BigInteger(scrypted, 16).compareTo(targetValue) < 0) {  //!
+                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
+                    lista.add(printByteArray(nonce));
+                    lista.add(scrypted);
+                    return lista;
+                }
+            }
+            else{
+                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
+            }
         }
         return null;
     }

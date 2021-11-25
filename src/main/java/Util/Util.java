@@ -2,8 +2,10 @@ package Util;
 
 import Model.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.bouncycastle.crypto.digests.Blake2bDigest;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 import static Core.ScryptHelp.compactSize;
 
@@ -25,6 +28,24 @@ public class Util {
         SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
         return digestSHA3.digest(input);
 //        return org.apache.commons.codec.digest.DigestUtils.sha384(input);
+    }
+
+    public static byte[] blake2AsU8a(byte[] data, int bitLength, byte[] key) {
+        int byteLength = (int) Math.ceil(bitLength / 8F);
+        Blake2bDigest blake2bkeyed = new Blake2bDigest(key, byteLength, null, null);
+        blake2bkeyed.reset();
+        blake2bkeyed.update(data, 0, data.length);
+        byte[] keyedHash = new byte[64];
+        int digestLength = blake2bkeyed.doFinal(keyedHash, 0);
+        return ArrayUtils.subarray(keyedHash, 0, digestLength);
+    }
+
+    public static byte[] blake2AsU8a(byte[] data) {
+        return blake2AsU8a(data, 256, null);
+    }
+
+    public static byte[] blake2AsU8a(byte[] data, int bitLength) {
+        return blake2AsU8a(data, bitLength, null);
     }
 
     public static String sha256(String input){
