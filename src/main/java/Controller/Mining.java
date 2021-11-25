@@ -218,7 +218,7 @@ public class Mining {
         //Loop over and increment nonce
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = Util.sha256(Arrays.toString(Util.littleEndianByte(hash)));
+            String scrypted = Util.sha256(Arrays.toString(hash));
 
             System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
             if (scrypted.startsWith(difficulty)){ //!
@@ -240,6 +240,7 @@ public class Mining {
     public static List<String> POW (byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
+        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
         System.out.println("POW" + dtf.format(now()));
         List<String> lista = new ArrayList<>();
         int target_count = Util.getDifficulty(target).length();
@@ -248,6 +249,7 @@ public class Mining {
             String scrypted = Bytes.concat(databyte, Util.littleEndianByte(Util.numtoHex(nonce).getBytes(StandardCharsets.UTF_8))).toString();
             //scrypted = Util.blockHashByte(scrypted.getBytes(StandardCharsets.UTF_8));
             //scrypted = printByteArray(SCrypt.scryptJ(scrypted.getBytes(StandardCharsets.UTF_8), scrypted.getBytes(StandardCharsets.UTF_8), 1024, 1, 1, 32));
+            //scrypted = Util.sha3(scrypted.getBytes(StandardCharsets.UTF_8)).toString();
             if (scrypted.startsWith(difficulty)) {
                 System.out.println(Util.numtoHex(nonce)+": "+scrypted + "" + target);
                 lista.add(Util.numtoHex(nonce));
