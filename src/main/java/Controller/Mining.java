@@ -119,19 +119,9 @@ public class Mining {
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
         if (list.size() == 0) return "";
-        //else {
-//            MerkleTree merkle = new MerkleTree(list);
-//            merkle.merkle_tree();
-//            return Util.littleEndian(merkle.getMerkleRoot()); //
-            return (Util.calculateMerkleRoot(list)); //
-        //}
+        return (Util.calculateMerkleRoot(list)); //
     }
 
-
-    public static String lastHashMerkleRoot(String merkleroot, String blockhash){
-        String str = merkleroot + blockhash;
-        return Util.littleEndian(Util.hash256(str));
-    }
 
     //Búsqueda de nonce para algoritmo Scrypt
     public static List<String> doScrypt(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
@@ -157,13 +147,13 @@ public class Mining {
             String scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-            if (!scrypted.startsWith(difficulty)){ //!
-                //if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
+            if (scrypted.startsWith(difficulty)){ //!
+                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
                     System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
                     lista.add(printByteArray(nonce));
                     lista.add(scrypted);
                     return lista;
-                //}
+                }
             }
             else{
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
@@ -176,6 +166,7 @@ public class Mining {
     public static List<String> doSha256(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
+        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
         System.out.println("Buscando para Sha256" + dtf.format(now()));
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
@@ -194,11 +185,13 @@ public class Mining {
             String scrypted = Util.sha256(Arrays.toString(Util.littleEndianByte(hash)));
 
             System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-            if ((scrypted.startsWith(difficulty)) && (scrypted.compareTo(target)<0 || scrypted.compareTo(target)==0) ) {  //!
-                System.out.println(printByteArray(nonce)+": "+scrypted);
-                lista.add(printByteArray(nonce));
-                lista.add(scrypted);
-                return lista;
+            if (scrypted.startsWith(difficulty)){ //!
+                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
+                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
+                    lista.add(printByteArray(nonce));
+                    lista.add(scrypted);
+                    return lista;
+                }
             }
             else{
                 ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
