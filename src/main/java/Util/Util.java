@@ -1,13 +1,11 @@
 package Util;
 
-import Controller.Mining;
 import Model.Transaction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Node;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static Core.ScryptHelp.compactSize;
-import static Core.ScryptHelp.printByteArray;
 
 public class Util {
+
+    public static byte[] sha3(byte[] input){
+        return org.apache.commons.codec.digest.DigestUtils.sha384(input);
+    }
 
     public static String sha256(String input){
         return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
