@@ -41,9 +41,9 @@ public class Mining {
             Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
             //if (block.getMerkleRoot() != "" && block.getMerkleRoot() != null) {
                 //Buscamos el nonce
-                //List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
-//                List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                List<String> nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                //List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                //List<String> nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
                 //List<String> nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
 
                 if (nonceHash != null) {
@@ -220,8 +220,8 @@ public class Mining {
         while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             String scrypted = Util.sha256(hash.toString());
+            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-            System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
             if (scrypted.startsWith(difficulty)){ //!
                 if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
                     System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);

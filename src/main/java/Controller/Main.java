@@ -4,9 +4,7 @@ import Model.Block;
 import Model.Coinbase;
 import Util.Util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -82,6 +80,43 @@ public class Main {
         }
     }
 
+    /**
+     * Send request to bitcoin node
+     * @param request
+     * @return
+     * @throws Throwable
+     */
+    //Function to Connect to node bitcoin
+    private static String sendRequest(String request) throws Throwable {
+        //Authentication in bitcoin node
+        String userpass = "prueba:prueba";
+        String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+        URL url = new URL("http://127.0.0.1:18332/");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Authorization", basicAuth);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setAllowUserInteraction(false);
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+        conn.connect();
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(request);
+        wr.flush();
+        wr.close();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        StringBuffer response = new StringBuffer();
+        while ((line = rd.readLine()) != null) {
+            response.append(line);
+        }
+        rd.close();
+        return response.toString();
+    }
+
 
     /**
      * Function for send request to bitcoin server
@@ -89,43 +124,43 @@ public class Main {
      * @param requestBody
      * @return
      */
-    public static String sendRequest(String requestBody) {
-        String uri = "http://127.0.0.1:18332";
-        String contentType = "application/json";
-        //user and password for bitcoin server
-        String user = "prueba";
-        String password = "prueba";
-        String response = "";
-        try {
-            URL url = new URL(uri);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", contentType);
-            connection.setRequestProperty("Accept", contentType);
-            connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes()));
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(requestBody);
-            writer.flush();
-            writer.close();
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    response += inputLine;
-                }
-                in.close();
-            } else {
-                System.out.println("Error: " + responseCode);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Conexión rechazada.");
-            //e.printStackTrace();
-        }
-        return response;
-    }
+//    public static String sendRequest(String requestBody) {
+//        String uri = "http://127.0.0.1:18332";
+//        String contentType = "application/json";
+//        //user and password for bitcoin server
+//        String user = "prueba";
+//        String password = "prueba";
+//        String response = "";
+//        try {
+//            URL url = new URL(uri);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setDoOutput(true);
+//            connection.setRequestMethod("POST");
+//            connection.setRequestProperty("Content-Type", contentType);
+//            connection.setRequestProperty("Accept", contentType);
+//            connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes()));
+//            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+//            writer.write(requestBody);
+//            writer.flush();
+//            writer.close();
+//            int responseCode = connection.getResponseCode();
+//            if (responseCode == HttpURLConnection.HTTP_OK) {
+//                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//                String inputLine;
+//                while ((inputLine = in.readLine()) != null) {
+//                    response += inputLine;
+//                }
+//                in.close();
+//            } else {
+//                System.out.println("Error: " + responseCode);
+//            }
+//
+//        } catch (Exception e) {
+//            System.out.println("Conexión rechazada.");
+//            //e.printStackTrace();
+//        }
+//        return response;
+//    }
 
 }
 
