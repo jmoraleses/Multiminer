@@ -1,28 +1,18 @@
 package Controller;
 
 import Core.Scrypt.Converter;
-import Core.ScryptHelp;
 import Model.Block;
 import Util.Util;
-import com.google.common.primitives.Bytes;
-import com.lambdaworks.crypto.SCrypt;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import static Core.ScryptHelp.printByteArray;
-import static java.time.LocalDateTime.now;
 
 public class Mining {
 
@@ -30,31 +20,15 @@ public class Mining {
     public static double fee_for_mine = Main.fee_for_mine;
     public static String fee_total;
 
-    //public static int numThreads = Runtime.getRuntime().availableProcessors();
-
-
-    public static Block mining(String response, long startTime, String coin) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
+    public static Block mining(String response, long startTime, String algorithm) throws JSONException, IOException, GeneralSecurityException {
+        System.out.println("Comienza:");
         List<Object> list = extractInfoFromJson(response);
         if(response != null && !response.equals("")) {
-            String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
+            String nonce = Util.numtoHex(0);
             Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
             if (block.getMerkleRoot() != "" && block.getMerkleRoot() != null) {
                 //Buscamos el nonce
-                List<String> nonceHash = new ArrayList<>();
-                switch (coin){
-                    case "sha256":
-                        nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                        break;
-                    case "equihash":
-                        nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                        break;
-                    case "scrypt":
-                        nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                        break;
-                    case "sha3":
-                        nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                        break;
-                }
+                List<String> nonceHash = Algorithm.POW(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime, algorithm);
 
                 if (nonceHash != null) {
                     block.setNonce(nonceHash.get(0));
@@ -130,183 +104,9 @@ public class Mining {
             fee_transactions += Long.parseLong(jsonObjectTransaction.getString("fee"));
         }
         fee_total = Util.satoshisToHex((fee_for_mine*100000000) + fee_transactions);
-        if (list.size() == 0) return "";
+        if (list.size() == 0) return null;
         return (Util.calculateMerkleRoot(list)); //
     }
 
-    //Búsqueda de nonce para algoritmo SHA3
-    public static List<String> doSha3(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String difficulty = Util.getDifficulty(target);
-        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para Sha3 " + dtf.format(now()) );
-        List<String> lista = new ArrayList<>();
-        //Initialize the nonce
-        byte[] nonce = new byte[4];
-        byte[] nonceMAX = new byte[4];
-        nonceMAX[0] = (byte)255;
-        nonceMAX[1] = (byte)255;
-        nonceMAX[2] = (byte)255;
-        nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
-
-        //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
-            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = Util.sha3(hash).toString();
-            System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-
-            if (scrypted.startsWith(difficulty)){ //!
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
-                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
-                    lista.add(printByteArray(nonce));
-                    lista.add(scrypted);
-                    return lista;
-                }
-            }
-            else{
-                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
-            }
-        }
-        return null;
-    }
-
-    //Búsqueda de nonce para algoritmo Scrypt
-    public static List<String> doScrypt(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String difficulty = Util.getDifficulty(target);
-        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para Scrypt " + dtf.format(now()) );
-        List<String> lista = new ArrayList<>();
-        //Initialize the nonce
-        byte[] nonce = new byte[4];
-        byte[] nonceMAX = new byte[4];
-        nonceMAX[0] = (byte)255;
-        nonceMAX[1] = (byte)255;
-        nonceMAX[2] = (byte)255;
-        nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
-
-        //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
-        //while(nonce < Long.MAX_VALUE){ //1 minute in dogecoin
-            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
-            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-
-            if (scrypted.startsWith(difficulty)){ //!
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) < 0) {  //!
-                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
-                    lista.add(printByteArray(nonce));
-                    lista.add(scrypted);
-                    return lista;
-                }
-            }
-            else{
-                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
-            }
-        }
-        return null;
-    }
-
-    //Búsqueda de nonce para algoritmo SHA256
-    public static List<String> doSha256(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String difficulty = Util.getDifficulty(target);
-        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para Sha256 " + dtf.format(now()));
-        List<String> lista = new ArrayList<>();
-        //Initialize the nonce
-        byte[] nonce = new byte[4];
-        byte[] nonceMAX = new byte[4];
-        nonceMAX[0] = (byte)255;
-        nonceMAX[1] = (byte)255;
-        nonceMAX[2] = (byte)255;
-        nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)24; //empieza en la mitad de todos los nonce permitidos: 128
-        //boolean found = false;
-
-        //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 600*1000)){ //10 minutes
-            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = Util.sha256(hash.toString());
-            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-
-            if (scrypted.startsWith(difficulty)){ //!
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) == -1) {  //! // || scrypted.endsWith(difficulty)
-                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
-                    lista.add(printByteArray(nonce));
-                    lista.add(scrypted);
-                    return lista;
-                }
-            }
-            else{
-                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
-            }
-            //System.out.println(printByteArray(nonce));
-        }
-        return null;
-    }
-
-    //Búsqueda de nonce para algoritmo Scrypt
-    public static List<String> doEquiHash(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String difficulty = Util.getDifficulty(target);
-        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para EquiHash (ZCash) " + dtf.format(now()) );
-        List<String> lista = new ArrayList<>();
-        //Initialize the nonce
-        byte[] nonce = new byte[4];
-        byte[] nonceMAX = new byte[4];
-        nonceMAX[0] = (byte)255;
-        nonceMAX[1] = (byte)255;
-        nonceMAX[2] = (byte)255;
-        nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
-
-        //Loop over and increment nonce
-        while(nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < 60*1000)){ //1 minute in dogecoin
-            //while(nonce < Long.MAX_VALUE){ //1 minute in dogecoin
-            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
-            String scrypted = Util.blake2AsU8a(hash).toString();
-            //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
-
-            if (scrypted.startsWith(difficulty)){ //!
-                if (new BigInteger(scrypted, 16).compareTo(targetValue) < 0) {  //!
-                    System.out.println("Found nonce: " + printByteArray(nonce) + " with hash: " + scrypted);
-                    lista.add(printByteArray(nonce));
-                    lista.add(scrypted);
-                    return lista;
-                }
-            }
-            else{
-                ScryptHelp.incrementAtIndex(nonce, nonce.length-1); //Otherwise increment the nonce
-            }
-        }
-        return null;
-    }
-
-    public static List<String> POW (byte[] databyte, String target, long startTime) throws GeneralSecurityException {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String difficulty = Util.getDifficulty(target);
-        BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("POW" + dtf.format(now()));
-        List<String> lista = new ArrayList<>();
-        int target_count = Util.getDifficulty(target).length();
-
-        for (int nonce = 0; (System.currentTimeMillis() - startTime < 55*1000); nonce++) {  // 55 seconds
-            String scrypted = Bytes.concat(databyte, Util.littleEndianByte(Util.numtoHex(nonce).getBytes(StandardCharsets.UTF_8))).toString();
-            //scrypted = Util.blockHashByte(scrypted.getBytes(StandardCharsets.UTF_8));
-            //scrypted = printByteArray(SCrypt.scryptJ(scrypted.getBytes(StandardCharsets.UTF_8), scrypted.getBytes(StandardCharsets.UTF_8), 1024, 1, 1, 32));
-            //scrypted = Util.sha3(scrypted.getBytes(StandardCharsets.UTF_8)).toString();
-            if (scrypted.startsWith(difficulty)) {
-                System.out.println(Util.numtoHex(nonce)+": "+scrypted + "" + target);
-                lista.add(Util.numtoHex(nonce));
-                lista.add(scrypted);
-                return lista;
-            }
-        }
-        return null;
-    }
 
 }

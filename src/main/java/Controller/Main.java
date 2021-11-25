@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
-    public static double fee_for_mine = 6.25;
-    //public static String publicKey = ""; //example public key: dogecoin testnet
-    public static String publicKey = ""; //example public key: bitcoin testnet
+    public static double fee_for_mine = 10000;
+    public static String publicKey = ""; //example public key: dogecoin testnet
+//    public static String publicKey = ""; //example public key: bitcoin testnet
     //public static String publicKey = ""; //example public key: Zcash testnet
 
 
@@ -53,19 +53,10 @@ public class Main {
                 coinbase.set(blockMined); //configura el header (coinbase transaction)
                 coinbase.setTransactionMineds(Util.transactionToList(blockMined.getTransactions())); //guarda las transacciones de JSONArray a List<Transaction>
 
-//                System.out.println();
-//                ArrayList<String> lista2 = new ArrayList<>();
-//                lista2.add("8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87");
-//                lista2.add("fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4");
-//                lista2.add("6359f0868171b1d194cbee1af2f16ea598ae8fad666d9b012c8ed2b79a236ec4");
-//                lista2.add("e9a66845e05d5abc0ad04ec80f774a7e585c6e8db975962d069a522137b80c1d");
-//                System.out.println(Util.calculateMerkleRoot(lista2));
-
-
                 System.out.println();
 //                System.out.println("Coinbase: "+coinbase.transactiontoJSON());
                 System.out.println("Merkleroot: "+blockMined.getMerkleRoot());
-//                System.out.println("Transcations: "+coinbase.getTransactionMineds());
+//                System.out.println("Transactions: "+coinbase.getTransactionMineds());
                 System.out.println(blockMined.toString());
                 System.out.println();
 
