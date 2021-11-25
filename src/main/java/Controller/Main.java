@@ -17,6 +17,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
+    public static double fee_for_mine = 6.25;
+    //public static String publicKey = ""; //example public key: dogecoin testnet
+    public static String publicKey = ""; //example public key: bitcoin testnet
+    //public static String publicKey = ""; //example public key: Zcash testnet
+
+
 //    public static int total_process = 10;
 //    public static int total_process_parallel = 2;
 

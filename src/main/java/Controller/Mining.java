@@ -28,7 +28,7 @@ public class Mining {
 
     public static String target;
     public static double fee_transactions;
-    public static double fee_for_mine = 10000;
+    public static double fee_for_mine = Main.fee_for_mine;
     public static String fee_total;
 
     //public static int numThreads = Runtime.getRuntime().availableProcessors();
@@ -204,7 +204,7 @@ public class Mining {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
         BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para Sha256" + dtf.format(now()));
+        System.out.println("Buscando para Sha256 " + dtf.format(now()));
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];
