@@ -43,7 +43,7 @@ public class Mining {
                 //Buscamos el nonce
                 //List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), Util.getDifficulty(block.getTarget()), startTime);
 //                List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                List<String> nonceHash = doZCash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                List<String> nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
                 //List<String> nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
 
                 if (nonceHash != null) {
@@ -239,11 +239,11 @@ public class Mining {
     }
 
     //Búsqueda de nonce para algoritmo Scrypt
-    public static List<String> doZCash(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
+    public static List<String> doEquiHash(byte[] databyte, String target, long startTime) throws GeneralSecurityException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
         BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
-        System.out.println("Buscando para ZCash " + dtf.format(now()) );
+        System.out.println("Buscando para EquiHash (ZCash) " + dtf.format(now()) );
         List<String> lista = new ArrayList<>();
         //Initialize the nonce
         byte[] nonce = new byte[4];

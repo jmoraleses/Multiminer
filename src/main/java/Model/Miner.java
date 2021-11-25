@@ -21,7 +21,7 @@ public class Miner {
     public static String signature;
     //public static String sigHash;
 
-//    public static String publicKey = "0286b7a409720d1940f67135e0969c5cc099ace92d170f5a63f7d3fb2d29e2aa6d"; //example public key: dogecoin testnet
+//    public static String publicKey = ""; //example public key: dogecoin testnet
     public static String publicKey = ""; //example public key: Zcash testnet
     public static String pubKeyHash = Util.hash160(publicKey);
     public static String scriptPubKey = "76a914" + pubKeyHash + "88ac";
