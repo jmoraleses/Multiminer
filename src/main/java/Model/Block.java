@@ -20,7 +20,7 @@ public class Block {
     private String difficulty;
     private String blockhash;
     private String version;
-    private String bits; //target is the same as difficulty
+    private String bits; //is the difficulty
     private String target; //target
     public JSONArray transactions;
 

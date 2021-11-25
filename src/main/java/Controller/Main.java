@@ -43,7 +43,7 @@ public class Main {
         while(blockMined == null){
             long startTime = System.currentTimeMillis();
             response = sendRequest(request);
-            blockMined = Mining.mining(response, startTime); //Busca el blochash dado los parametros
+            blockMined = Mining.mining(response, startTime, "scrypt"); //Busca el blochash dado los parametros
             TimeUnit.SECONDS.sleep(1);
         }
         if (!response.equals("")) {

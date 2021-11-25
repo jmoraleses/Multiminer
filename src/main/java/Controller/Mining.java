@@ -26,7 +26,6 @@ import static java.time.LocalDateTime.now;
 
 public class Mining {
 
-    public static String target;
     public static double fee_transactions;
     public static double fee_for_mine = Main.fee_for_mine;
     public static String fee_total;
@@ -34,17 +33,28 @@ public class Mining {
     //public static int numThreads = Runtime.getRuntime().availableProcessors();
 
 
-    public static Block mining(String response, long startTime) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
+    public static Block mining(String response, long startTime, String coin) throws JSONException, IOException, InterruptedException, GeneralSecurityException {
         List<Object> list = extractInfoFromJson(response);
         if(response != null && !response.equals("")) {
             String nonce = Util.numtoHex(0); //esto hay que cambiarlo por la llamada al método personalizado de minería
             Block block = createBlock((String) list.get(0), (JSONArray) list.get(1), (String) list.get(2), (String) list.get(3), (String) list.get(4), (String) nonce); //String previousHash, String transactions, String bits, String nonce
-            //if (block.getMerkleRoot() != "" && block.getMerkleRoot() != null) {
+            if (block.getMerkleRoot() != "" && block.getMerkleRoot() != null) {
                 //Buscamos el nonce
-                List<String> nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                //List<String> nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                //List<String> nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
-                //List<String> nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                List<String> nonceHash = new ArrayList<>();
+                switch (coin){
+                    case "sha256":
+                        nonceHash = doSha256(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                        break;
+                    case "equihash":
+                        nonceHash = doEquiHash(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                        break;
+                    case "scrypt":
+                        nonceHash = doScrypt(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                        break;
+                    case "sha3":
+                        nonceHash = doSha3(Converter.fromHexString(block.showBlockWithoutNonce()), block.getTarget(), startTime);
+                        break;
+                }
 
                 if (nonceHash != null) {
                     block.setNonce(nonceHash.get(0));
@@ -52,7 +62,7 @@ public class Mining {
                     return block;
                 }
                 return null;
-           //}
+            }
         }
         return null;
 
