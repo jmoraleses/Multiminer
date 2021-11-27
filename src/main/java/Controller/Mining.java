@@ -22,7 +22,7 @@ public class Mining {
     public static String fee_total;
 
     public static Block mining(String response, long startTime, String algorithm) throws JSONException, IOException, GeneralSecurityException, InterruptedException {
-        System.out.println("Comienza:");
+        //System.out.println("Comienza:");
         List<Object> list = extractInfoFromJson(response);
         if(response != null && !response.equals("")) {
             String nonce = Util.numtoHex(0);
@@ -37,7 +37,10 @@ public class Mining {
                     return block;
                 }
                 return null;
-            }else TimeUnit.SECONDS.sleep(60);
+            }else{
+                System.out.println("Transacciones no encontradas...");
+                TimeUnit.SECONDS.sleep(60);
+            }
         }
         return null;
 

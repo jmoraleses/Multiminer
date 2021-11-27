@@ -136,11 +136,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
-        <!--        <dependency>-->
-<!--            <groupId>org.bitcoinj</groupId>-->
-<!--            <artifactId>bitcoinj-core</artifactId>-->
-<!--            <version>0.15.10</version>-->
-<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.aparapi/aparapi -->
+        <dependency>
+            <groupId>com.aparapi</groupId>
+            <artifactId>aparapi</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
 
     </dependencies>
 

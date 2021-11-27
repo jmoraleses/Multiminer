@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
-    public static double fee_for_mine = 10000;
-    public static String publicKey = ""; //example public key: dogecoin testnet
-//    public static String publicKey = ""; //example public key: bitcoin testnet
+    public static double fee_for_mine = 6.25;
+//    public static String publicKey = ""; //example public key: dogecoin
+    public static String publicKey = ""; //example public key: bitcoin testnet
     //public static String publicKey = ""; //example public key: Zcash testnet
 
 
@@ -43,7 +43,7 @@ public class Main {
         while(blockMined == null){
             long startTime = System.currentTimeMillis();
             response = sendRequest(request);
-            blockMined = Mining.mining(response, startTime, "scrypt"); //Busca el blochash dado los parametros
+            blockMined = Mining.mining(response, startTime, "sha256"); //Busca el blochash dado los parametros
             TimeUnit.SECONDS.sleep(1);
         }
         if (!response.equals("")) {

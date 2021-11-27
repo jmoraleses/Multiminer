@@ -32,7 +32,7 @@ public class Algorithm {
         nonceMAX[1] = (byte)255;
         nonceMAX[2] = (byte)255;
         nonceMAX[3] = (byte)255;
-        nonce[0] = (byte)26; //empieza en la mitad de todos los nonce permitidos: 128
+        nonce[0] = (byte)128; //empieza en la mitad de todos los nonce permitidos: 128
         int timewait = 0;
         switch (algorithm){
             case "sha256":
@@ -50,23 +50,19 @@ public class Algorithm {
         }
         while (nonce[0] != nonceMAX[0] && (System.currentTimeMillis() - startTime < timewait*1000)) {  // 1 minute
             String scrypted = null;
-
+            byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             switch (algorithm){
                 case "sha256":
-                    scrypted = Bytes.concat(databyte, Util.littleEndianByte(nonce)).toString();
-                    scrypted = Util.blockHashByte(scrypted.getBytes(StandardCharsets.UTF_8));
+                    scrypted = Util.SHA256(Util.SHA256(hash)).toString();
                     break;
                 case "equihash":
-                    byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
                     scrypted = Util.blake2AsU8a(hash).toString();
                     break;
                 case "scrypt":
-                    scrypted = Bytes.concat(databyte, Util.littleEndianByte(nonce)).toString();
-                    scrypted = printByteArray(SCrypt.scryptJ(scrypted.getBytes(StandardCharsets.UTF_8), scrypted.getBytes(StandardCharsets.UTF_8), 1024, 1, 1, 32));
+                    scrypted = printByteArray(SCrypt.scryptJ(hash, hash, 1024, 1, 1, 32));
                     break;
                 case "sha3":
-                    scrypted = Bytes.concat(databyte, Util.littleEndianByte(nonce)).toString();
-                    scrypted = Util.sha3(scrypted.getBytes(StandardCharsets.UTF_8)).toString();
+                    scrypted = Util.sha3(hash).toString();
                     break;
             }
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);

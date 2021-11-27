@@ -48,20 +48,20 @@ public class Util {
         return blake2AsU8a(data, bitLength, null);
     }
 
-    public static String sha256(String input){
-        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-    }
+//    public static String sha256(String input){
+//        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+//    }
+//
+//    //función hacer dos hash256 para obtener el block hash
+//    public static String hash256(String input) {
+//        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+//        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
+//    }
 
-    //función hacer dos hash256 para obtener el block hash
-    public static String hash256(String input) {
-        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
-    }
-
-    public static String blockHashByte(byte[] input) {
-        String hash = DigestUtils.sha256Hex(input);
-        return DigestUtils.sha256Hex(hash);
-    }
+//    public static String blockHashByte(byte[] input) {
+//        String hash = DigestUtils.sha256Hex(input);
+//        return DigestUtils.sha256Hex(hash);
+//    }
 
     //función que dado un string encripta a hexadecimal
     public static String hexString(String input) {
