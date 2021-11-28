@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Dogecoin, Litecoin
  */
-public class ScryptHelp {
+public class ScryptHelper {
 
     public  static void  incrementAtIndex(byte[] array, int index) {
         //Short method to increment the nonce

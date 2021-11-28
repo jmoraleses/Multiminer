@@ -1,5 +1,6 @@
 package Controller;
 
+import Core.Sha256Helper;
 import Model.Block;
 import Model.Coinbase;
 import Util.Util;
@@ -8,9 +9,12 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
+
+import static Core.ScryptHelper.printByteArray;
 
 /**
  * (SHA256) Bitcoin
@@ -39,6 +43,16 @@ public class Main {
         String request = "{\"jsonrpc\": \"2.0\", \"id\": \"curltest\", \"method\": \"getblocktemplate\", \"params\": [{\"rules\": [\"segwit\"]}]}";
         Block blockMined = null;
         String response = "";
+
+        ArrayList<String> lista5 = new ArrayList<String>();
+        lista5.add("8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87");
+        lista5.add("fff2525b8931402dd09222c50775608f75787bd2b87e56995a7bdd30f79702c4");
+        lista5.add("6359f0868171b1d194cbee1af2f16ea598ae8fad666d9b012c8ed2b79a236ec4");
+        lista5.add("e9a66845e05d5abc0ad04ec80f774a7e585c6e8db975962d069a522137b80c1d");
+        System.out.println("Merkleroot calculate: "+Util.calculateMerkleRoot(lista5));
+        System.out.println(Sha256Helper.sha256("8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87"));
+        System.out.println(printByteArray(Util.SHA256("8c14f0db3df150123e6f3dbbf30f8b955a8249b62ac1d1ff16284aefa3d06d87".getBytes(StandardCharsets.UTF_8))));
+
 
         while(blockMined == null){
             long startTime = System.currentTimeMillis();

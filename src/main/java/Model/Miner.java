@@ -11,7 +11,7 @@ import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECPoint;
 
-import static Core.ScryptHelp.printByteArray;
+import static Core.ScryptHelper.printByteArray;
 
 public class Miner {
 

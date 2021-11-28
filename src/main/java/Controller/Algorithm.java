@@ -1,25 +1,25 @@
 package Controller;
 
-import Core.Scrypt.Converter;
-import Core.ScryptHelp;
+import Core.ScryptHelper;
+import Core.Sha256Helper;
 import Util.Util;
 import com.google.common.primitives.Bytes;
 import com.lambdaworks.crypto.SCrypt;
 
+import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Core.ScryptHelp.printByteArray;
+import static Core.ScryptHelper.printByteArray;
 import static java.time.LocalDateTime.now;
 
 public class Algorithm {
 
 
-    public static List<String> POW (byte[] databyte, String target, long startTime, String algorithm) throws GeneralSecurityException {
+    public static List<String> POW (byte[] databyte, String target, long startTime, String algorithm) throws GeneralSecurityException, IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         String difficulty = Util.getDifficulty(target);
         BigInteger targetValue = BigInteger.valueOf(1).shiftLeft((256 - difficulty.length()));
@@ -53,7 +53,8 @@ public class Algorithm {
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             switch (algorithm){
                 case "sha256":
-                    scrypted = Util.SHA256(Util.SHA256(hash)).toString();
+                    scrypted = Sha256Helper.sha256(Sha256Helper.sha256(hash.toString())).toString();
+//                    scrypted = Util.SHA256(Util.SHA256(hash)).toString();
                     break;
                 case "equihash":
                     scrypted = Util.blake2AsU8a(hash).toString();
@@ -76,7 +77,7 @@ public class Algorithm {
                 }
             }
             else{
-                ScryptHelp.incrementAtIndex(nonce, nonce.length-1);
+                ScryptHelper.incrementAtIndex(nonce, nonce.length-1);
             }
         }
         return null;

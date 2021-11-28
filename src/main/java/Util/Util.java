@@ -1,11 +1,9 @@
 package Util;
 
 import Model.Transaction;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.crypto.digests.Blake2bDigest;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
-import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
-import static Core.ScryptHelp.compactSize;
+import static Core.ScryptHelper.compactSize;
 
 public class Util {
 
