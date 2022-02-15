@@ -1,7 +1,6 @@
 package Controller;
 
 import Core.ScryptHelper;
-import Core.Sha256Helper;
 import Util.Util;
 import com.google.common.primitives.Bytes;
 import com.lambdaworks.crypto.SCrypt;
@@ -17,7 +16,6 @@ import static Core.ScryptHelper.printByteArray;
 import static java.time.LocalDateTime.now;
 
 public class Algorithm {
-
 
     public static List<String> POW (byte[] databyte, String target, long startTime, String algorithm) throws GeneralSecurityException, IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -53,8 +51,8 @@ public class Algorithm {
             byte[] hash = Bytes.concat(databyte, Util.littleEndianByte(nonce));
             switch (algorithm){
                 case "sha256":
-                    scrypted = Sha256Helper.sha256(Sha256Helper.sha256(hash.toString())).toString();
-//                    scrypted = Util.SHA256(Util.SHA256(hash)).toString();
+//                    scrypted = Sha256Helper.sha256(Sha256Helper.sha256(hash.toString())).toString();
+                    scrypted = Util.SHA256(Util.SHA256(hash)).toString();
                     break;
                 case "equihash":
                     scrypted = Util.blake2AsU8a(hash).toString();
@@ -68,7 +66,7 @@ public class Algorithm {
             }
             //System.out.println(printByteArray(nonce)+": "+scrypted + " target: " + target);
 
-            if (scrypted.startsWith(difficulty)){ //!
+            if (scrypted.endsWith(difficulty)){ //!
                 if (new BigInteger(scrypted, 16).compareTo(targetValue) <= 0) {
                     System.out.println("Found nonce: " + printByteArray(Util.littleEndianByte(nonce)) + " with hash: " + scrypted);
                     lista.add(printByteArray(nonce));
@@ -82,7 +80,5 @@ public class Algorithm {
         }
         return null;
     }
-
-
 
 }

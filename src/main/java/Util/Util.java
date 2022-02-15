@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -46,21 +47,6 @@ public class Util {
         return blake2AsU8a(data, bitLength, null);
     }
 
-//    public static String sha256(String input){
-//        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-//    }
-//
-//    //función hacer dos hash256 para obtener el block hash
-//    public static String hash256(String input) {
-//        String hash = org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
-//        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(hash);
-//    }
-
-//    public static String blockHashByte(byte[] input) {
-//        String hash = DigestUtils.sha256Hex(input);
-//        return DigestUtils.sha256Hex(hash);
-//    }
-
     //función que dado un string encripta a hexadecimal
     public static String hexString(String input) {
         return String.format("%040x", new BigInteger(1, input.getBytes(StandardCharsets.UTF_8)));
@@ -78,11 +64,6 @@ public class Util {
 
     public static String timestampToHex(Instant ts) {
         return String.format("%08x", ts.getEpochSecond());
-    }
-
-    //función que devuelve la longitud de merkleroot + 1, en hexadecimal. pasandole un bloque.
-    public static String merkleRootTXLen(String merkleroot){
-        return compactSize(merkleroot.length() + 1);
     }
 
     //función para encontrar el tamaño del scriptSig
@@ -126,22 +107,6 @@ public class Util {
         return sb;
     }
 
-    //swapendianness
-    public static String swapEndianness(String hex) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = hex.length() - 2; i >= 0; i -= 2) {
-            sb.append(hex, i, i + 2);
-        }
-        return sb.toString();
-    }
-
-
-    //Convertir hexadecimal a long
-    public static long hexToLong(String hex) {
-        return Long.parseLong(hex, 16);
-    }
-
-
     //contar cantidad de ceros delante de hash
     public static int countLeadingZeros(String hash) {
         int i = 0;
@@ -163,17 +128,6 @@ public class Util {
         }
         return difficulty;
     }
-
-    //función hexStringToByteArray
-//    public static byte[] hexStringToByteArray(String s) {
-//        int len = s.length();
-//        byte[] data = new byte[len / 2];
-//        for (int i = 0; i < len; i += 2) {
-//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-//                    + Character.digit(s.charAt(i+1), 16));
-//        }
-//        return data;
-//    }
 
     //funtion hash160 with RIPEMD160Digest
     public static String hash160(String h) {
@@ -211,16 +165,6 @@ public class Util {
         }
         return list;
     }
-
-    //comprobar merkleroot
-//    public static boolean checkMerkleRoot(String merkleRoot, List<Transaction> list) {
-//        List<String> listHashes = new ArrayList<>();
-//        for (Transaction transaction : list) {
-//            listHashes.add(transaction.getHash());
-//        }
-//        String hash = Mining.calculateMerkleRoot(listHashes);
-//        return hash.equals(merkleRoot);
-//    }
 
     //Función merkle root
     public static String calculateMerkleRoot(List<String> listHashes) throws NoSuchAlgorithmException {
@@ -275,6 +219,8 @@ public class Util {
         }
         return result;
     }
+
+
     public static byte[] SHA256(byte[] obytes) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return digest.digest(obytes);
@@ -295,6 +241,12 @@ public class Util {
             hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
         }
         return hex.toString();
+    }
+
+    public static byte[] intToByteArray(int nonce) {
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(nonce);
+        return buffer.array();
     }
 
 

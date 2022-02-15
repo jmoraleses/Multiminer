@@ -22,7 +22,7 @@ uint ch (uint x, uint y, uint z) {
 
 // Maj(x,y,z)=(x&y)xor(x&z)xor(y&z)
 uint maj (uint x, uint y, uint z) {
-    return (x & y) ^ (x & z) ^ (y & z);
+    return (x & y) ^ (x & z) ^ (y & z); 
 }
 
 // Sigma0(x)=ROTR2(x) xor ROTR13(x) xor ROTR22(x)
@@ -51,7 +51,7 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
     int block, used; // Current block of message, used length of message
     int gid = get_global_id(0); // global id
     int origin = gid * 8;
-
+    
     uint K[64]={
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
         0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -62,7 +62,7 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
         0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
         0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
     }; // 64 32-bit constants
-
+    
     len = data_info[2]; // Data string length
     N = len%64>=56?2:1 + len/64; // (l+1+k)%512=448, add one 1 and k 0 after l and extra 64 for l
     // Setting H0(0)-H7(0)
@@ -74,7 +74,7 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
     Hash[5 + origin] = H5;
     Hash[6 + origin] = H6;
     Hash[7 + origin] = H7;
-
+    
     // Do for N message blocks
     for (i = 0; i < N; i++) {
         // Initialize working variables
@@ -86,7 +86,7 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
         F = Hash[5 + origin];
         G = Hash[6 + origin];
         H = Hash[7 + origin];
-
+        
         // --------------Preprocessing-----------------
         #pragma unroll
         for (t = 0; t < 64; t++){
@@ -124,7 +124,7 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
             } else {
                 W[t] |= 0x80000000; // An 1 and thirty one 0s
             }
-
+            
             if (block < 56) {
                 W[15] = len*8; // We assume length is less than 2^32
                 //printf("ulen avlue 2 :w[15] :%x\n", W[15]);
@@ -136,8 +136,8 @@ kernel void sha256Kernel (global uint *data_info, global char *data, global uint
             W[15] = len*8;
         }
         // --------------End Preprocessing-----------------
-
-
+        
+        
         // --------------Hashing-----------------
         for (t = 0; t < 64; t++) {
             if (t > 15) {

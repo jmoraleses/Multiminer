@@ -2,14 +2,13 @@ package Core;
 
 import java.io.IOException;
 
-//import static Controller.Mining.blockhash;
 
 /**
  * Dogecoin, Litecoin
  */
 public class ScryptHelper {
 
-    public  static void  incrementAtIndex(byte[] array, int index) {
+    public static void  incrementAtIndex(byte[] array, int index) {
         //Short method to increment the nonce
         if (array[index] == Byte.MAX_VALUE) {
             array[index] = 0;

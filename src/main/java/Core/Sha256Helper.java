@@ -1,42 +1,61 @@
-/*
- * JOCL - Java bindings for OpenCL
- * 
- * Copyright 2009 Marco Hutter - http://www.jocl.org/
- */
 package Core;
 
-import static org.jocl.CL.*;
-
 import Core.Sha256.Sha256;
-import Util.Util;
-import org.jocl.*;
-
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * GPUhash
- *
- * @author Zhuowen Fang
- */
-public class Sha256Helper {
+public class Sha256Helper extends Thread {
 
-    /**
-     * The source code of the OpenCL program to execute
-     */
-    private static int[] n = new int[]{1, 5, 10, 50, 100, 200, 500, 1000, 2000, 3500, 5000, 8000, 10000, 12000,
-        15000, 18000, 20000, 35000, 50000, 80000, 100000, 150000, 200000, 350000, 500000};
-    private static int ite = 5;
+    public static String thehash;
+    public static String thenonce;
+
+    List<Thread> hilos = new ArrayList<>();
+    private int numThreads = 100;
+    public static int hashesSecond = 0;
 
 
-    public static String sha256(String input) throws IOException {
-        Sha256 sha256 = new Sha256();
-        sha256.setData(input);
-        sha256.init(2048, input.length());
-        return sha256.crypt(input.length());
+    public Sha256Helper(String block, String target, long startTime) throws IOException, InterruptedException {
 
+        for (int i = 0; i < numThreads; i++) {
+            Runnable r1 = (Runnable) new Sha256(block, target, startTime, 1000000000L*i);
+            hilos.add(new Thread(r1));
+//            System.out.println("Hilo " + i + " creado");
+        }
+    }
+
+    //función para comprobar si algún hilo ha finalizado y en tal caso recoger el resultado y cerrar los demás hilos
+    public List<String> startWait() throws InterruptedException {
+        for (Thread hilo : hilos) {
+            try {
+                hilo.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        for (Thread hilo : hilos) {
+            hilo.start();
+        }
+        //comprobar si algún hilo a terminado
+        while (true) {
+            for (Thread hilo : hilos) {
+                if (hilo.isInterrupted()) {
+                    List<String> list = new ArrayList<String>();
+                    list.add(thenonce);
+                    list.add(thehash);
+                    //cerrar los demás hilos
+                    for (Thread hilo1 : hilos) {
+                        hilo1.interrupt();
+                    }
+                    return list;
+                }
+            }
+            Thread.sleep(1000);
+            System.out.println(hashesSecond+" hashes/s");
+            hashesSecond = 0;
+
+        }
     }
 
 
